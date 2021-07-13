@@ -13,7 +13,9 @@
             </div>
 
             <div class="card-body">
+                @can('Permission Create')
                 <a href="{{ route('admin.permissions.create') }}" class="btn btn-primary mb-3"><i class="fa fa-plus"></i> Add Permission</a>
+                @endcan
                 <table class="table table-bordered table-striped">
                     <thead>
                         <tr>
@@ -31,12 +33,16 @@
                             <td>{{ $permission->name }}</td>
                             <td>{{ $permission->guard_name }}</td>
                             <td>
+                                @can('Permission Edit')
                                 <a href="{{ route('admin.permissions.edit', $permission->id) }}" class="btn btn-sm btn-info"><i class="fa fa-edit"></i></a>
+                                @endcan
+                                @can('Permission Delete')
                                 <form action="{{ route('admin.permissions.destroy', $permission->id) }}" method="post" style="display: inline;" class="delete-form">
                                     @method('DELETE')
                                     @csrf
                                     <button type="submit" class="btn btn-sm btn-danger"><i class="fa fa-trash"></i></button>
                                 </form>
+                                @endcan
                             </td>
                         </tr>
                         @endforeach

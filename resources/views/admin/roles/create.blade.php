@@ -1,16 +1,16 @@
-@extends('layouts.master', ['title' => 'Permissions'])
+@extends('layouts.master', ['title' => 'Roles'])
 
 @section('content')
 <div class="row">
     <div class="col-md-6">
-        <h1 class="page-title">Permissions</h1>
+        <h1 class="page-title">Add Roles</h1>
         <div class="card">
             <div class="card-header">
-                <h5 class="text-bold card-title">Add Permissions</h5>
+                <h5 class="text-bold card-title">Add Roles</h5>
             </div>
 
             <div class="card-body">
-                <form action="{{ route('admin.permissions.store') }}" method="post">
+                <form action="{{ route('admin.roles.store') }}" method="post">
                     @csrf
                     <div class="form-group">
                         <label>Name</label>

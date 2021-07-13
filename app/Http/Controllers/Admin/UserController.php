@@ -3,83 +3,99 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\User;
+use App\Http\Requests\UpdateUserRequest;
+use App\{User, Warehouse};
+use App\Http\Requests\StoreUserRequest;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
 use Spatie\Permission\Models\Role;
 
 class UserController extends Controller
 {
     public function index()
     {
-        $users = User::get();
+        abort_unless(Gate::allows('User Access'), 403);
+
+        $users = User::with('warehouse')->get();
 
         return view('admin.users.index', compact('users'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function create()
     {
-        //
+        abort_unless(Gate::allows('User Create'), 403);
+
+        $roles = Role::get();
+        $warehouses = Warehouse::get();
+
+        return view('admin.users.create', compact('roles', 'warehouses'));
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
+    public function store(StoreUserRequest $request)
     {
-        //
+        abort_unless(Gate::allows('User Create'), 403);
+
+        $attr = $request->all();
+        $image = $request->file('image');
+        $imageUrl = $image->storeAs('images/users', \Str::random(15) . '.' . $image->extension());
+
+        $attr['image'] = $imageUrl;
+        $attr['is_active'] = 1;
+        $attr['password'] = Hash::make($request->password);
+
+        $user = User::create($attr);
+
+        $user->assignRole($request->input('role'));
+
+        return redirect()->route('admin.users.index')->with('success', 'User has been added');
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
-    }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function edit(User $user)
     {
+        abort_unless(Gate::allows('User Edit'), 403);
+
         $roles = Role::get();
-        return view('admin.users.edit', compact('user', 'roles'));
+        $warehouses = Warehouse::get();
+
+        return view('admin.users.edit', compact('user', 'roles', 'warehouses'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
+    public function update(UpdateUserRequest $request, User $user)
     {
-        //
+        abort_unless(Gate::allows('User Edit'), 403);
+
+        $attr = $request->all();
+
+        if ($request->input('password') == null) {
+            $attr['password'] = $user->password;
+        } else {
+            $attr['password'] =  Hash::make($request->password);
+        }
+
+        $image = $request->file('image');
+
+        if ($request->file('image')) {
+            Storage::delete($user->image);
+            $imageUrl = $image->storeAs('images/users', \Str::random(15) . '.' . $image->extension());
+            $attr['image'] = $imageUrl;
+        } else {
+            $attr['image'] = $user->image;
+        }
+
+        $user->update($attr);
+        $user->syncRoles($request->input('role'));
+
+        return redirect()->route('admin.users.index')->with('success', 'User has been updated');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
+    public function destroy(User $user)
     {
-        //
+        abort_unless(Gate::allows('User Delete'), 403);
+
+        $user->delete();
+        return redirect()->route('admin.users.index')->with('success', 'User has been deleted');
     }
 }

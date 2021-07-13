@@ -11,12 +11,16 @@ class RolesController extends Controller
 {
     public function index()
     {
+        abort_unless(\Gate::allows('Roles Access'), 403);
+
         $roles = Role::get();
         return view('admin.roles.index', compact('roles'));
     }
 
     public function create()
     {
+        abort_unless(\Gate::allows('Roles Create'), 403);
+
         $permissions = Permission::all();
 
         return view('admin.roles.create', compact('permissions'));
@@ -24,6 +28,8 @@ class RolesController extends Controller
 
     public function store(StoreRoleRequest $request)
     {
+        abort_unless(\Gate::allows('Roles Create'), 403);
+
         $role = Role::create(['name' => $request->input('name')]);
         $role->syncPermissions($request->input('permission'));
 
@@ -35,14 +41,10 @@ class RolesController extends Controller
         //
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function edit(Role $role)
     {
+        abort_unless(\Gate::allows('Roles Edit'), 403);
+
         $permissions = Permission::all();
         $rolePermissions = \DB::table("role_has_permissions")->join('permissions', 'role_has_permissions.permission_id', '=', 'permissions.id')->where("role_has_permissions.role_id", $role->id)
             ->get();
@@ -52,6 +54,8 @@ class RolesController extends Controller
 
     public function update(UpdateRoleRequest $request, Role $role)
     {
+        abort_unless(\Gate::allows('Roles Edit'), 403);
+
         $role->update(['name' => $request->input('name')]);
         $role->syncPermissions($request->input('permission'));
 
@@ -60,6 +64,8 @@ class RolesController extends Controller
 
     public function destroy(Role $role)
     {
+        abort_unless(\Gate::allows('Roles Delete'), 403);
+
         $role->delete();
         return redirect()->route('admin.roles.index')->with('success', 'Role has been deleted');
     }

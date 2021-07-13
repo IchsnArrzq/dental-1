@@ -3,7 +3,7 @@
 @section('content')
 <div class="row">
     <div class="col-md-6">
-        <h1 class="page-title">Permissions</h1>
+        <h1 class="page-title">Add Permissions</h1>
         <div class="card">
             <div class="card-header">
                 <h5 class="text-bold card-title">Add Permissions</h5>

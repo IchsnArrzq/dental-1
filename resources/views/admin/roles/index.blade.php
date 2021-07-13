@@ -13,7 +13,9 @@
             </div>
 
             <div class="card-body">
+                @can('Roles Access')
                 <a href="{{ route('admin.roles.create') }}" class="btn btn-primary mb-3"><i class="fa fa-plus"></i> Add Role</a>
+                @endcan
                 <table class="table table-bordered table-striped">
                     <thead>
                         <tr>
@@ -40,12 +42,16 @@
                                 @endforeach
                             </td>
                             <td>
+                                @can('Roles Edit')
                                 <a href="{{ route('admin.roles.edit', $role->id) }}" class="btn btn-sm btn-info"><i class="fa fa-edit"></i></a>
+                                @endcan
+                                @can('Roles Delete')
                                 <form action="{{ route('admin.roles.destroy', $role->id) }}" method="post" style="display: inline;" class="delete-form">
                                     @method('DELETE')
                                     @csrf
                                     <button type="submit" class="btn btn-sm btn-danger"><i class="fa fa-trash"></i></button>
                                 </form>
+                                @endcan
                             </td>
                         </tr>
                         @endforeach

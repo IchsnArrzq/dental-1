@@ -16,6 +16,16 @@
 		<script src="{{ asset('/') }}js/html5shiv.min.js"></script>
 		<script src="{{ asset('/') }}js/respond.min.js"></script>
 	<![endif]-->
+
+    <style>
+        .select2-container {
+            width: 100% !important;
+        }
+
+        .select2-search--dropdown .select2-search__field {
+            width: 98%;
+        }
+    </style>
 </head>
 
 <body>
@@ -39,7 +49,12 @@
                         <a class="dropdown-item" href="profile.html">My Profile</a>
                         <a class="dropdown-item" href="edit-profile.html">Edit Profile</a>
                         <a class="dropdown-item" href="settings.html">Settings</a>
-                        <a class="dropdown-item" href="login.html">Logout</a>
+                        <a class="dropdown-item" href="{{ route('logout') }}" onclick="event.preventDefault();
+                    document.getElementById('logout-form').submit();">Logout</a>
+
+                        <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
+                            @csrf
+                        </form>
                     </div>
                 </li>
             </ul>
@@ -49,7 +64,12 @@
                     <a class="dropdown-item" href="profile.html">My Profile</a>
                     <a class="dropdown-item" href="edit-profile.html">Edit Profile</a>
                     <a class="dropdown-item" href="settings.html">Settings</a>
-                    <a class="dropdown-item" href="login.html">Logout</a>
+                    <a class="dropdown-item" href="{{ route('logout') }}" onclick="event.preventDefault();
+                    document.getElementById('logout-form').submit();">Logout</a>
+
+                    <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
+                        @csrf
+                    </form>
                 </div>
             </div>
         </div>
@@ -70,19 +90,29 @@
                         <li>
                             <a href="appointments.html"><i class="fa fa-calendar"></i> <span>Appointments</span></a>
                         </li>
+                        @can('User Access')
                         <li class="{{ (request()->is('admin/users*')) ? 'active' : '' }}">
                             <a href="{{ route('admin.users.index') }}"><i class="fa fa-users"></i> <span>Master User</span></a>
                         </li>
-                        <li class="{{ (request()->is('admin/users*')) ? 'active' : '' }}">
-                            <a href="{{ route('admin.users.index') }}"><i class="fa fa-shop"></i> <span>Master Cabang</span></a>
+                        @endcan
+                        @can('Warehouse Access')
+                        <li class="{{ (request()->is('admin/warehouse*')) ? 'active' : '' }}">
+                            <a href="{{ route('admin.warehouse.index') }}"><i class="fa fa-building"></i> <span>Master Warehouse</span></a>
                         </li>
+                        @endcan
+                        @role('Super Admin')
                         <li class="submenu">
                             <a href="#" class=""><i class="fa fa-cog"></i> <span> Settings </span> <span class="menu-arrow"></span></a>
                             <ul style="display: none;">
+                                @can('Permission Access')
                                 <li><a href="{{ route('admin.permissions.index') }}">Permissions</a></li>
+                                @endcan
+                                @can('Roles Access')
                                 <li><a href="{{ route('admin.roles.index') }}">Roles</a></li>
+                                @endcan
                             </ul>
                         </li>
+                        @endrole
                     </ul>
                 </div>
             </div>

@@ -25,13 +25,16 @@ Route::middleware('auth')->group(function () {
     Route::get('/dashboard', 'DashboardController@index')->name('dashboard');
 
     Route::group(['prefix' => 'admin', 'as' => 'admin.', 'namespace' => 'Admin'], function () {
-        // Route Master User
-        Route::resource('users', 'UserController');
-
         // Route Permissions
         Route::resource('permissions', 'PermissionController');
 
         // Route Roles
         Route::resource('roles', 'RolesController');
+
+        // Route Master User
+        Route::resource('users', 'UserController');
+
+        // Route Master Cabang
+        Route::resource('warehouse', 'WarehouseController');
     });
 });
