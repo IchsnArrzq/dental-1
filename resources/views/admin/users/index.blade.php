@@ -13,51 +13,55 @@
             </div>
 
             <div class="card-body">
-                @can('User Create')
+                @can('user-create')
                 <a href="{{ route('admin.users.create') }}" class="btn btn-primary mb-3"><i class="fa fa-plus"></i> Add User</a>
                 @endcan
-                <table class="table table-bordered table-striped">
-                    <thead>
-                        <tr>
-                            <th>No</th>
-                            <th>Nama</th>
-                            <th>Email</th>
-                            <th>Role</th>
-                            <th>Cabang</th>
-                            <th>Mac Address</th>
-                            <th>Action</th>
-                        </tr>
-                    </thead>
+                <div class="table-responsive">
+                    <table class="table table-bordered table-striped">
+                        <thead>
+                            <tr>
+                                <th></th>
+                                <th>No</th>
+                                <th>Nama</th>
+                                <th>Email</th>
+                                <th>Role</th>
+                                <th>Cabang</th>
+                                <th>Mac Address</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
 
-                    <tbody>
-                        @foreach($users as $user)
-                        <tr>
-                            <td>{{ $loop->iteration }}</td>
-                            <td>{{ $user->name }}</td>
-                            <td>{{ $user->email }}</td>
-                            <td>
-                                @foreach($user->roles as $role)
-                                <span class="badge badge-primary">{{ $role->name }}</span>
-                                @endforeach
-                            </td>
-                            <td>{{ $user->warehouse->nama }}</td>
-                            <td>{{ $user->mac_address }}</td>
-                            <td>
-                                @can('User Edit')
-                                <a href="{{ route('admin.users.edit', $user->id) }}" class="btn btn-sm btn-info"><i class="fa fa-edit"></i></a>
-                                @endcan
-                                @can('User Delete')
-                                <form action="{{ route('admin.users.destroy', $user->id) }}" method="post" style="display: inline;" class="delete-form">
-                                    @method('DELETE')
-                                    @csrf
-                                    <button type="submit" class="btn btn-sm btn-danger"><i class="fa fa-trash"></i></button>
-                                </form>
-                                @endcan
-                            </td>
-                        </tr>
-                        @endforeach
-                    </tbody>
-                </table>
+                        <tbody>
+                            @foreach($users as $user)
+                            <tr>
+                                <td></td>
+                                <td>{{ $loop->iteration }}</td>
+                                <td>{{ $user->name }}</td>
+                                <td>{{ $user->email }}</td>
+                                <td>
+                                    @foreach($user->roles as $role)
+                                    <span class="custom-badge status-blue">{{ $role->name }}</span>
+                                    @endforeach
+                                </td>
+                                <td>{{ $user->warehouse->nama }}</td>
+                                <td>{{ $user->mac_address }}</td>
+                                <td>
+                                    @can('user-edit')
+                                    <a href="{{ route('admin.users.edit', $user->id) }}" class="btn btn-sm btn-info"><i class="fa fa-edit"></i></a>
+                                    @endcan
+                                    @can('user-delete')
+                                    <form action="{{ route('admin.users.destroy', $user->id) }}" method="post" style="display: inline;" class="delete-form">
+                                        @method('DELETE')
+                                        @csrf
+                                        <button type="submit" class="btn btn-sm btn-danger"><i class="fa fa-trash"></i></button>
+                                    </form>
+                                    @endcan
+                                </td>
+                            </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
     </div>

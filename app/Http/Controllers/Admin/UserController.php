@@ -16,7 +16,7 @@ class UserController extends Controller
 {
     public function index()
     {
-        abort_unless(Gate::allows('User Access'), 403);
+        abort_unless(Gate::allows('user-access'), 403);
 
         $users = User::with('warehouse')->get();
 
@@ -25,7 +25,7 @@ class UserController extends Controller
 
     public function create()
     {
-        abort_unless(Gate::allows('User Create'), 403);
+        abort_unless(Gate::allows('user-create'), 403);
 
         $roles = Role::get();
         $warehouses = Warehouse::get();
@@ -35,7 +35,7 @@ class UserController extends Controller
 
     public function store(StoreUserRequest $request)
     {
-        abort_unless(Gate::allows('User Create'), 403);
+        abort_unless(Gate::allows('user-create'), 403);
 
         $attr = $request->all();
         $image = $request->file('image');
@@ -55,7 +55,7 @@ class UserController extends Controller
 
     public function edit(User $user)
     {
-        abort_unless(Gate::allows('User Edit'), 403);
+        abort_unless(Gate::allows('user-edit'), 403);
 
         $roles = Role::get();
         $warehouses = Warehouse::get();
@@ -65,7 +65,7 @@ class UserController extends Controller
 
     public function update(UpdateUserRequest $request, User $user)
     {
-        abort_unless(Gate::allows('User Edit'), 403);
+        abort_unless(Gate::allows('user-edit'), 403);
 
         $attr = $request->all();
 
@@ -93,7 +93,7 @@ class UserController extends Controller
 
     public function destroy(User $user)
     {
-        abort_unless(Gate::allows('User Delete'), 403);
+        abort_unless(Gate::allows('user-delete'), 403);
 
         $user->delete();
         return redirect()->route('admin.users.index')->with('success', 'User has been deleted');

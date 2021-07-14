@@ -26,7 +26,7 @@ class UpdateWarehouseRequest extends FormRequest
         return [
             'nama' => 'required',
             'email' => 'required',
-            'telepon' => 'required',
+            'telpon' => 'required',
             'wa' => 'required',
             'alamat' => 'required',
         ];
@@ -37,7 +37,7 @@ class UpdateWarehouseRequest extends FormRequest
         return [
             'nama.required' => 'The Name field is required.',
             'email.required' => 'The Email field is required.',
-            'telepon.required' => 'The Phone field is required.',
+            'telpon.required' => 'The Phone field is required.',
             'wa.required' => 'The Whatsapp field is required.',
             'alamat.required' => 'The Address field is required.',
         ];

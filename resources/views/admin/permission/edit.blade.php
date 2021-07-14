@@ -15,7 +15,7 @@
                     @csrf
                     <div class="form-group">
                         <label>Name</label>
-                        <input type="text" name="name" id="name" class="form-control" value="{{ $permission->name }}">
+                        <input type="text" name="name" id="name" class="form-control" value="{{ $permission->key }}">
                     </div>
 
                     <button type="submit" class="btn btn-primary"><i class="fa fa-save"></i> Save</button>

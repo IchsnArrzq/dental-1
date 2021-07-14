@@ -25,7 +25,7 @@
                         <label>Permissions</label>
                         <select name="permission[]" id="permisson" class="form-control select2" multiple>
                             @foreach($permissions as $permission)
-                            <option value="{{ $permission->id }}">{{ $permission->name }}</option>
+                            <option value="{{ $permission->id }}">{{ $permission->key }}</option>
                             @endforeach
                         </select>
 

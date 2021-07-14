@@ -23,9 +23,9 @@
 
                     <div class="form-group">
                         <label>Phone</label>
-                        <input type="number" name="telepon" id="phone" class="form-control">
+                        <input type="number" name="telpon" id="phone" class="form-control">
 
-                        @error('telepon')
+                        @error('telpon')
                         <small class="text-danger">{{ $message }}</small>
                         @enderror
                     </div>

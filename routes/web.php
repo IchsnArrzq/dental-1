@@ -36,5 +36,17 @@ Route::middleware('auth')->group(function () {
 
         // Route Master Cabang
         Route::resource('warehouse', 'WarehouseController');
+
+        // Route Master Barang
+        Route::resource('product', 'BarangController');
+
+        // Route Master Service
+        Route::resource('service', 'ServiceController');
+
+        // Route Harga Barang Cabang
+        Route::get('price-product/{warehouse:id}/create', 'HargaBarangController@create');
+        Route::get('price-service/{warehouse:id}/create', 'HargaBarangController@create');
+        Route::resource('price-product', 'HargaBarangController');
+        Route::resource('price-service', 'HargaBarangController');
     });
 });

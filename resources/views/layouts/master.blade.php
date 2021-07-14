@@ -9,13 +9,16 @@
     <link rel="stylesheet" type="text/css" href="{{ asset('/') }}css/bootstrap.min.css">
     <link rel="stylesheet" type="text/css" href="{{ asset('/') }}css/font-awesome.min.css">
     <link rel="stylesheet" type="text/css" href="{{ asset('/') }}css/style.css">
-    <link rel="stylesheet" type="text/css" href="{{ asset('/') }}css/dataTables.bootstrap4.min.css">
+
+    <!-- Sweetalert -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/11.0.18/sweetalert2.min.css" integrity="sha512-riZwnB8ebhwOVAUlYoILfran/fH0deyunXyJZ+yJGDyU0Y8gsDGtPHn1eh276aNADKgFERecHecJgkzcE9J3Lg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <!-- Select2 -->
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
-    <!--[if lt IE 9]>
-		<script src="{{ asset('/') }}js/html5shiv.min.js"></script>
-		<script src="{{ asset('/') }}js/respond.min.js"></script>
-	<![endif]-->
+    <!-- Datatables -->
+    <link rel="stylesheet" type="text/css" href="{{ asset('/') }}css/dataTables.bootstrap4.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/fixedheader/3.1.7/css/fixedHeader.bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.2.6/css/responsive.bootstrap4.min.css">
+
 
     <style>
         .select2-container {
@@ -24,6 +27,10 @@
 
         .select2-search--dropdown .select2-search__field {
             width: 98%;
+        }
+
+        th {
+            color: #565656 !important;
         }
     </style>
 </head>
@@ -90,24 +97,34 @@
                         <li>
                             <a href="appointments.html"><i class="fa fa-calendar"></i> <span>Appointments</span></a>
                         </li>
-                        @can('User Access')
+                        @can('user-access')
                         <li class="{{ (request()->is('admin/users*')) ? 'active' : '' }}">
                             <a href="{{ route('admin.users.index') }}"><i class="fa fa-users"></i> <span>Master User</span></a>
                         </li>
                         @endcan
-                        @can('Warehouse Access')
+                        @can('warehouse-access')
                         <li class="{{ (request()->is('admin/warehouse*')) ? 'active' : '' }}">
                             <a href="{{ route('admin.warehouse.index') }}"><i class="fa fa-building"></i> <span>Master Warehouse</span></a>
                         </li>
                         @endcan
-                        @role('Super Admin')
+                        @can('product-access')
+                        <li class="{{ (request()->is('admin/product*')) ? 'active' : '' }}">
+                            <a href="{{ route('admin.product.index') }}"><i class="fa fa-tag"></i> <span>Master Product</span></a>
+                        </li>
+                        @endcan
+                        @can('service-access')
+                        <li class="{{ (request()->is('admin/service*')) ? 'active' : '' }}">
+                            <a href="{{ route('admin.service.index') }}"><i class="fa fa-stethoscope"></i> <span>Master Service</span></a>
+                        </li>
+                        @endcan
+                        @role('super-admin')
                         <li class="submenu">
                             <a href="#" class=""><i class="fa fa-cog"></i> <span> Settings </span> <span class="menu-arrow"></span></a>
                             <ul style="display: none;">
-                                @can('Permission Access')
+                                @can('permission-access')
                                 <li><a href="{{ route('admin.permissions.index') }}">Permissions</a></li>
                                 @endcan
-                                @can('Roles Access')
+                                @can('roles-access')
                                 <li><a href="{{ route('admin.roles.index') }}">Roles</a></li>
                                 @endcan
                             </ul>
@@ -129,14 +146,37 @@
     <script src="{{ asset('/') }}js/bootstrap.min.js"></script>
     <script src="{{ asset('/') }}js/jquery.slimscroll.js"></script>
     <script src="{{ asset('/') }}js/app.js"></script>
+    <!-- Sweetalert -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/11.0.18/sweetalert2.min.js" integrity="sha512-mBSqtiBr4vcvTb6BCuIAgVx4uF3EVlVvJ2j+Z9USL0VwgL9liZ638rTANn5m1br7iupcjjg/LIl5cCYcNae7Yg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <!-- Select2 -->
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    <!-- Datatables -->
     <script src="{{ asset('/') }}js/jquery.dataTables.min.js"></script>
     <script src="{{ asset('/') }}js/dataTables.bootstrap4.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/11.0.18/sweetalert2.min.js" integrity="sha512-mBSqtiBr4vcvTb6BCuIAgVx4uF3EVlVvJ2j+Z9USL0VwgL9liZ638rTANn5m1br7iupcjjg/LIl5cCYcNae7Yg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    <script src="https://cdn.datatables.net/fixedheader/3.1.7/js/dataTables.fixedHeader.min.js"></script>
+    <script src="https://cdn.datatables.net/responsive/2.2.6/js/dataTables.responsive.min.js"></script>
+    <script src="https://cdn.datatables.net/responsive/2.2.6/js/responsive.bootstrap.min.js"></script>
 
     <script>
         $(document).ready(function() {
-            $('.table').DataTable()
+            var table = $('.table').DataTable({
+                responsive: {
+                    details: {
+                        type: 'column'
+                    }
+                },
+                columnDefs: [{
+                        className: 'dtr-control',
+                        responsivePriority: 1,
+                        targets: 0
+                    },
+                    {
+                        responsivePriority: 2,
+                        targets: 1
+                    }
+                ]
+            });
+
             $('.select2').select2();
         })
 

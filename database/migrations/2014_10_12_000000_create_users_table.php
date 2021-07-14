@@ -21,13 +21,12 @@ class CreateUsersTable extends Migration
             $table->string('password');
             $table->rememberToken();
             $table->timestamp('deleted_at')->nullable();
-            $table->integer('theme_color');
             $table->string('phone_number')->nullable();
             $table->integer('is_active');
-            $table->foreignId('cabang_id');
+            $table->foreignId('cabang_id')->nullable();
             $table->string('mac_address')->nullable();
             $table->enum('is_verified', ['pending', 'verified']);
-            $table->integer('updated_by');
+            $table->integer('updated_by')->nullable();
             $table->string('image')->nullable();
             $table->text('address')->nullable();
             $table->timestamps();
