@@ -26,4 +26,9 @@ class User extends Authenticatable
     {
         return $this->belongsTo(Warehouse::class, 'cabang_id');
     }
+
+    public function customer()
+    {
+        return $this->hasMany(Customer::class);
+    }
 }

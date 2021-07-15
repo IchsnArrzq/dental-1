@@ -17,4 +17,9 @@ class Warehouse extends Model
     {
         return $this->hasMany(HargaProdukCabang::class, 'cabang_id');
     }
+
+    public function customer()
+    {
+        return $this->hasMany(Customer::class, 'cabang_id');
+    }
 }

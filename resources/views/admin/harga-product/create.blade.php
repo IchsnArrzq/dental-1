@@ -22,7 +22,7 @@
             </div>
 
             <div class="card-body">
-                <form action="{{ route('admin.price-product.store') }}" method="post">
+                <form action="/admin/price/store" method="post">
                     @csrf
                     <input type="hidden" name="cabang_id" value="{{ $warehouse->id }}">
                     <div class="form-group">

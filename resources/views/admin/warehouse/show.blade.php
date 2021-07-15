@@ -40,10 +40,10 @@
                                 <td>{{ $service->product->durasi }}</td>
                                 <td>
                                     @can('product-edit')
-                                    <a href="{{ route('admin.price-service.edit', $service->id) }}" class="btn btn-sm btn-info"><i class="fa fa-edit"></i></a>
+                                    <a href="/admin/price-service/{{ $service->id }}/edit" class="btn btn-sm btn-info"><i class="fa fa-edit"></i></a>
                                     @endcan
                                     @can('product-delete')
-                                    <form action="{{ route('admin.product.destroy', $service->id) }}" method="post" style="display: inline;" class="delete-form">
+                                    <form action="/admin/price/{{ $service->id }}/destroy" method="post" style="display: inline;" class="delete-form">
                                         @method('DELETE')
                                         @csrf
                                         <button type="submit" class="btn btn-sm btn-danger"><i class="fa fa-trash"></i></button>
@@ -88,11 +88,10 @@
                                 <td>{{ $product->product->nama_barang }}</td>
                                 <td>@currency($product->harga)</td>
                                 <td>
-                                    @can('product-edit')
-                                    <a href="" class="btn btn-sm btn-info"><i class="fa fa-edit"></i></a>
-                                    @endcan
+                                    <a href="/admin/price-product/{{ $product->id }}/edit" class="btn btn-sm btn-info"><i class="fa fa-edit"></i></a>
+
                                     @can('product-delete')
-                                    <form action="{{ route('admin.product.destroy', $product->id) }}" method="post" style="display: inline;" class="delete-form">
+                                    <form action="/admin/price/{{ $product->id }}/destroy" method="post" style="display: inline;" class="delete-form">
                                         @method('DELETE')
                                         @csrf
                                         <button type="submit" class="btn btn-sm btn-danger"><i class="fa fa-trash"></i></button>

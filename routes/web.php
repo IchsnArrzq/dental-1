@@ -44,9 +44,16 @@ Route::middleware('auth')->group(function () {
         Route::resource('service', 'ServiceController');
 
         // Route Harga Barang Cabang
-        Route::get('price-product/{warehouse:id}/create', 'HargaBarangController@create');
         Route::get('price-service/{warehouse:id}/create', 'HargaBarangController@create');
-        Route::resource('price-product', 'HargaBarangController');
-        Route::resource('price-service', 'HargaBarangController');
+        Route::get('price-service/{hargaProdukCabang:id}/edit', 'HargaBarangController@edit');
+        Route::get('price-product/{warehouse:id}/create', 'HargaBarangController@create');
+        Route::get('price-product/{hargaProdukCabang:id}/edit', 'HargaBarangController@edit');
+
+        Route::post('price/store', 'HargaBarangController@store');
+        Route::patch('price/{hargaProdukCabang:id}/update', 'HargaBarangController@update');
+        Route::delete('price/{hargaProdukCabang:id}/destroy', 'HargaBarangController@destroy');
+
+        // Route Master Patient
+        Route::resource('patients', 'PatientController');
     });
 });

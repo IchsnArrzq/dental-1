@@ -13,7 +13,7 @@ class UpdatePriceRequest extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        return true;
     }
 
     /**
@@ -24,7 +24,16 @@ class UpdatePriceRequest extends FormRequest
     public function rules()
     {
         return [
-            //
+            'barang_id' => 'required',
+            'harga' => 'required',
+        ];
+    }
+
+    public function messages()
+    {
+        return [
+            'barang_id.required' => 'Choose the Product.',
+            'harga.required' => 'The Price field is required.',
         ];
     }
 }

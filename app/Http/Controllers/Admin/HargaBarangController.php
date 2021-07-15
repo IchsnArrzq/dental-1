@@ -29,7 +29,7 @@ class HargaBarangController extends Controller
     {
         HargaProdukCabang::create($request->all());
 
-        return redirect()->route('admin.warehouse.show', $request->input('cabang_id'))->with('success', 'Price Product has been added');
+        return redirect()->route('admin.warehouse.show', $request->input('cabang_id'))->with('success', 'Price has been added');
     }
 
     public function show($id)
@@ -50,13 +50,19 @@ class HargaBarangController extends Controller
         return view('admin.harga-product.edit', compact('price', 'products'));
     }
 
-    public function update(UpdatePriceRequest $request, HargaProdukCabang $price)
+    public function update(UpdatePriceRequest $request, $id)
     {
-        return $price;
+        $price = HargaProdukCabang::with('warehouse', 'product')->where('id', $id)->first();
+
+        $price->update($request->all());
+        return redirect()->route('admin.warehouse.show', $price->cabang_id)->with('success', 'Price has been updated');
     }
 
     public function destroy($id)
     {
-        //
+        $price = HargaProdukCabang::with('warehouse', 'product')->where('id', $id)->first();
+
+        $price->delete();
+        return redirect()->back()->with('success', 'Price has been deleted');
     }
 }

@@ -91,9 +91,11 @@
                         <li>
                             <a href="doctors.html"><i class="fa fa-user-md"></i> <span>Doctors</span></a>
                         </li>
-                        <li>
-                            <a href="patients.html"><i class="fa fa-wheelchair"></i> <span>Patients</span></a>
+                        @can('patient-access')
+                        <li class="{{ (request()->is('admin/patients*')) ? 'active' : '' }}">
+                            <a href="{{ route('admin.patients.index') }}"><i class="fa fa-wheelchair"></i> <span>Patients</span></a>
                         </li>
+                        @endcan
                         <li>
                             <a href="appointments.html"><i class="fa fa-calendar"></i> <span>Appointments</span></a>
                         </li>
