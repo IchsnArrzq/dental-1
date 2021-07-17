@@ -13,7 +13,7 @@ class UserSeeder extends Seeder
      */
     public function run()
     {
-        User::create([
+        $user = User::create([
             'name' => 'Developer',
             'email' => 'admin@localhost.com',
             'password' => Hash::make('admin'),

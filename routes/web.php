@@ -35,7 +35,7 @@ Route::middleware('auth')->group(function () {
         Route::resource('users', 'UserController');
 
         // Route Master Cabang
-        Route::resource('warehouse', 'WarehouseController');
+        Route::resource('cabang', 'CabangController');
 
         // Route Master Barang
         Route::resource('product', 'BarangController');
@@ -55,5 +55,14 @@ Route::middleware('auth')->group(function () {
 
         // Route Master Patient
         Route::resource('patients', 'PatientController');
+
+        // Route Master Payments
+        Route::resource('payments', 'PaymentController');
+
+        // Route Master Status Pasien
+        Route::resource('status', 'StatusPasienController');
+
+        // Route Master Voucher
+        Route::resource('voucher', 'VoucherController');
     });
 });

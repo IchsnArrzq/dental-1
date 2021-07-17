@@ -21,7 +21,7 @@ class RolesController extends Controller
     {
         abort_unless(\Gate::allows('roles-create'), 403);
 
-        $permissions = Permission::all();
+        $permissions = Permission::orderBy('Name', 'ASC')->get();
 
         return view('admin.roles.create', compact('permissions'));
     }
@@ -53,7 +53,7 @@ class RolesController extends Controller
     {
         abort_unless(\Gate::allows('roles-edit'), 403);
 
-        $permissions = Permission::all();
+        $permissions = Permission::orderBy('Name', 'ASC')->get();
         $rolePermissions = \DB::table("role_has_permissions")->join('permissions', 'role_has_permissions.permission_id', '=', 'permissions.id')->where("role_has_permissions.role_id", $role->id)
             ->get();
 

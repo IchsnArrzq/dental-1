@@ -12,7 +12,7 @@ class PatientController extends Controller
 {
     public function index()
     {
-        $patients = Customer::with('user', 'warehouse')->get();
+        $patients = Customer::with('user', 'cabang')->get();
         return view('admin.patient.index', compact('patients'));
     }
 

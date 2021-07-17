@@ -50,7 +50,7 @@
                                 <td>{{ $patient->alamat }}</td>
                                 <td>{{ $patient->pekerjaan }}</td>
                                 <td>{{ $patient->user->name }}</td>
-                                <td>{{ $patient->warehouse->nama }}</td>
+                                <td>{{ $patient->cabang->nama }}</td>
                                 <td>
                                     @can('patient-show')
                                     <a href="{{ route('admin.patients.show', $patient->id) }}" class="btn btn-sm btn-success"><i class="fa fa-eye"></i></a>

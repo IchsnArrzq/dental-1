@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\UpdateUserRequest;
-use App\{User, Warehouse};
+use App\{User, Cabang};
 use App\Http\Requests\StoreUserRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
@@ -16,9 +16,9 @@ class UserController extends Controller
 {
     public function index()
     {
-        abort_unless(Gate::allows('user-access'), 403);
+        // abort_unless(Gate::allows('user-access'), 403);
 
-        $users = User::with('warehouse')->get();
+        $users = User::with('cabang')->get();
 
         return view('admin.users.index', compact('users'));
     }
@@ -28,7 +28,7 @@ class UserController extends Controller
         abort_unless(Gate::allows('user-create'), 403);
 
         $roles = Role::get();
-        $warehouses = Warehouse::get();
+        $warehouses = Cabang::get();
 
         return view('admin.users.create', compact('roles', 'warehouses'));
     }
@@ -55,17 +55,17 @@ class UserController extends Controller
 
     public function edit(User $user)
     {
-        abort_unless(Gate::allows('user-edit'), 403);
+        // abort_unless(Gate::allows('user-edit'), 403);
 
         $roles = Role::get();
-        $warehouses = Warehouse::get();
+        $warehouses = Cabang::get();
 
         return view('admin.users.edit', compact('user', 'roles', 'warehouses'));
     }
 
     public function update(UpdateUserRequest $request, User $user)
     {
-        abort_unless(Gate::allows('user-edit'), 403);
+        // abort_unless(Gate::allows('user-edit'), 403);
 
         $attr = $request->all();
 

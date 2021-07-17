@@ -20,15 +20,15 @@ class CreateUsersTable extends Migration
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->rememberToken();
-            $table->timestamp('deleted_at')->nullable();
             $table->string('phone_number')->nullable();
             $table->integer('is_active');
             $table->foreignId('cabang_id')->nullable();
             $table->string('mac_address')->nullable();
             $table->enum('is_verified', ['pending', 'verified']);
             $table->integer('updated_by')->nullable();
-            $table->string('image')->nullable();
             $table->text('address')->nullable();
+            $table->string('image')->nullable();
+            $table->timestamp('deleted_at')->nullable();
             $table->timestamps();
         });
     }

@@ -69,7 +69,7 @@
                                 <select name="cabang_id" id="cabang" class="form-control">
                                     <option disabled selected>-- Select Cabang --</option>
                                     @foreach($warehouses as $warehouse)
-                                    <option {{ $user->warehouse->id == $warehouse->id ? 'selected' : '' }} value="{{ $warehouse->id }}">{{ $warehouse->nama }}</option>
+                                    <option value="{{ $warehouse->id }}">{{ $warehouse->nama }}</option>
                                     @endforeach
                                 </select>
 

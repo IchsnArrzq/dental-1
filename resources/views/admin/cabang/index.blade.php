@@ -1,20 +1,20 @@
-@extends('layouts.master', ['title' => 'Warehouse'])
+@extends('layouts.master', ['title' => 'Cabang'])
 
 @section('content')
 <div class="row">
     <div class="col-md-12">
-        <h1 class="page-title">Warehouse</h1>
+        <h1 class="page-title">Cabang</h1>
 
         <x-alert></x-alert>
 
         <div class="card">
             <div class="card-header">
-                <h5 class="text-bold card-title">Master Warehouse</h5>
+                <h5 class="text-bold card-title">Master Cabang</h5>
             </div>
 
             <div class="card-body">
-                @can('warehouse-create')
-                <a href="{{ route('admin.warehouse.create') }}" class="btn btn-primary mb-3"><i class="fa fa-plus"></i> Add Warehouse</a>
+                @can('cabang-create')
+                <a href="{{ route('admin.cabang.create') }}" class="btn btn-primary mb-3"><i class="fa fa-plus"></i> Add Cabang</a>
                 @endcan
                 <div class="table-responsive">
                     <table class="table table-bordered table-striped">
@@ -32,21 +32,21 @@
                         </thead>
 
                         <tbody>
-                            @foreach($warehouses as $warehouse)
+                            @foreach($cabangs as $cabang)
                             <tr>
                                 <td></td>
                                 <td>{{ $loop->iteration }}</td>
-                                <td><a href="{{ route('admin.warehouse.show', $warehouse->id) }}">{{ $warehouse->nama }}</a></td>
-                                <td>{{ $warehouse->alamat }}</td>
-                                <td>{{ $warehouse->telpon }}</td>
-                                <td>{{ $warehouse->email }}</td>
-                                <td>{{ $warehouse->wa }}</td>
+                                <td><a href="{{ route('admin.cabang.show', $cabang->id) }}">{{ $cabang->nama }}</a></td>
+                                <td>{{ $cabang->alamat }}</td>
+                                <td>{{ $cabang->telpon }}</td>
+                                <td>{{ $cabang->email }}</td>
+                                <td>{{ $cabang->wa }}</td>
                                 <td>
-                                    @can('warehouse-edit')
-                                    <a href="{{ route('admin.warehouse.edit', $warehouse->id) }}" class="btn btn-sm btn-info"><i class="fa fa-edit"></i></a>
+                                    @can('cabang-edit')
+                                    <a href="{{ route('admin.cabang.edit', $cabang->id) }}" class="btn btn-sm btn-info"><i class="fa fa-edit"></i></a>
                                     @endcan
-                                    @can('warehouse-delete')
-                                    <form action="{{ route('admin.warehouse.destroy', $warehouse->id) }}" method="post" style="display: inline;" class="delete-form">
+                                    @can('cabang-delete')
+                                    <form action="{{ route('admin.cabang.destroy', $cabang->id) }}" method="post" style="display: inline;" class="delete-form">
                                         @method('DELETE')
                                         @csrf
                                         <button type="submit" class="btn btn-sm btn-danger delete"><i class="fa fa-trash"></i></button>

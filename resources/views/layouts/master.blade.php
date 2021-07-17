@@ -104,14 +104,14 @@
                             <a href="{{ route('admin.users.index') }}"><i class="fa fa-users"></i> <span>Master User</span></a>
                         </li>
                         @endcan
-                        @can('warehouse-access')
-                        <li class="{{ (request()->is('admin/warehouse*')) ? 'active' : '' }}">
-                            <a href="{{ route('admin.warehouse.index') }}"><i class="fa fa-building"></i> <span>Master Warehouse</span></a>
+                        @can('cabang-access')
+                        <li class="{{ (request()->is('admin/cabang*')) ? 'active' : '' }}">
+                            <a href="{{ route('admin.cabang.index') }}"><i class="fa fa-building"></i> <span>Master cabang</span></a>
                         </li>
                         @endcan
                         @can('product-access')
                         <li class="{{ (request()->is('admin/product*')) ? 'active' : '' }}">
-                            <a href="{{ route('admin.product.index') }}"><i class="fa fa-tag"></i> <span>Master Product</span></a>
+                            <a href="{{ route('admin.product.index') }}"><i class="fa fa-shopping-bag"></i> <span>Master Product</span></a>
                         </li>
                         @endcan
                         @can('service-access')
@@ -119,6 +119,31 @@
                             <a href="{{ route('admin.service.index') }}"><i class="fa fa-stethoscope"></i> <span>Master Service</span></a>
                         </li>
                         @endcan
+                        @can('service-access')
+                        <li class="{{ (request()->is('admin/payments*')) ? 'active' : '' }}">
+                            <a href="{{ route('admin.payments.index') }}"><i class="fa fa-credit-card"></i> <span>Master Payments</span></a>
+                        </li>
+                        @endcan
+                        @can('service-access')
+                        <li class="{{ (request()->is('admin/status*')) ? 'active' : '' }}">
+                            <a href="{{ route('admin.status.index') }}"><i class="fa fa-line-chart"></i> <span>Master Status</span></a>
+                        </li>
+                        @endcan
+                        @can('service-access')
+                        <li class="{{ (request()->is('admin/voucher*')) ? 'active' : '' }}">
+                            <a href="{{ route('admin.voucher.index') }}"><i class="fa fa-tags"></i> <span>Master Voucher</span></a>
+                        </li>
+                        @endcan
+                        <li class="submenu">
+                            <a href="#"><i class="fa fa-flag-o"></i> <span> Reports </span> <span class="menu-arrow"></span></a>
+                            <ul style="display: none;">
+                                <li><a href="expense-reports.html"> Laporan Appointment </a></li>
+                                <li><a href="invoice-reports.html"> Laporan Metode Pembayaran </a></li>
+                                <li><a href="invoice-reports.html"> Laporan Komisi </a></li>
+                                <li><a href="invoice-reports.html"> Laporan Pasien </a></li>
+                                <li><a href="invoice-reports.html"> Laporan Perpindahan Pasien </a></li>
+                            </ul>
+                        </li>
                         @role('super-admin')
                         <li class="submenu">
                             <a href="#" class=""><i class="fa fa-cog"></i> <span> Settings </span> <span class="menu-arrow"></span></a>

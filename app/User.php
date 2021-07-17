@@ -22,9 +22,9 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
-    public function warehouse()
+    public function cabang()
     {
-        return $this->belongsTo(Warehouse::class, 'cabang_id');
+        return $this->belongsTo(Cabang::class, 'cabang_id');
     }
 
     public function customer()

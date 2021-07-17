@@ -19,12 +19,15 @@ class CreateCustomersTable extends Migration
             $table->foreignId('cabang_id');
             $table->string('nama');
             $table->string('no_telp', 15);
+            $table->string('no_rek', 25);
             $table->string('email');
             $table->string('ttl');
             $table->enum('jk', ['Laki-Laki', 'Perempuan']);
             $table->string('suku');
+            $table->text('alamat');
             $table->string('pekerjaan');
             $table->string('pict');
+            $table->integer('is_active')->default(1);
             $table->timestamps();
         });
     }

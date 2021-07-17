@@ -58,8 +58,8 @@
                     <div class="form-group">
                         <label>Gender</label>
                         <div class="radio">
-                            <input type="radio" name="jk" id="jk" value="Male"> Male
-                            <input type="radio" name="jk" id="jk" value="Female" class="ml-3"> Female
+                            <input type="radio" name="jk" id="jk" value="Laki-Laki"> Laki-Laki
+                            <input type="radio" name="jk" id="jk" value="Perempuan" class="ml-3"> Perempuan
                         </div>
 
                         @error('jk')
@@ -81,6 +81,15 @@
                         <input type="text" name="pekerjaan" id="profession" class="form-control">
 
                         @error('pekerjaan')
+                        <small class="text-danger">{{ $message }}</small>
+                        @enderror
+                    </div>
+
+                    <div class="form-group">
+                        <label>Account Number</label>
+                        <input type="number" name="no_rek" id="profession" class="form-control">
+
+                        @error('no_rek')
                         <small class="text-danger">{{ $message }}</small>
                         @enderror
                     </div>

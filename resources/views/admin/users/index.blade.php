@@ -43,7 +43,7 @@
                                     <span class="custom-badge status-blue">{{ $role->name }}</span>
                                     @endforeach
                                 </td>
-                                <td>{{ $user->warehouse->nama }}</td>
+                                <td>{{ $user->name }}</td>
                                 <td>{{ $user->mac_address }}</td>
                                 <td>
                                     @can('user-edit')

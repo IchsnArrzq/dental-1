@@ -1,9 +1,9 @@
-@extends('layouts.master', ['title' => 'Warehouse'])
+@extends('layouts.master', ['title' => 'Cabang'])
 
 @section('content')
 <div class="row">
     <div class="col-md-12">
-        <h1 class="page-title">Name : {{ $warehouse->nama }}</h1>
+        <h1 class="page-title">Name : {{ $cabang->nama }}</h1>
 
         <x-alert></x-alert>
 
@@ -13,7 +13,7 @@
             </div>
 
             <div class="card-body">
-                <a href="/admin/price-service/{{ $warehouse->id }}/create" class=" btn btn-primary mb-3"><i class="fa fa-plus"></i> Add Price Service</a>
+                <a href="/admin/price-service/{{ $cabang->id }}/create" class=" btn btn-primary mb-3"><i class="fa fa-plus"></i> Add Price Service</a>
 
                 <div class="table-responsive">
                     <table class="table table-bordered table-striped">
@@ -64,7 +64,7 @@
             </div>
 
             <div class="card-body">
-                <a href="/admin/price-product/{{ $warehouse->id }}/create" class=" btn btn-primary mb-3"><i class="fa fa-plus"></i> Add Price Product</a>
+                <a href="/admin/price-product/{{ $cabang->id }}/create" class=" btn btn-primary mb-3"><i class="fa fa-plus"></i> Add Price Product</a>
 
                 <div class="table-responsive">
                     <table class="table table-bordered table-striped">
