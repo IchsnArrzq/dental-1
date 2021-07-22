@@ -16,7 +16,7 @@ class UserController extends Controller
 {
     public function index()
     {
-        // abort_unless(Gate::allows('user-access'), 403);
+        abort_unless(Gate::allows('user-access'), 403);
 
         $users = User::with('cabang')->get();
 

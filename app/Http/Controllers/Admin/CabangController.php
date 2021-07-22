@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreWarehouseRequest;
 use App\Http\Requests\UpdateWarehouseRequest;
-use App\{Cabang, Barang, HargaProdukCabang};
+use App\{Cabang, Barang, HargaProdukCabang, Ruangan};
 
 class CabangController extends Controller
 {
@@ -70,5 +70,11 @@ class CabangController extends Controller
         $cabang->delete();
 
         return redirect()->route('admin.cabang.index')->with('success', 'Cabang has been deleted');
+    }
+
+    public function ruangan(Cabang $cabang)
+    {
+        $ruangan = Ruangan::with('cabang')->where('cabang_id', $cabang->id)->get();
+        return view('admin.cabang.ruangan', compact('cabang', 'ruangan'));
     }
 }

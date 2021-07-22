@@ -89,7 +89,7 @@
                             <a href="/dashboard"><i class="fa fa-dashboard"></i> <span>Dashboard</span></a>
                         </li>
                         <li>
-                            <a href="doctors.html"><i class="fa fa-user-md"></i> <span>Doctors</span></a>
+                            <a href="{{ route('admin.dokter.index') }}"><i class="fa fa-user-md"></i> <span>Doctors</span></a>
                         </li>
                         @can('patient-access')
                         <li class="{{ (request()->is('admin/patients*')) ? 'active' : '' }}">
@@ -134,11 +134,14 @@
                             <a href="{{ route('admin.voucher.index') }}"><i class="fa fa-tags"></i> <span>Master Voucher</span></a>
                         </li>
                         @endcan
+                        <li class="{{ (request()->is('admin/komisi*')) ? 'active' : '' }}">
+                            <a href="{{ route('admin.komisi.index') }}"><i class="fa fa-money"></i> <span>Master Komisi</span></a>
+                        </li>
                         <li class="submenu">
                             <a href="#"><i class="fa fa-flag-o"></i> <span> Reports </span> <span class="menu-arrow"></span></a>
                             <ul style="display: none;">
                                 <li><a href="expense-reports.html"> Laporan Appointment </a></li>
-                                <li><a href="invoice-reports.html"> Laporan Metode Pembayaran </a></li>
+                                <li><a href="/admin/report/metode-pembayaran"> Laporan Metode Pembayaran </a></li>
                                 <li><a href="invoice-reports.html"> Laporan Komisi </a></li>
                                 <li><a href="invoice-reports.html"> Laporan Pasien </a></li>
                                 <li><a href="invoice-reports.html"> Laporan Perpindahan Pasien </a></li>

@@ -35,6 +35,7 @@ Route::middleware('auth')->group(function () {
         Route::resource('users', 'UserController');
 
         // Route Master Cabang
+        Route::get('cabang/{cabang:id}/ruangan', 'CabangController@ruangan');
         Route::resource('cabang', 'CabangController');
 
         // Route Master Barang
@@ -44,9 +45,9 @@ Route::middleware('auth')->group(function () {
         Route::resource('service', 'ServiceController');
 
         // Route Harga Barang Cabang
-        Route::get('price-service/{warehouse:id}/create', 'HargaBarangController@create');
+        Route::get('price-service/{cabang:id}/create', 'HargaBarangController@create');
         Route::get('price-service/{hargaProdukCabang:id}/edit', 'HargaBarangController@edit');
-        Route::get('price-product/{warehouse:id}/create', 'HargaBarangController@create');
+        Route::get('price-product/{cabang:id}/create', 'HargaBarangController@create');
         Route::get('price-product/{hargaProdukCabang:id}/edit', 'HargaBarangController@edit');
 
         Route::post('price/store', 'HargaBarangController@store');
@@ -64,5 +65,18 @@ Route::middleware('auth')->group(function () {
 
         // Route Master Voucher
         Route::resource('voucher', 'VoucherController');
+
+        // Route Master Komisi
+        Route::resource('komisi', 'KomisiController');
+
+        // Route Master Dokter
+        Route::resource('dokter', 'DokterController');
+
+        // Route Master Ruangan
+        Route::get('ruangan/{cabang:id}/create', 'RuanganController@create');
+        Route::resource('ruangan', 'RuanganController');
+
+        // Route Report
+        Route::get('report/metode-pembayaran', 'ReportController@metodePembayaran');
     });
 });

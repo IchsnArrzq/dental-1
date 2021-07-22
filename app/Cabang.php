@@ -15,11 +15,16 @@ class Cabang extends Model
 
     public function harga()
     {
-        return $this->hasMany(HargaProdukCabang::class, 'cabang_id');
+        return $this->hasMany(HargaProdukCabang::class);
     }
 
     public function customer()
     {
         return $this->hasMany(Customer::class, 'cabang_id');
+    }
+
+    public function ruangan()
+    {
+        return $this->hasMany(Ruangan::class);
     }
 }

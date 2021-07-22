@@ -24,7 +24,7 @@
             <div class="card-body">
                 <form action="/admin/price/store" method="post">
                     @csrf
-                    <input type="hidden" name="cabang_id" value="{{ $warehouse->id }}">
+                    <input type="hidden" name="cabang_id" value="{{ $cabang->id }}">
                     <div class="form-group">
                         <label>Product</label>
                         <select name="barang_id" id="product" class="form-control">

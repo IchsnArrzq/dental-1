@@ -42,6 +42,7 @@
                                 <td>{{ $cabang->email }}</td>
                                 <td>{{ $cabang->wa }}</td>
                                 <td>
+                                    <a href="/admin/cabang/{{ $cabang->id }}/ruangan" class="btn btn-sm btn-success"><i class="fa fa-home"></i></a>
                                     @can('cabang-edit')
                                     <a href="{{ route('admin.cabang.edit', $cabang->id) }}" class="btn btn-sm btn-info"><i class="fa fa-edit"></i></a>
                                     @endcan
