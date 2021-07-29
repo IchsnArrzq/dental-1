@@ -13,32 +13,8 @@
                 <form action="{{ route('admin.payments.update', $payment->id) }}" method="post">
                     @method('PATCH')
                     @csrf
-                    <div class="form-group">
-                        <label>Name</label>
-                        <input type="text" name="nama_metode" id="name" class="form-control" value="{{ $payment->nama_metode }}">
 
-                        @error('nama_metode')
-                        <small class="text-danger">{{ $message }}</small>
-                        @enderror
-                    </div>
-
-                    <div class="form-group">
-                        <label>Piece</label>
-                        <input type="text" name="potongan" id="potongan" class="form-control" value="{{ $payment->potongan }}">
-
-                        @error('potongan')
-                        <small class="text-danger">{{ $message }}</small>
-                        @enderror
-                    </div>
-
-                    <div class="form-group">
-                        <label>Account Number</label>
-                        <input type="text" name="rekening" id="rekening" class="form-control" value="{{ $payment->rekening }}">
-
-                        @error('rekening')
-                        <small class="text-danger">{{ $message }}</small>
-                        @enderror
-                    </div>
+                    @include('admin.payment.form')
 
                     <button type="submit" class="btn btn-primary"><i class="fa fa-save"></i> Save</button>
                 </form>

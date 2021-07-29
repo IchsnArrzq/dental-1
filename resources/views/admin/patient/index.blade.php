@@ -1,15 +1,15 @@
-@extends('layouts.master', ['title' => 'Patients'])
+@extends('layouts.master', ['title' => 'Pasien'])
 
 @section('content')
 <div class="row">
     <div class="col-md-12">
-        <h1 class="page-title">Patients</h1>
+        <h1 class="page-title">Pasien</h1>
 
         <x-alert></x-alert>
 
         <div class="card">
             <div class="card-header">
-                <h5 class="text-bold card-title">Master Patients</h5>
+                <h5 class="text-bold card-title">Master Pasien</h5>
             </div>
 
             <div class="card-body">
@@ -22,16 +22,16 @@
                             <tr>
                                 <th></th>
                                 <th>No</th>
-                                <th>Name</th>
-                                <th>Phone</th>
+                                <th>Nama</th>
+                                <th>Telp</th>
                                 <th>Email</th>
-                                <th>Date of Birth</th>
-                                <th>Gender</th>
-                                <th>Tribe</th>
-                                <th>Address</th>
-                                <th>Profession</th>
+                                <th>Tanggal Lahir</th>
+                                <th>JK</th>
+                                <th>Suku</th>
+                                <th>Alamat</th>
+                                <th>Profesi</th>
                                 <th>Marketing</th>
-                                <th>Warehouse</th>
+                                <th>Cabang</th>
                                 <th>Action</th>
                             </tr>
                         </thead>
@@ -52,9 +52,7 @@
                                 <td>{{ $patient->user->name }}</td>
                                 <td>{{ $patient->cabang->nama }}</td>
                                 <td>
-                                    @can('patient-show')
-                                    <a href="{{ route('admin.patients.show', $patient->id) }}" class="btn btn-sm btn-success"><i class="fa fa-eye"></i></a>
-                                    @endcan
+                                    <a href="{{ route('admin.patients.odontogram', $patient->id) }}" class="btn btn-sm btn-success"><i class="fa fa-plus-square"></i></a>
                                     @can('patient-edit')
                                     <a href="{{ route('admin.patients.edit', $patient->id) }}" class="btn btn-sm btn-info"><i class="fa fa-edit"></i></a>
                                     @endcan

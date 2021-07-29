@@ -13,7 +13,7 @@
             </div>
 
             <div class="card-body">
-                @can('roles-create')
+                @can('payment-create')
                 <a href="{{ route('admin.payments.create') }}" class="btn btn-primary mb-3"><i class="fa fa-plus"></i> Add Payment</a>
                 @endcan
                 <div class="table-responsive">
@@ -22,9 +22,9 @@
                             <tr>
                                 <th></th>
                                 <th>No</th>
-                                <th>Name</th>
-                                <th>Piece</th>
-                                <th>Account Number</th>
+                                <th>Nama</th>
+                                <th>Potongan</th>
+                                <th>Rekening</th>
                                 <th>Action</th>
                             </tr>
                         </thead>
@@ -38,10 +38,10 @@
                                 <td>{{ $payment->potongan }}</td>
                                 <td>{{ $payment->rekening }}</td>
                                 <td>
-                                    @can('roles-edit')
+                                    @can('payment-edit')
                                     <a href="{{ route('admin.payments.edit', $payment->id) }}" class="btn btn-sm btn-info"><i class="fa fa-edit"></i></a>
                                     @endcan
-                                    @can('roles-delete')
+                                    @can('payment-delete')
                                     <form action="{{ route('admin.payments.destroy', $payment->id) }}" method="post" style="display: inline;" class="delete-form">
                                         @method('DELETE')
                                         @csrf

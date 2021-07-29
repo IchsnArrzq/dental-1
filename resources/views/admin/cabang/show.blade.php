@@ -3,17 +3,17 @@
 @section('content')
 <div class="row">
     <div class="col-md-12">
-        <h1 class="page-title">Name : {{ $cabang->nama }}</h1>
+        <h1 class="page-title">Nama Cabang : {{ $cabang->nama }}</h1>
 
         <x-alert></x-alert>
 
         <div class="card">
             <div class="card-header">
-                <h5 class="text-bold card-title">Price List Service</h5>
+                <h5 class="text-bold card-title">List Harga Service</h5>
             </div>
 
             <div class="card-body">
-                <a href="/admin/price-service/{{ $cabang->id }}/create" class=" btn btn-primary mb-3"><i class="fa fa-plus"></i> Add Price Service</a>
+                <a href="/admin/price-service/{{ $cabang->id }}/create" class=" btn btn-primary mb-3"><i class="fa fa-plus"></i> Add Harga Service</a>
 
                 <div class="table-responsive">
                     <table class="table table-bordered table-striped">
@@ -21,10 +21,10 @@
                             <tr>
                                 <th></th>
                                 <th>No</th>
-                                <th>Service Code</th>
-                                <th>Name</th>
-                                <th>Price</th>
-                                <th>Duration</th>
+                                <th>Kode Service</th>
+                                <th>Nama</th>
+                                <th>Harga</th>
+                                <th>Durasi</th>
                                 <th>Action</th>
                             </tr>
                         </thead>
@@ -60,11 +60,11 @@
 
         <div class="card">
             <div class="card-header">
-                <h5 class="text-bold card-title">Price List Product</h5>
+                <h5 class="text-bold card-title">List Harga Produk</h5>
             </div>
 
             <div class="card-body">
-                <a href="/admin/price-product/{{ $cabang->id }}/create" class=" btn btn-primary mb-3"><i class="fa fa-plus"></i> Add Price Product</a>
+                <a href="/admin/price-product/{{ $cabang->id }}/create" class=" btn btn-primary mb-3"><i class="fa fa-plus"></i> Add Harga Produk</a>
 
                 <div class="table-responsive">
                     <table class="table table-bordered table-striped">
@@ -72,9 +72,9 @@
                             <tr>
                                 <th></th>
                                 <th>No</th>
-                                <th>Product Code</th>
-                                <th>Name</th>
-                                <th>Price</th>
+                                <th>Kode Produk</th>
+                                <th>Nama</th>
+                                <th>Harga</th>
                                 <th>Action</th>
                             </tr>
                         </thead>

@@ -12,18 +12,25 @@ class PaymentController extends Controller
 {
     public function index()
     {
+        abort_unless(\Gate::allows('payment-access'), 403);
+
         $payments = Payment::get();
         return view('admin.payment.index', compact('payments'));
     }
 
     public function create()
     {
-        return view('admin.payment.create');
+        abort_unless(\Gate::allows('payment-create'), 403);
+
+        $payment = new Payment();
+        return view('admin.payment.create', compact('payment'));
     }
 
 
     public function store(StorePaymentRequest $request)
     {
+        abort_unless(\Gate::allows('payment-create'), 403);
+
         Payment::create($request->all());
 
         return redirect()->route('admin.payments.index')->with('success', 'Payment has been added');
@@ -31,11 +38,15 @@ class PaymentController extends Controller
 
     public function edit(Payment $payment)
     {
+        abort_unless(\Gate::allows('payment-edit'), 403);
+
         return view('admin.payment.edit', compact('payment'));
     }
 
     public function update(UpdatePaymentRequest $request, Payment $payment)
     {
+        abort_unless(\Gate::allows('payment-edit'), 403);
+
         $payment->update($request->all());
 
         return redirect()->route('admin.payments.index')->with('success', 'Payment has been updated');
@@ -43,6 +54,8 @@ class PaymentController extends Controller
 
     public function destroy(Payment $payment)
     {
+        abort_unless(\Gate::allows('payment-delete'), 403);
+
         $payment->delete();
 
         return redirect()->route('admin.payments.index')->with('success', 'Payment has been deleted');

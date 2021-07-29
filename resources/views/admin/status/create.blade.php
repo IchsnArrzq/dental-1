@@ -12,14 +12,8 @@
             <div class="card-body">
                 <form action="{{ route('admin.status.store') }}" method="post">
                     @csrf
-                    <div class="form-group">
-                        <label>Status</label>
-                        <input type="text" name="status" id="status" class="form-control">
 
-                        @error('status')
-                        <small class="text-danger">{{ $message }}</small>
-                        @enderror
-                    </div>
+                    @include('admin.status.form')
 
                     <button type="submit" class="btn btn-primary"><i class="fa fa-save"></i> Save</button>
                 </form>

@@ -13,32 +13,8 @@
                 <form action="{{ route('admin.service.update', $service->id) }}" method="post">
                     @method('PATCH')
                     @csrf
-                    <div class="form-group">
-                        <label>Service Code</label>
-                        <input type="text" name="kode_barang" id="name" class="form-control" value="{{ $service->kode_barang }}">
 
-                        @error('kode_barang')
-                        <small class="text-danger">{{ $message }}</small>
-                        @enderror
-                    </div>
-
-                    <div class="form-group">
-                        <label>Name</label>
-                        <input type="text" name="nama_barang" id="name" class="form-control" value="{{ $service->nama_barang }}">
-
-                        @error('nama_barang')
-                        <small class="text-danger">{{ $message }}</small>
-                        @enderror
-                    </div>
-
-                    <div class="form-group">
-                        <label>Duration</label>
-                        <input type="number" name="durasi" id="name" class="form-control" value="{{ $service->durasi }}">
-
-                        @error('durasi')
-                        <small class="text-danger">{{ $message }}</small>
-                        @enderror
-                    </div>
+                    @include('admin.service.form')
 
                     <button type="submit" class="btn btn-primary"><i class="fa fa-save"></i> Save</button>
                 </form>

@@ -19,7 +19,7 @@
             <div class="col-md-4 col-sm-4  col-lg-3">
                 <div class="profile-widget">
                     <div class="doctor-img">
-                        <a class="avatar" href=""><img alt="" src="{{ asset('storage/public/'. $dok->image) }}"></a>
+                        <a class="avatar" href=""><img alt="" src="{{ Storage::url('/storage/app/$images->filename') }}"></a>
                     </div>
                     <div class="dropdown profile-action">
                         <a href="#" class="action-icon dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><i class="fa fa-ellipsis-v"></i></a>

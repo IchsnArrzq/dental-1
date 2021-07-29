@@ -34,8 +34,8 @@ class StoreKomisiRequest extends FormRequest
     {
         return [
             'role_id.required' => 'Select Role.',
-            'persentase.required' => 'The Persentase field is required.',
-            'min_transaksi.required' => 'The Min Transaksi field is required.',
+            'persentase.required' => 'The persentase field is required.',
+            'min_transaksi.required' => 'The min transaksi field is required.',
         ];
     }
 }

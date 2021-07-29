@@ -29,8 +29,9 @@ class UserController extends Controller
 
         $roles = Role::get();
         $warehouses = Cabang::get();
+        $user = new User();
 
-        return view('admin.users.create', compact('roles', 'warehouses'));
+        return view('admin.users.create', compact('roles', 'warehouses', 'user'));
     }
 
     public function store(StoreUserRequest $request)
@@ -55,7 +56,7 @@ class UserController extends Controller
 
     public function edit(User $user)
     {
-        // abort_unless(Gate::allows('user-edit'), 403);
+        abort_unless(Gate::allows('user-edit'), 403);
 
         $roles = Role::get();
         $warehouses = Cabang::get();
@@ -65,7 +66,7 @@ class UserController extends Controller
 
     public function update(UpdateUserRequest $request, User $user)
     {
-        // abort_unless(Gate::allows('user-edit'), 403);
+        abort_unless(Gate::allows('user-edit'), 403);
 
         $attr = $request->all();
 

@@ -13,7 +13,7 @@
             </div>
 
             <div class="card-body">
-                @can('roles-create')
+                @can('komisi-create')
                 <a href="{{ route('admin.komisi.create') }}" class="btn btn-primary mb-3"><i class="fa fa-plus"></i> Add Komisi</a>
                 @endcan
                 <div class="table-responsive">
@@ -38,10 +38,10 @@
                                 <td>{{ $kms->persentase }}</td>
                                 <td>{{ $kms->min_transaksi }}</td>
                                 <td>
-                                    @can('roles-edit')
+                                    @can('komisi-edit')
                                     <a href="{{ route('admin.komisi.edit', $kms->id) }}" class="btn btn-sm btn-info"><i class="fa fa-edit"></i></a>
                                     @endcan
-                                    @can('roles-delete')
+                                    @can('komisi-delete')
                                     <form action="{{ route('admin.komisi.destroy', $kms->id) }}" method="post" style="display: inline;" class="delete-form">
                                         @method('DELETE')
                                         @csrf

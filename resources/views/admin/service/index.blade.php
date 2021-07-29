@@ -22,9 +22,9 @@
                             <tr>
                                 <th></th>
                                 <th>No</th>
-                                <th>Service Code</th>
-                                <th>Name</th>
-                                <th>Duration</th>
+                                <th>Kode Service</th>
+                                <th>Nama</th>
+                                <th>Durasi</th>
                                 <th>Action</th>
                             </tr>
                         </thead>

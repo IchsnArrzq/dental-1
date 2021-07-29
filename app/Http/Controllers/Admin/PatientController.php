@@ -3,8 +3,11 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Customer;
+use App\GigiPasien;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StorePatientRequest;
+use App\Odontogram;
+use App\SimbolOdontogram;
 use App\User;
 use Illuminate\Http\Request;
 
@@ -34,7 +37,14 @@ class PatientController extends Controller
         $attr['ttl'] = $request->input('place') . ', ' . $request->input('date');
         $attr['pict'] = $pictUrl;
 
-        Customer::create($attr);
+        $customer = Customer::create($attr);
+        Odontogram::create([
+            'customer_id' => $customer->id
+        ]);
+        GigiPasien::create([
+            'customer_id' => $customer->id
+        ]);
+
         return redirect()->route('admin.patients.index')->with('success', 'Patient has been added');
     }
 
@@ -81,5 +91,21 @@ class PatientController extends Controller
     public function destroy(Customer $customer)
     {
         //
+    }
+
+    public function odontogram(Customer $customer)
+    {
+        return view('admin.patient.odontogram', compact('customer'));
+    }
+
+    public function simbol($warna)
+    {
+        $simbol =  SimbolOdontogram::where('warna', $warna)->first();
+
+        return response()->json([
+            'warna' => $simbol->warna,
+            'nama' => $simbol->nama_simbol,
+            'singkatan' => $simbol->singkatan,
+        ], 200);
     }
 }

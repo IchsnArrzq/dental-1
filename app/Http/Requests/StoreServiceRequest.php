@@ -32,10 +32,10 @@ class StoreServiceRequest extends FormRequest
     public function messages()
     {
         return [
-            'kode_barang.required' => 'The Service Code field is required.',
-            'nama_barang.required' => 'The Name field is required.',
-            'kode_barang.unique' => 'The Service Code has already been taken.',
-            'durasi.required' => 'The Duration field is required.',
+            'kode_barang.required' => 'The kode service field is required.',
+            'nama_barang.required' => 'The nama field is required.',
+            'kode_barang.unique' => 'The kode service has already been taken.',
+            'durasi.required' => 'The durasi field is required.',
         ];
     }
 }

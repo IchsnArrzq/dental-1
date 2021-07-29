@@ -33,7 +33,6 @@ class UpdatePriceRequest extends FormRequest
     {
         return [
             'barang_id.required' => 'Choose the Product.',
-            'harga.required' => 'The Price field is required.',
         ];
     }
 }

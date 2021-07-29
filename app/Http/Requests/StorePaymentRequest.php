@@ -33,9 +33,9 @@ class StorePaymentRequest extends FormRequest
     public function messages()
     {
         return [
-            'nama_metode.required' => 'The Name field is required.',
-            'potongan.required' => 'The Piece field is required.',
-            'rekening.required' => 'The Account Number field is required.',
+            'nama_metode.required' => 'The nama field is required.',
+            'potongan.required' => 'The potongan field is required.',
+            'rekening.required' => 'The rekening field is required.',
         ];
     }
 }

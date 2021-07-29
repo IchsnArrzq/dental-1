@@ -23,7 +23,8 @@ class ServiceController extends Controller
     {
         abort_unless(\Gate::allows('service-create'), 403);
 
-        return view('admin.service.create');
+        $service = new Barang();
+        return view('admin.service.create', compact('service'));
     }
 
     public function store(StoreServiceRequest $request)

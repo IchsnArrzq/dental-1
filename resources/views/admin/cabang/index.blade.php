@@ -3,7 +3,7 @@
 @section('content')
 <div class="row">
     <div class="col-md-12">
-        <h1 class="page-title">Cabang</h1>
+        <h1 class="page-title">Master Cabang</h1>
 
         <x-alert></x-alert>
 
@@ -22,9 +22,9 @@
                             <tr>
                                 <th></th>
                                 <th>No</th>
-                                <th>Name</th>
-                                <th>Address</th>
-                                <th>Phone</th>
+                                <th>Nama Cabang</th>
+                                <th>Alamat</th>
+                                <th>Telp</th>
                                 <th>Email</th>
                                 <th>Whatsapp</th>
                                 <th>Action</th>

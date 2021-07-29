@@ -17,17 +17,20 @@ class HargaBarangController extends Controller
 
     public function create(Cabang $cabang)
     {
+        $price = new HargaProdukCabang();
+
         if (request()->is('admin/price-product*')) {
             $products = Barang::where('jenis', 'barang')->get();
         } else {
             $products = Barang::where('jenis', 'service')->get();
         }
-        return view('admin.harga-product.create', compact('cabang', 'products'));
+        return view('admin.harga-product.create', compact('cabang', 'products', 'price'));
     }
 
     public function store(StorePriceRequest $request)
     {
         HargaProdukCabang::create($request->all());
+
 
         return redirect()->route('admin.cabang.show', $request->input('cabang_id'))->with('success', 'Price has been added');
     }

@@ -21,7 +21,8 @@ class BarangController extends Controller
     {
         abort_unless(\Gate::allows('product-create'), 403);
 
-        return view('admin.product.create');
+        $barang = new Barang();
+        return view('admin.product.create', compact('barang'));
     }
 
     public function store(StoreBarangRequest $request)

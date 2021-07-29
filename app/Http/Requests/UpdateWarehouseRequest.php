@@ -35,11 +35,11 @@ class UpdateWarehouseRequest extends FormRequest
     public function messages()
     {
         return [
-            'nama.required' => 'The Name field is required.',
-            'email.required' => 'The Email field is required.',
-            'telpon.required' => 'The Phone field is required.',
-            'wa.required' => 'The Whatsapp field is required.',
-            'alamat.required' => 'The Address field is required.',
+            'nama.required' => 'The nama field is required.',
+            'email.required' => 'The email field is required.',
+            'telpon.required' => 'The telp field is required.',
+            'wa.required' => 'The whatsapp field is required.',
+            'alamat.required' => 'The alamat field is required.',
         ];
     }
 }

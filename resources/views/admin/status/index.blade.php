@@ -13,7 +13,7 @@
             </div>
 
             <div class="card-body">
-                @can('permission-create')
+                @can('status-create')
                 <a href="{{ route('admin.status.create') }}" class="btn btn-primary mb-3"><i class="fa fa-plus"></i> Add Status</a>
                 @endcan
                 <div class="table-responsive">
@@ -34,10 +34,10 @@
                                 <td>{{ $loop->iteration }}</td>
                                 <td>{{ $stt->status }}</td>
                                 <td>
-                                    @can('permission-edit')
+                                    @can('status-edit')
                                     <a href="{{ route('admin.status.edit', $stt->id) }}" class="btn btn-sm btn-info"><i class="fa fa-edit"></i></a>
                                     @endcan
-                                    @can('permission-delete')
+                                    @can('status-delete')
                                     <form action="{{ route('admin.status.destroy', $stt->id) }}" method="post" style="display: inline;" class="delete-form">
                                         @method('DELETE')
                                         @csrf

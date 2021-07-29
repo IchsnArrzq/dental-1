@@ -38,14 +38,14 @@ class StoreUserRequest extends FormRequest
     public function messages()
     {
         return [
-            'name.required' => 'The Name field is required.',
-            'email.required' => 'The Email field is required.',
-            'phone_number.required' => 'The Phone Number field is required.',
-            'password.required' => 'The Password field is required.',
+            'name.required' => 'The nama field is required.',
+            'email.required' => 'The email field is required.',
+            'phone_number.required' => 'The no telp. field is required.',
+            'password.required' => 'The password field is required.',
             'role.required' => 'Please select role.',
-            'cabang_id.required' => 'Please select warehouse.',
-            'address.required' => 'The Address field is required.',
-            'image.required' => 'The Image field is required.',
+            'cabang_id.required' => 'Please select cabang.',
+            'address.required' => 'The alamat field is required.',
+            'image.required' => 'The image field is required.',
         ];
     }
 }

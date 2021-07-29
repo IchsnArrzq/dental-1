@@ -88,12 +88,12 @@
                         <li class="{{ (request()->is('dashboard*')) ? 'active' : '' }}">
                             <a href="/dashboard"><i class="fa fa-dashboard"></i> <span>Dashboard</span></a>
                         </li>
-                        <li>
-                            <a href="{{ route('admin.dokter.index') }}"><i class="fa fa-user-md"></i> <span>Doctors</span></a>
+                        <li class="{{ (request()->is('admin/dokter*')) ? 'active' : '' }}">
+                            <a href="{{ route('admin.dokter.index') }}"><i class="fa fa-user-md"></i> <span>Dokter</span></a>
                         </li>
                         @can('patient-access')
                         <li class="{{ (request()->is('admin/patients*')) ? 'active' : '' }}">
-                            <a href="{{ route('admin.patients.index') }}"><i class="fa fa-wheelchair"></i> <span>Patients</span></a>
+                            <a href="{{ route('admin.patients.index') }}"><i class="fa fa-wheelchair"></i> <span>Pasien</span></a>
                         </li>
                         @endcan
                         <li>
@@ -134,9 +134,16 @@
                             <a href="{{ route('admin.voucher.index') }}"><i class="fa fa-tags"></i> <span>Master Voucher</span></a>
                         </li>
                         @endcan
+                        @can('komisi-access')
                         <li class="{{ (request()->is('admin/komisi*')) ? 'active' : '' }}">
                             <a href="{{ route('admin.komisi.index') }}"><i class="fa fa-money"></i> <span>Master Komisi</span></a>
                         </li>
+                        @endcan
+                        @can('simbol-access')
+                        <li class="{{ (request()->is('admin/simbol*')) ? 'active' : '' }}">
+                            <a href="{{ route('admin.simbol.index') }}"><i class="fa fa-question"></i> <span>Master Simbol</span></a>
+                        </li>
+                        @endcan
                         <li class="submenu">
                             <a href="#"><i class="fa fa-flag-o"></i> <span> Reports </span> <span class="menu-arrow"></span></a>
                             <ul style="display: none;">

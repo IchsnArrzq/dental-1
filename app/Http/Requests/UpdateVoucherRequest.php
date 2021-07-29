@@ -27,14 +27,14 @@ class UpdateVoucherRequest extends FormRequest
     public function messages()
     {
         return [
-            'kode_voucher.required' => 'The Voucher Number field is required.',
-            'tgl_mulai.required' => 'The Start field is required.',
-            'tgk_akhir.required' => 'The End field is required.',
-            'min_transaksi.required' => 'The Min Transaction field is required.',
-            'nominal.required' => 'The Nominal field is required.',
+            'kode_voucher.required' => 'The kode voucher field is required.',
+            'tgl_mulai.required' => 'The tanggal mulai field is required.',
+            'tgk_akhir.required' => 'The tanggal akhir field is required.',
+            'min_transaksi.required' => 'The min transaksi field is required.',
+            'nominal.required' => 'The nominal field is required.',
             'type.required' => 'Select the type.',
-            'persentase.required' => 'The Percentage field is required.',
-            'kode_voucher.unique' => 'The Voucher Number has already been taken.'
+            'persentase.required' => 'The persentase field is required.',
+            'kode_voucher.unique' => 'The kode voucher has already been taken.'
         ];
     }
 }

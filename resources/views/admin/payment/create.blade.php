@@ -12,32 +12,8 @@
             <div class="card-body">
                 <form action="{{ route('admin.payments.store') }}" method="post">
                     @csrf
-                    <div class="form-group">
-                        <label>Name</label>
-                        <input type="text" name="nama_metode" id="name" class="form-control">
 
-                        @error('nama_metode')
-                        <small class="text-danger">{{ $message }}</small>
-                        @enderror
-                    </div>
-
-                    <div class="form-group">
-                        <label>Piece</label>
-                        <input type="text" name="potongan" id="potongan" class="form-control">
-
-                        @error('potongan')
-                        <small class="text-danger">{{ $message }}</small>
-                        @enderror
-                    </div>
-
-                    <div class="form-group">
-                        <label>Account Number</label>
-                        <input type="text" name="rekening" id="rekening" class="form-control">
-
-                        @error('rekening')
-                        <small class="text-danger">{{ $message }}</small>
-                        @enderror
-                    </div>
+                    @include('admin.payment.form')
 
                     <button type="submit" class="btn btn-primary"><i class="fa fa-save"></i> Save</button>
                 </form>

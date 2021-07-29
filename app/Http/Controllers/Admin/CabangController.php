@@ -21,7 +21,9 @@ class CabangController extends Controller
     {
         abort_unless(\Gate::allows('cabang-create'), 403);
 
-        return view('admin.cabang.create');
+        $cabang = new Cabang();
+
+        return view('admin.cabang.create', compact('cabang'));
     }
 
     public function store(StoreWarehouseRequest $request)

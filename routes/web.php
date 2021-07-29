@@ -55,10 +55,16 @@ Route::middleware('auth')->group(function () {
         Route::delete('price/{hargaProdukCabang:id}/destroy', 'HargaBarangController@destroy');
 
         // Route Master Patient
+        Route::get('patients/simbol/{warna}', 'PatientController@simbol')->name('patients.simbol');
+        Route::get('patients/{customer:id}/odontogram', 'PatientController@odontogram')->name('patients.odontogram');
         Route::resource('patients', 'PatientController');
+
 
         // Route Master Payments
         Route::resource('payments', 'PaymentController');
+
+        // Route Master simbol
+        Route::resource('simbol', 'SimbolOdontogramController');
 
         // Route Master Status Pasien
         Route::resource('status', 'StatusPasienController');
@@ -79,4 +85,7 @@ Route::middleware('auth')->group(function () {
         // Route Report
         Route::get('report/metode-pembayaran', 'ReportController@metodePembayaran');
     });
+
+    // Route Rekam Medis
+    Route::resource('rekam-medis', 'RekamMedisController');
 });

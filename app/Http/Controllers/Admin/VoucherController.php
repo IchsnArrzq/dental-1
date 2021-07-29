@@ -6,13 +6,13 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreVoucherRequest;
 use App\Http\Requests\UpdateVoucherRequest;
 use App\Voucher;
-use Illuminate\Http\Request;
-use phpDocumentor\Reflection\Types\Void_;
 
 class VoucherController extends Controller
 {
     public function index()
     {
+        abort_unless(\Gate::allows('voucher-access'), 403);
+
         $vouchers = Voucher::get();
 
         return view('admin.voucher.index', compact('vouchers'));
@@ -20,11 +20,15 @@ class VoucherController extends Controller
 
     public function create()
     {
-        return view('admin.voucher.create');
+        abort_unless(\Gate::allows('voucher-create'), 403);
+
+        $voucher = new Voucher();
+        return view('admin.voucher.create', compact('voucher'));
     }
 
     public function store(StoreVoucherRequest $request)
     {
+        abort_unless(\Gate::allows('voucher-create'), 403);
         Voucher::create($request->all());
 
         return redirect()->route('admin.voucher.index')->with('success', 'Voucher has been added');
@@ -37,11 +41,15 @@ class VoucherController extends Controller
 
     public function edit(Voucher $voucher)
     {
+        abort_unless(\Gate::allows('voucher-edit'), 403);
+
         return view('admin.voucher.edit', compact('voucher'));
     }
 
     public function update(UpdateVoucherRequest $request, Voucher $voucher)
     {
+        abort_unless(\Gate::allows('voucher-edit'), 403);
+
         $voucher->update($request->all());
 
         return redirect()->route('admin.voucher.index')->with('success', 'Voucher has been updated');
@@ -49,6 +57,8 @@ class VoucherController extends Controller
 
     public function destroy(Voucher $voucher)
     {
+        abort_unless(\Gate::allows('voucher-delete'), 403);
+
         $voucher->delete();
 
         return redirect()->route('admin.voucher.index')->with('success', 'Voucher has been deleted');

@@ -1,22 +1,22 @@
-@extends('layouts.master', ['title' => 'Price Product'])
+@extends('layouts.master', ['title' => 'Harga Produk'])
 
 @section('content')
 <div class="row">
     <div class="col-md-6">
         <h1 class="page-title">
             @if(request()->is('admin/price-product*'))
-            Edit Price Product
+            Edit Harga Produk
             @else
-            Edit Price Service
+            Edit Harga Service
             @endif
         </h1>
         <div class="card">
             <div class="card-header">
                 <h5 class="text-bold card-title">
                     @if(request()->is('admin/price-product*'))
-                    Edit Price Product
+                    Edit Harga Produk
                     @else
-                    Edit Price Service
+                    Edit Harga Service
                     @endif
                 </h5>
             </div>

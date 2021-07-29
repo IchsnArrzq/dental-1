@@ -32,9 +32,9 @@ class StoreBarangRequest extends FormRequest
     public function messages()
     {
         return [
-            'kode_barang.required' => 'The Product Code field is required.',
-            'nama_barang.required' => 'The Name field is required.',
-            'kode_barang.unique' => 'The Product Code has already been taken.'
+            'kode_barang.required' => 'The kode produk field is required.',
+            'nama_barang.required' => 'The nama field is required.',
+            'kode_barang.unique' => 'The kode produk has already been taken.'
         ];
     }
 }

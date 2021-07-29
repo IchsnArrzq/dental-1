@@ -13,7 +13,7 @@
             </div>
 
             <div class="card-body">
-                @can('roles-create')
+                @can('voucher-create')
                 <a href="{{ route('admin.voucher.create') }}" class="btn btn-primary mb-3"><i class="fa fa-plus"></i> Add Voucher</a>
                 @endcan
                 <div class="table-responsive">
@@ -22,13 +22,13 @@
                             <tr>
                                 <th></th>
                                 <th>No</th>
-                                <th>Voucher Number</th>
-                                <th>Start</th>
-                                <th>End</th>
+                                <th>Kode Voucher</th>
+                                <th>Mulai</th>
+                                <th>Akhir</th>
                                 <th>Min Trx</th>
                                 <th>Min or Per</th>
                                 <th>Nominal</th>
-                                <th>Percentage</th>
+                                <th>Persentase</th>
                                 <th>Action</th>
                             </tr>
                         </thead>
@@ -46,10 +46,10 @@
                                 <td>@currency($voucher->nominal)</td>
                                 <td>{{ $voucher->persentase }}</td>
                                 <td>
-                                    @can('roles-edit')
+                                    @can('voucher-edit')
                                     <a href="{{ route('admin.voucher.edit', $voucher->id) }}" class="btn btn-sm btn-info"><i class="fa fa-edit"></i></a>
                                     @endcan
-                                    @can('roles-delete')
+                                    @can('voucher-delete')
                                     <form action="{{ route('admin.voucher.destroy', $voucher->id) }}" method="post" style="display: inline;" class="delete-form">
                                         @method('DELETE')
                                         @csrf

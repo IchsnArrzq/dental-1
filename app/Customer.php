@@ -17,4 +17,14 @@ class Customer extends Model
     {
         return $this->belongsTo(Cabang::class, 'cabang_id');
     }
+
+    public function odontogram()
+    {
+        return $this->hasOne(Odontogram::class);
+    }
+
+    public function gigi()
+    {
+        return $this->hasOne(GigiPasien::class);
+    }
 }
