@@ -4,11 +4,14 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <link rel="shortcut icon" type="image/x-icon" href="{{ asset('/') }}img/favicon.ico">
-    <title>{{ $title }} - Dental Clinic</title>
+    <title>{{ $title }} - Sky Dental Care</title>
     <link rel="stylesheet" type="text/css" href="{{ asset('/') }}css/bootstrap.min.css">
     <link rel="stylesheet" type="text/css" href="{{ asset('/') }}css/font-awesome.min.css">
     <link rel="stylesheet" type="text/css" href="{{ asset('/') }}css/style.css">
+    <link rel="stylesheet" type="text/css" href="{{ asset('/') }}css/select2.min.css">
+    <link rel="stylesheet" type="text/css" href="{{ asset('/') }}css/bootstrap-datetimepicker.min.css">
 
     <!-- Sweetalert -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/11.0.18/sweetalert2.min.css" integrity="sha512-riZwnB8ebhwOVAUlYoILfran/fH0deyunXyJZ+yJGDyU0Y8gsDGtPHn1eh276aNADKgFERecHecJgkzcE9J3Lg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
@@ -18,6 +21,7 @@
     <link rel="stylesheet" type="text/css" href="{{ asset('/') }}css/dataTables.bootstrap4.min.css">
     <link rel="stylesheet" href="https://cdn.datatables.net/fixedheader/3.1.7/css/fixedHeader.bootstrap.min.css">
     <link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.2.6/css/responsive.bootstrap4.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/buttons/1.7.1/css/buttons.dataTables.min.css">
 
 
     <style>
@@ -53,13 +57,13 @@
                         <span>{{ auth()->user()->name }}</span>
                     </a>
                     <div class="dropdown-menu">
-                        <a class="dropdown-item" href="profile.html">My Profile</a>
+                        <a class="dropdown-item" href="{{ route('profile') }}">My Profile</a>
                         <a class="dropdown-item" href="edit-profile.html">Edit Profile</a>
                         <a class="dropdown-item" href="settings.html">Settings</a>
                         <a class="dropdown-item" href="{{ route('logout') }}" onclick="event.preventDefault();
-                    document.getElementById('logout-form').submit();">Logout</a>
+                    document.getElementById('logout').submit();">Logout</a>
 
-                        <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
+                        <form id="logout" action="{{ route('logout') }}" method="POST" class="d-none">
                             @csrf
                         </form>
                     </div>
@@ -68,7 +72,7 @@
             <div class="dropdown mobile-user-menu float-right">
                 <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><i class="fa fa-ellipsis-v"></i></a>
                 <div class="dropdown-menu dropdown-menu-right">
-                    <a class="dropdown-item" href="profile.html">My Profile</a>
+                    <a class="dropdown-item" href="{{ route('profile') }}">My Profile</a>
                     <a class="dropdown-item" href="edit-profile.html">Edit Profile</a>
                     <a class="dropdown-item" href="settings.html">Settings</a>
                     <a class="dropdown-item" href="{{ route('logout') }}" onclick="event.preventDefault();
@@ -85,84 +89,86 @@
                 <div id="sidebar-menu" class="sidebar-menu">
                     <ul>
                         <li class="menu-title">Main</li>
-                        <li class="{{ (request()->is('dashboard*')) ? 'active' : '' }}">
+                        <li class="{{ request()->is('dashboard*') ? 'active' : '' }}">
                             <a href="/dashboard"><i class="fa fa-dashboard"></i> <span>Dashboard</span></a>
                         </li>
-                        <li class="{{ (request()->is('admin/dokter*')) ? 'active' : '' }}">
+                        <li class="{{ request()->is('admin/dokter*') ? 'active' : '' }}">
                             <a href="{{ route('admin.dokter.index') }}"><i class="fa fa-user-md"></i> <span>Dokter</span></a>
                         </li>
                         @can('patient-access')
-                        <li class="{{ (request()->is('admin/patients*')) ? 'active' : '' }}">
-                            <a href="{{ route('admin.patients.index') }}"><i class="fa fa-wheelchair"></i> <span>Pasien</span></a>
+                        <li class="{{ request()->is('admin/pasien*') ? 'active' : '' }}">
+                            <a href="{{ route('admin.pasien.index') }}"><i class="fa fa-wheelchair"></i> <span>Pasien</span></a>
                         </li>
                         @endcan
-                        <li>
-                            <a href="appointments.html"><i class="fa fa-calendar"></i> <span>Appointments</span></a>
+                        <li class="{{ request()->is('appointments*') ? 'active' : '' }}">
+                            <a href="{{ route('appointments.index') }}"><i class="fa fa-calendar"></i> <span>Appointments</span></a>
                         </li>
                         @can('user-access')
-                        <li class="{{ (request()->is('admin/users*')) ? 'active' : '' }}">
+                        <li class="{{ request()->is('admin/users*') ? 'active' : '' }}">
                             <a href="{{ route('admin.users.index') }}"><i class="fa fa-users"></i> <span>Master User</span></a>
                         </li>
                         @endcan
                         @can('cabang-access')
-                        <li class="{{ (request()->is('admin/cabang*')) ? 'active' : '' }}">
-                            <a href="{{ route('admin.cabang.index') }}"><i class="fa fa-building"></i> <span>Master cabang</span></a>
+                        <li class="{{ request()->is('admin/cabang*') ? 'active' : '' }}">
+                            <a href="{{ route('admin.cabang.index') }}"><i class="fa fa-building"></i> <span>Master Cabang</span></a>
                         </li>
                         @endcan
                         @can('product-access')
-                        <li class="{{ (request()->is('admin/product*')) ? 'active' : '' }}">
+                        <li class="{{ request()->is('admin/product*') ? 'active' : '' }}">
                             <a href="{{ route('admin.product.index') }}"><i class="fa fa-shopping-bag"></i> <span>Master Product</span></a>
                         </li>
                         @endcan
                         @can('service-access')
-                        <li class="{{ (request()->is('admin/service*')) ? 'active' : '' }}">
+                        <li class="{{ request()->is('admin/service*') ? 'active' : '' }}">
                             <a href="{{ route('admin.service.index') }}"><i class="fa fa-stethoscope"></i> <span>Master Service</span></a>
                         </li>
                         @endcan
-                        @can('service-access')
-                        <li class="{{ (request()->is('admin/payments*')) ? 'active' : '' }}">
+                        @can('payment-access')
+                        <li class="{{ request()->is('admin/payments*') ? 'active' : '' }}">
                             <a href="{{ route('admin.payments.index') }}"><i class="fa fa-credit-card"></i> <span>Master Payments</span></a>
                         </li>
                         @endcan
-                        @can('service-access')
-                        <li class="{{ (request()->is('admin/status*')) ? 'active' : '' }}">
+                        @can('status-access')
+                        <li class="{{ request()->is('admin/status*') ? 'active' : '' }}">
                             <a href="{{ route('admin.status.index') }}"><i class="fa fa-line-chart"></i> <span>Master Status</span></a>
                         </li>
                         @endcan
-                        @can('service-access')
-                        <li class="{{ (request()->is('admin/voucher*')) ? 'active' : '' }}">
+                        @can('voucher-access')
+                        <li class="{{ request()->is('admin/voucher*') ? 'active' : '' }}">
                             <a href="{{ route('admin.voucher.index') }}"><i class="fa fa-tags"></i> <span>Master Voucher</span></a>
                         </li>
                         @endcan
                         @can('komisi-access')
-                        <li class="{{ (request()->is('admin/komisi*')) ? 'active' : '' }}">
+                        <li class="{{ request()->is('admin/komisi*') ? 'active' : '' }}">
                             <a href="{{ route('admin.komisi.index') }}"><i class="fa fa-money"></i> <span>Master Komisi</span></a>
                         </li>
                         @endcan
                         @can('simbol-access')
-                        <li class="{{ (request()->is('admin/simbol*')) ? 'active' : '' }}">
+                        <li class="{{ request()->is('admin/simbol*') ? 'active' : '' }}">
                             <a href="{{ route('admin.simbol.index') }}"><i class="fa fa-question"></i> <span>Master Simbol</span></a>
                         </li>
                         @endcan
+                        @can('report-access')
                         <li class="submenu">
                             <a href="#"><i class="fa fa-flag-o"></i> <span> Reports </span> <span class="menu-arrow"></span></a>
                             <ul style="display: none;">
-                                <li><a href="expense-reports.html"> Laporan Appointment </a></li>
-                                <li><a href="/admin/report/metode-pembayaran"> Laporan Metode Pembayaran </a></li>
-                                <li><a href="invoice-reports.html"> Laporan Komisi </a></li>
-                                <li><a href="invoice-reports.html"> Laporan Pasien </a></li>
+                                <li><a href="{{ route('admin.report.appoinment') }}"> Laporan Appointment </a></li>
+                                <li><a href="{{ route('admin.report.payment') }}"> Laporan Metode Pembayaran </a></li>
+                                <li><a href="{{ route('admin.report.komisi') }}"> Laporan Komisi </a></li>
+                                <li><a href="{{ route('admin.report.pasien') }}"> Laporan Pasien </a></li>
                                 <li><a href="invoice-reports.html"> Laporan Perpindahan Pasien </a></li>
                             </ul>
                         </li>
+                        @endcan
                         @role('super-admin')
                         <li class="submenu">
                             <a href="#" class=""><i class="fa fa-cog"></i> <span> Settings </span> <span class="menu-arrow"></span></a>
                             <ul style="display: none;">
                                 @can('permission-access')
-                                <li><a href="{{ route('admin.permissions.index') }}">Permissions</a></li>
+                                <li class="{{ request()->is('admin/permissions*') ? 'active' : '' }}"><a href="{{ route('admin.permissions.index') }}">Permissions</a></li>
                                 @endcan
                                 @can('roles-access')
-                                <li><a href="{{ route('admin.roles.index') }}">Roles</a></li>
+                                <li class="{{ request()->is('admin/roles*') ? 'active' : '' }}"><a href="{{ route('admin.roles.index') }}">Roles</a></li>
                                 @endcan
                             </ul>
                         </li>
@@ -183,6 +189,9 @@
     <script src="{{ asset('/') }}js/bootstrap.min.js"></script>
     <script src="{{ asset('/') }}js/jquery.slimscroll.js"></script>
     <script src="{{ asset('/') }}js/app.js"></script>
+    <script src="{{ asset('/') }}js/select2.min.js"></script>
+    <script src="{{ asset('/') }}js/moment.min.js"></script>
+    <script src="{{ asset('/') }}js/bootstrap-datetimepicker.min.js"></script>
     <!-- Sweetalert -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/11.0.18/sweetalert2.min.js" integrity="sha512-mBSqtiBr4vcvTb6BCuIAgVx4uF3EVlVvJ2j+Z9USL0VwgL9liZ638rTANn5m1br7iupcjjg/LIl5cCYcNae7Yg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <!-- Select2 -->
@@ -193,26 +202,35 @@
     <script src="https://cdn.datatables.net/fixedheader/3.1.7/js/dataTables.fixedHeader.min.js"></script>
     <script src="https://cdn.datatables.net/responsive/2.2.6/js/dataTables.responsive.min.js"></script>
     <script src="https://cdn.datatables.net/responsive/2.2.6/js/responsive.bootstrap.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/1.7.1/js/dataTables.buttons.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
+    <script src="https://cdn.datatables.net/buttons/1.7.1/js/buttons.html5.min.js"></script>
 
     <script>
         $(document).ready(function() {
-            var table = $('.table').DataTable({
-                responsive: {
-                    details: {
-                        type: 'column'
-                    }
-                },
-                columnDefs: [{
-                        className: 'dtr-control',
-                        responsivePriority: 1,
-                        targets: 0
-                    },
-                    {
-                        responsivePriority: 2,
-                        targets: 1
-                    }
-                ]
-            });
+
+            // $('.report').append('<caption style="caption-side: bottom">A fictional company\'s staff table.</caption>');
+            // var table = $('.table').DataTable({
+            //     responsive: {
+            //         details: {
+            //             type: 'column'
+            //         }
+            //     },
+            //     columnDefs: [{
+            //             className: 'dtr-control',
+            //             responsivePriority: 1,
+            //             targets: 0
+            //         },
+            //         {
+            //             responsivePriority: 2,
+            //             targets: 1
+            //         }
+            //     ]
+            // });
+
+            $('.table').DataTable()
 
             $('.select2').select2();
         })

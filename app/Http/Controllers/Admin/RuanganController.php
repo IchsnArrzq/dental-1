@@ -12,7 +12,9 @@ class RuanganController extends Controller
 {
     public function create(Cabang $cabang)
     {
-        return view('admin.ruangan.create', compact('cabang'));
+        $ruangan = new Ruangan();
+
+        return view('admin.ruangan.create', compact('cabang', 'ruangan'));
     }
 
     public function store(RuanganRequest $request)

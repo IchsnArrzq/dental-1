@@ -5,7 +5,9 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreVoucherRequest;
 use App\Http\Requests\UpdateVoucherRequest;
+use App\RincianPembayaran;
 use App\Voucher;
+use Carbon\Carbon;
 
 class VoucherController extends Controller
 {
@@ -34,10 +36,14 @@ class VoucherController extends Controller
         return redirect()->route('admin.voucher.index')->with('success', 'Voucher has been added');
     }
 
-    public function show(Voucher $voucher)
+    public function show($id)
     {
-        //
+        $voucher = Voucher::where('kode_voucher', $id)->first();
+        return response()->json([
+            'voucher' => $voucher
+        ], 200);
     }
+
 
     public function edit(Voucher $voucher)
     {

@@ -1,24 +1,19 @@
 @extends('layouts.master', ['title' => 'Product'])
 
 @section('content')
-<div class="row">
-    <div class="col-md-6">
-        <h1 class="page-title">Add Product</h1>
-        <div class="card">
-            <div class="card-header">
-                <h5 class="text-bold card-title">Add Product</h5>
-            </div>
+<div class="row justify-content-center text-center">
+    <div class="col-sm-4 col-3">
+        <h4 class="page-title">Add Produk</h4>
+    </div>
+</div>
 
-            <div class="card-body">
-                <form action="{{ route('admin.product.store') }}" method="post">
-                    @csrf
+<div class="row justify-content-center">
+    <div class="col-sm-6">
+        <form action="{{ route('admin.product.store') }}" method="post">
+            @csrf
 
-                    @include('admin.product.form')
-
-                    <button type="submit" class="btn btn-primary"><i class="fa fa-save"></i> Save</button>
-                </form>
-            </div>
-        </div>
+            @include('admin.product.form')
+        </form>
     </div>
 </div>
 @stop

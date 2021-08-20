@@ -36,6 +36,13 @@ class PaymentController extends Controller
         return redirect()->route('admin.payments.index')->with('success', 'Payment has been added');
     }
 
+    public function show(Payment $payment)
+    {
+        return response()->json([
+            'payment' => $payment
+        ], 200);
+    }
+
     public function edit(Payment $payment)
     {
         abort_unless(\Gate::allows('payment-edit'), 403);

@@ -27,7 +27,7 @@
                         </div>
                         <div class="form-group">
                             <label>Email</label>
-                            <input type="email" name="email" class="form-control">
+                            <input type="email" name="email" class="form-control" value="{{ old('email') }}">
 
                             @error('email')
                             <small class="text-danger">{{ $message }}</small>
@@ -36,6 +36,10 @@
                         <div class="form-group">
                             <label>Password</label>
                             <input type="password" name="password" class="form-control">
+
+                            @error('password')
+                            <small class="text-danger">{{ $message }}</small>
+                            @enderror
                         </div>
                         <div class="form-group text-right">
                             <a href="forgot-password.html">Forgot your password?</a>

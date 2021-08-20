@@ -1,25 +1,21 @@
 @extends('layouts.master', ['title' => 'Product'])
 
 @section('content')
-<div class="row">
-    <div class="col-md-6">
-        <h1 class="page-title">Edit Product</h1>
-        <div class="card">
-            <div class="card-header">
-                <h5 class="text-bold card-title">Edit Product</h5>
-            </div>
+<div class="row justify-content-center text-center">
+    <div class="col-sm-4 col-3">
+        <h4 class="page-title">Edit Produk</h4>
+    </div>
+</div>
 
-            <div class="card-body">
-                <form action="{{ route('admin.product.update', $product->id) }}" method="post">
-                    @method('PATCH')
-                    @csrf
+<div class="row justify-content-center">
+    <div class="col-sm-6">
+        <form action="{{ route('admin.product.update', $product->id) }}" method="post">
+            @method('PATCH')
+            @csrf
 
-                    @include('admin.product.form')
+            @include('admin.product.form')
 
-                    <button type="submit" class="btn btn-primary"><i class="fa fa-save"></i> Save</button>
-                </form>
-            </div>
-        </div>
+        </form>
     </div>
 </div>
 @stop

@@ -24,6 +24,7 @@ class StoreWarehouseRequest extends FormRequest
     public function rules()
     {
         return [
+            'kode_cabang' => 'required|unique:cabangs',
             'nama' => 'required',
             'email' => 'required',
             'telpon' => 'required',

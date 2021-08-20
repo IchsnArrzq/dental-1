@@ -1,57 +1,30 @@
 @extends('layouts.master', ['title' => 'Harga Produk'])
 
 @section('content')
-<div class="row">
-    <div class="col-md-6">
-        <h1 class="page-title">
+<div class="row justify-content-center text-center">
+    <div class="col-sm-4 col-3">
+        <h4 class="page-title">
             @if(request()->is('admin/price-product*'))
             Edit Harga Produk
             @else
             Edit Harga Service
             @endif
-        </h1>
-        <div class="card">
-            <div class="card-header">
-                <h5 class="text-bold card-title">
-                    @if(request()->is('admin/price-product*'))
-                    Edit Harga Produk
-                    @else
-                    Edit Harga Service
-                    @endif
-                </h5>
+        </h4>
+    </div>
+</div>
+
+<div class="row justify-content-center">
+    <div class="col-sm-6">
+        <form action="/admin/price/{{ $price->id }}/update" method="post">
+            @method('PATCH')
+            @csrf
+
+            @include('admin.harga-product.form')
+
+            <div class="m-t-20 text-center">
+                <button type="submit" class="btn btn-primary submit-btn">Update</button>
             </div>
-
-            <div class="card-body">
-                <form action="/admin/price/{{ $price->id }}/update" method="post">
-                    @method('PATCH')
-                    @csrf
-                    <div class="form-group">
-                        <label>Product</label>
-                        <select name="barang_id" id="product" class="form-control">
-                            <option disabled selected>-- Choose Product --</option>
-                            @foreach($products as $product)
-                            <option {{ $price->barang_id == $product->id ? 'selected' : '' }} value="{{ $product->id }}">{{ $product->nama_barang }}</option>
-                            @endforeach
-                        </select>
-
-                        @error('barang_id')
-                        <small class="text-danger">{{ $message }}</small>
-                        @enderror
-                    </div>
-
-                    <div class="form-group">
-                        <label>Price</label>
-                        <input type="number" name="harga" id="name" class="form-control" value="{{ $price->harga }}">
-
-                        @error('harga')
-                        <small class="text-danger">{{ $message }}</small>
-                        @enderror
-                    </div>
-
-                    <button type="submit" class="btn btn-primary"><i class="fa fa-save"></i> Save</button>
-                </form>
-            </div>
-        </div>
+        </form>
     </div>
 </div>
 @stop

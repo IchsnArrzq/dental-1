@@ -24,3 +24,7 @@
     <small class="text-danger">{{ $message }}</small>
     @enderror
 </div>
+
+<div class="m-t-20 text-center">
+    <button type="submit" class="btn btn-primary submit-btn"><i class="fa fa-save"></i> Save</button>
+</div>

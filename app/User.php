@@ -31,4 +31,19 @@ class User extends Authenticatable
     {
         return $this->hasMany(Customer::class);
     }
+
+    public function booking()
+    {
+        return $this->hasMany(Booking::class);
+    }
+
+    public function rincian()
+    {
+        return $this->hasMany(RincianPembayaran::class, 'kasir_id');
+    }
+
+    public function komisi()
+    {
+        return $this->hasMany(RincianKomisi::class);
+    }
 }

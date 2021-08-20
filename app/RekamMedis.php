@@ -17,4 +17,9 @@ class RekamMedis extends Model
     {
         return $this->belongsTo(User::class);
     }
+
+    public function customer()
+    {
+        return $this->belongsTo(Customer::class);
+    }
 }

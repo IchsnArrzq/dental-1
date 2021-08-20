@@ -27,4 +27,24 @@ class Customer extends Model
     {
         return $this->hasOne(GigiPasien::class);
     }
+
+    public function ketodonto()
+    {
+        return $this->hasOne(KetOdontogram::class);
+    }
+
+    public function fisik()
+    {
+        return $this->hasOne(Fisik::class);
+    }
+
+    public function rekam()
+    {
+        return $this->hasMany(RekamMedis::class);
+    }
+
+    public function booking()
+    {
+        return $this->hasMany(Booking::class);
+    }
 }

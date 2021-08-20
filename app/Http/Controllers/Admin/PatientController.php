@@ -2,13 +2,10 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Customer;
-use App\GigiPasien;
+use App\{Customer, Fisik, GigiPasien, KetOdontogram, Odontogram, RekamMedis, User, SimbolOdontogram};
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StorePatientRequest;
-use App\Odontogram;
-use App\SimbolOdontogram;
-use App\User;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 class PatientController extends Controller
@@ -34,60 +31,41 @@ class PatientController extends Controller
 
         $attr['user_id'] = $user->id;
         $attr['cabang_id'] = $user->cabang_id;
-        $attr['ttl'] = $request->input('place') . ', ' . $request->input('date');
+        $attr['ttl'] = $request->input('place') . ', ' . Carbon::parse($request->input('date'))->format('d-m-Y');
         $attr['pict'] = $pictUrl;
+        $attr['is_active'] = 1;
 
         $customer = Customer::create($attr);
         Odontogram::create([
             'customer_id' => $customer->id
         ]);
+
         GigiPasien::create([
             'customer_id' => $customer->id
         ]);
 
-        return redirect()->route('admin.patients.index')->with('success', 'Patient has been added');
+        KetOdontogram::create([
+            'customer_id' => $customer->id
+        ]);
+
+        return redirect()->route('admin.pasien.index')->with('success', 'Patient has been added');
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Customer  $customer
-     * @return \Illuminate\Http\Response
-     */
     public function show(Customer $customer)
     {
         //
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Customer  $customer
-     * @return \Illuminate\Http\Response
-     */
     public function edit(Customer $customer)
     {
         //
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Customer  $customer
-     * @return \Illuminate\Http\Response
-     */
     public function update(Request $request, Customer $customer)
     {
         //
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Customer  $customer
-     * @return \Illuminate\Http\Response
-     */
     public function destroy(Customer $customer)
     {
         //
@@ -95,7 +73,32 @@ class PatientController extends Controller
 
     public function odontogram(Customer $customer)
     {
-        return view('admin.patient.odontogram', compact('customer'));
+        $ketodonto = KetOdontogram::where('customer_id', $customer->id)->first();
+        $riwayat = RekamMedis::with('simbol')->where('customer_id', $customer->id)->get();
+
+        return view('admin.patient.odontogram', compact('customer', 'ketodonto', 'riwayat'));
+    }
+
+    public function cekfisik(Customer $customer)
+    {
+        return view('admin.patient.cekfisik', compact('customer'));
+    }
+
+    public function storefisik(Request $request, Customer $customer)
+    {
+        $customer->fisik()->update($request->except('_token'));
+        return redirect()->route('admin.pasien.cekfisik', $customer->id)->with('success', 'Pemeriksaan berhasil');
+    }
+
+    public function cetakodontogram(Customer $customer)
+    {
+        return view('admin.patient.cetakodonto', compact('customer'));
+    }
+
+    public function cetakriwayat(Customer $customer)
+    {
+        $riwayat = RekamMedis::where('customer_id', $customer->id)->get();
+        return view('admin.patient.cetakriwayat', compact('customer', 'riwayat'));
     }
 
     public function simbol($warna)

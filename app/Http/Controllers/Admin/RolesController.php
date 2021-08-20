@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\{StoreRoleRequest, UpdateRoleRequest};
+use phpDocumentor\Reflection\Types\Null_;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
 
@@ -21,9 +22,12 @@ class RolesController extends Controller
     {
         abort_unless(\Gate::allows('roles-create'), 403);
 
+        $role = new Role();
+        $rolePermissions = null;
+
         $permissions = Permission::orderBy('Name', 'ASC')->get();
 
-        return view('admin.roles.create', compact('permissions'));
+        return view('admin.roles.create', compact('permissions', 'role', 'rolePermissions'));
     }
 
     public function store(StoreRoleRequest $request)

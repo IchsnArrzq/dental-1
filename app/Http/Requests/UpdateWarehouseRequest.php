@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class UpdateWarehouseRequest extends FormRequest
 {
@@ -24,6 +25,8 @@ class UpdateWarehouseRequest extends FormRequest
     public function rules()
     {
         return [
+            'kode_cabang' => 'required',
+            'kode_barang' => Rule::unique('cabangs')->ignore($this->cabang),
             'nama' => 'required',
             'email' => 'required',
             'telpon' => 'required',

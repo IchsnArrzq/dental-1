@@ -31,6 +31,8 @@ class CabangController extends Controller
         abort_unless(\Gate::allows('cabang-create'), 403);
 
         $request['is_active'] = 1;
+        $request['status_pajak'] = request('pajak');
+        $request['ppn'] = request('ppn');
         Cabang::create($request->all());
 
         return redirect()->route('admin.cabang.index')->with('success', 'Cabang has been added');
@@ -59,6 +61,9 @@ class CabangController extends Controller
     public function update(UpdateWarehouseRequest $request, Cabang $cabang)
     {
         abort_unless(\Gate::allows('cabang-edit'), 403);
+
+        $request['status_pajak'] = request('pajak');
+        $request['ppn'] = request('ppn');
 
         $cabang->update($request->all());
 

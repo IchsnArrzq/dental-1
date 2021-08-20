@@ -51,7 +51,7 @@
             <select name="cabang_id" id="cabang" class="form-control">
                 <option disabled selected>-- Select Cabang --</option>
                 @foreach($warehouses as $warehouse)
-                <option value="{{ $warehouse->id }}">{{ $warehouse->nama }}</option>
+                <option {{ $user->cabang_id == $warehouse->id ? 'selected' : '' }} value="{{ $warehouse->id }}">{{ $warehouse->nama }}</option>
                 @endforeach
             </select>
 
@@ -72,5 +72,8 @@
             <input type="file" name="image" id="image">
         </div>
     </div>
+</div>
 
+<div class="m-t-20 text-center">
+    <button type="submit" class="btn btn-primary submit-btn"><i class="fa fa-save"></i> Save</button>
 </div>
