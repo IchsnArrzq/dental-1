@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Waktu pembuatan: 29 Jul 2021 pada 03.07
+-- Waktu pembuatan: 30 Agu 2021 pada 04.12
 -- Versi server: 10.4.14-MariaDB
 -- Versi PHP: 7.4.11
 
@@ -51,17 +51,56 @@ INSERT INTO `barangs` (`id`, `kode_barang`, `nama_barang`, `jenis`, `durasi`, `i
 -- --------------------------------------------------------
 
 --
+-- Struktur dari tabel `bookings`
+--
+
+CREATE TABLE `bookings` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `no_booking` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `marketing_id` bigint(20) UNSIGNED NOT NULL,
+  `dokter_id` bigint(20) UNSIGNED NOT NULL,
+  `resepsionis_id` bigint(20) UNSIGNED NOT NULL,
+  `ob_id` bigint(20) UNSIGNED NOT NULL,
+  `perawat_id` bigint(20) UNSIGNED NOT NULL,
+  `cabang_id` bigint(20) UNSIGNED NOT NULL,
+  `customer_id` bigint(20) UNSIGNED NOT NULL,
+  `tindakan_id` bigint(20) UNSIGNED NOT NULL,
+  `jadwal_id` int(225) UNSIGNED NOT NULL,
+  `status_pembayaran` int(11) NOT NULL,
+  `tanggal_status` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `status_kedatangan_id` int(11) UNSIGNED NOT NULL,
+  `jam_status` time NOT NULL,
+  `jam_selesai` time NOT NULL,
+  `is_active` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data untuk tabel `bookings`
+--
+
+INSERT INTO `bookings` (`id`, `no_booking`, `marketing_id`, `dokter_id`, `resepsionis_id`, `ob_id`, `perawat_id`, `cabang_id`, `customer_id`, `tindakan_id`, `jadwal_id`, `status_pembayaran`, `tanggal_status`, `status_kedatangan_id`, `jam_status`, `jam_selesai`, `is_active`, `created_at`, `updated_at`) VALUES
+(1, 'Tebet1_20210819_54720883', 4, 3, 2, 6, 5, 1, 1, 1, 1, 1, '2021-08-20', 1, '09:00:00', '10:30:00', '1', '2021-08-27 08:20:23', '2021-08-24 06:23:48'),
+(2, 'Tebet1_20210819_932361523', 4, 2, 2, 6, 5, 1, 2, 1, 2, 1, '2021-08-20', 4, '10:30:00', '12:25:00', '1', '2021-08-27 08:21:19', '2021-08-27 07:38:45');
+
+-- --------------------------------------------------------
+
+--
 -- Struktur dari tabel `cabangs`
 --
 
 CREATE TABLE `cabangs` (
   `id` bigint(20) UNSIGNED NOT NULL,
+  `kode_cabang` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
   `nama` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   `alamat` text COLLATE utf8mb4_unicode_ci NOT NULL,
   `telpon` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   `email` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   `wa` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `ppn` int(11) NOT NULL,
   `is_active` int(11) NOT NULL DEFAULT 1,
+  `status_pajak` int(11) NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -70,8 +109,9 @@ CREATE TABLE `cabangs` (
 -- Dumping data untuk tabel `cabangs`
 --
 
-INSERT INTO `cabangs` (`id`, `nama`, `alamat`, `telpon`, `email`, `wa`, `is_active`, `created_at`, `updated_at`) VALUES
-(1, 'Tebet', 'Jl Tebet', '08977356372533', 'tebet@gmail.com', '08977356372533', 1, '2021-07-16 19:58:17', '2021-07-16 19:58:17');
+INSERT INTO `cabangs` (`id`, `kode_cabang`, `nama`, `alamat`, `telpon`, `email`, `wa`, `ppn`, `is_active`, `status_pajak`, `created_at`, `updated_at`) VALUES
+(1, 'C001', 'Tebet', 'Jl Tebet', '08977356372533', 'tebet@gmail.com', '08977356372533', 10, 1, 1, '2021-07-16 19:58:17', '2021-08-19 07:14:41'),
+(2, 'C002', 'Kemang', 'Jl Kemang', '0892367236723', 'kemang@gmail.com', '0892367236723', 5, 1, 1, '2021-08-04 21:01:24', '2021-08-19 07:14:32');
 
 -- --------------------------------------------------------
 
@@ -86,6 +126,7 @@ CREATE TABLE `customers` (
   `nama` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   `no_telp` varchar(15) COLLATE utf8mb4_unicode_ci NOT NULL,
   `no_rek` varchar(25) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `nik_ktp` varchar(17) COLLATE utf8mb4_unicode_ci NOT NULL,
   `email` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   `ttl` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   `jk` enum('Laki-Laki','Perempuan') COLLATE utf8mb4_unicode_ci NOT NULL,
@@ -102,8 +143,9 @@ CREATE TABLE `customers` (
 -- Dumping data untuk tabel `customers`
 --
 
-INSERT INTO `customers` (`id`, `user_id`, `cabang_id`, `nama`, `no_telp`, `no_rek`, `email`, `ttl`, `jk`, `suku`, `alamat`, `pekerjaan`, `pict`, `is_active`, `created_at`, `updated_at`) VALUES
-(1, 1, 1, 'Muhamad iqbal', '0892367482344', '123445674745', 'iqbal@gmail.com', 'Tasikmalaya, 2021-01-27', 'Laki-Laki', 'Sunda', 'Cikeler', 'Student', 'images/patients/QloFAJcS7JNrFWk.png', 1, '2021-07-26 19:01:09', '2021-07-26 19:01:09');
+INSERT INTO `customers` (`id`, `user_id`, `cabang_id`, `nama`, `no_telp`, `no_rek`, `nik_ktp`, `email`, `ttl`, `jk`, `suku`, `alamat`, `pekerjaan`, `pict`, `is_active`, `created_at`, `updated_at`) VALUES
+(1, 1, 1, 'Muhamad iqbal', '0892367482344', '123445674745', '1239023475', 'iqbal@gmail.com', 'Tasikmalaya, 20-11-2002', 'Laki-Laki', 'Sunda', 'Cikeler', 'Student', 'images/patients/QloFAJcS7JNrFWk.png', 1, '2021-08-11 19:01:09', '2021-07-26 19:01:09'),
+(2, 1, 2, 'Rahma Yantini', '089234726343', '10180273826323', '456473547645', 'rahma@gmail.com', 'Bandung, 05-08-2004', 'Perempuan', 'Sunda', 'Bandung', 'Pelajar', 'images/patients/ptyiKGYSyTwkFFB.png', 1, '2021-08-04 20:51:45', '2021-08-04 20:51:45');
 
 -- --------------------------------------------------------
 
@@ -119,6 +161,40 @@ CREATE TABLE `failed_jobs` (
   `exception` longtext COLLATE utf8mb4_unicode_ci NOT NULL,
   `failed_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Struktur dari tabel `fisiks`
+--
+
+CREATE TABLE `fisiks` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `customer_id` bigint(20) UNSIGNED NOT NULL,
+  `gol_darah` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `tekanan_darah` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `pny_jantung` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'Tidak Ada',
+  `diabetes` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'Tidak Ada',
+  `haemopilia` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'Tidak Ada',
+  `hepatitis` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'Tidak Ada',
+  `gastring` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'Tidak Ada',
+  `pny_lainnya` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'Tidak Ada',
+  `alergi_obat` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'Tidak Ada',
+  `alergi_makanan` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'Tidak Ada',
+  `ket_lainnya` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `ket_tekanan` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `ket_obat` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `ket_makanan` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data untuk tabel `fisiks`
+--
+
+INSERT INTO `fisiks` (`id`, `customer_id`, `gol_darah`, `tekanan_darah`, `pny_jantung`, `diabetes`, `haemopilia`, `hepatitis`, `gastring`, `pny_lainnya`, `alergi_obat`, `alergi_makanan`, `ket_lainnya`, `ket_tekanan`, `ket_obat`, `ket_makanan`, `created_at`, `updated_at`) VALUES
+(1, 1, 'A', '120/70', 'Tidak Ada', 'Tidak Ada', 'Tidak Ada', 'Tidak Ada', 'Tidak Ada', 'Tidak Ada', 'Tidak Ada', 'Tidak Ada', '-', 'Normal', '-', '-', NULL, '2021-08-01 22:00:55');
 
 -- --------------------------------------------------------
 
@@ -398,7 +474,8 @@ CREATE TABLE `gigipasien` (
 --
 
 INSERT INTO `gigipasien` (`id`, `customer_id`, `p11c`, `p11t`, `p11b`, `p11l`, `p11r`, `p12c`, `p12t`, `p12b`, `p12l`, `p12r`, `p13c`, `p13t`, `p13b`, `p13l`, `p13r`, `p14c`, `p14t`, `p14b`, `p14l`, `p14r`, `p15c`, `p15t`, `p15b`, `p15l`, `p15r`, `p16c`, `p16t`, `p16b`, `p16l`, `p16r`, `p17c`, `p17t`, `p17b`, `p17l`, `p17r`, `p18c`, `p18t`, `p18b`, `p18l`, `p18r`, `p21c`, `p21t`, `p21b`, `p21l`, `p21r`, `p22c`, `p22t`, `p22b`, `p22l`, `p22r`, `p23c`, `p23t`, `p23b`, `p23l`, `p23r`, `p24c`, `p24t`, `p24b`, `p24l`, `p24r`, `p25c`, `p25t`, `p25b`, `p25l`, `p25r`, `p26c`, `p26t`, `p26b`, `p26l`, `p26r`, `p27c`, `p27t`, `p27b`, `p27l`, `p27r`, `p28c`, `p28t`, `p28b`, `p28l`, `p28r`, `p51c`, `p51t`, `p51b`, `p51l`, `p51r`, `p52c`, `p52t`, `p52b`, `p52l`, `p52r`, `p53c`, `p53t`, `p53b`, `p53l`, `p53r`, `p54c`, `p54t`, `p54b`, `p54l`, `p54r`, `p55c`, `p55t`, `p55b`, `p55l`, `p55r`, `p61c`, `p61t`, `p61b`, `p61l`, `p61r`, `p62c`, `p62t`, `p62b`, `p62l`, `p62r`, `p63c`, `p63t`, `p63b`, `p63l`, `p63r`, `p64c`, `p64t`, `p64b`, `p64l`, `p64r`, `p65c`, `p65t`, `p65b`, `p65l`, `p65r`, `p81c`, `p81t`, `p81b`, `p81l`, `p81r`, `p82c`, `p82t`, `p82b`, `p82l`, `p82r`, `p83c`, `p83t`, `p83b`, `p83l`, `p83r`, `p84c`, `p84t`, `p84b`, `p84l`, `p84r`, `p85c`, `p85t`, `p85b`, `p85l`, `p85r`, `p71c`, `p71t`, `p71b`, `p71l`, `p71r`, `p72c`, `p72t`, `p72b`, `p72l`, `p72r`, `p73c`, `p73t`, `p73b`, `p73l`, `p73r`, `p74c`, `p74t`, `p74b`, `p74l`, `p74r`, `p75c`, `p75t`, `p75b`, `p75l`, `p75r`, `p41c`, `p41t`, `p41b`, `p41l`, `p41r`, `p42c`, `p42t`, `p42b`, `p42l`, `p42r`, `p43c`, `p43t`, `p43b`, `p43l`, `p43r`, `p44c`, `p44t`, `p44b`, `p44l`, `p44r`, `p45c`, `p45t`, `p45b`, `p45l`, `p45r`, `p46c`, `p46t`, `p46b`, `p46l`, `p46r`, `p47c`, `p47t`, `p47b`, `p47l`, `p47r`, `p48c`, `p48t`, `p48b`, `p48l`, `p48r`, `p31c`, `p31t`, `p31b`, `p31l`, `p31r`, `p32c`, `p32t`, `p32b`, `p32l`, `p32r`, `p33c`, `p33t`, `p33b`, `p33l`, `p33r`, `p34c`, `p34t`, `p34b`, `p34l`, `p34r`, `p35c`, `p35t`, `p35b`, `p35l`, `p35r`, `p36c`, `p36t`, `p36b`, `p36l`, `p36r`, `p37c`, `p37t`, `p37b`, `p37l`, `p37r`, `p38c`, `p38t`, `p38b`, `p38l`, `p38r`, `created_at`, `updated_at`) VALUES
-(1, 1, 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'amf', 'sou', 'sou', 'sou', 'amf', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', '2021-07-27 05:21:12', '2021-07-27 05:21:12');
+(1, 1, 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'UE', 'UE', 'UE', 'UE', 'UE', 'sou', 'sou', 'sou', 'sou', 'sou', 'rx', 'rx', 'rx', 'rx', 'rx', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'non', 'non', 'non', 'non', 'non', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'cof', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', '2021-08-20 04:24:24', '2021-08-20 11:24:24'),
+(2, 2, 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', 'sou', '2021-08-04 20:51:45', '2021-08-05 03:51:45');
 
 -- --------------------------------------------------------
 
@@ -421,7 +498,71 @@ CREATE TABLE `harga_produk_cabangs` (
 
 INSERT INTO `harga_produk_cabangs` (`id`, `barang_id`, `cabang_id`, `harga`, `created_at`, `updated_at`) VALUES
 (1, 1, 1, 2000000, '2021-07-21 18:17:34', '2021-07-21 18:17:34'),
-(2, 3, 1, 1500000, '2021-07-21 18:18:38', '2021-07-21 18:18:38');
+(2, 3, 1, 1500000, '2021-07-21 18:18:38', '2021-07-21 18:18:38'),
+(3, 4, 1, 1500000, '2021-08-13 06:16:04', '2021-08-13 06:16:04'),
+(4, 4, 2, 2000000, '2021-08-14 03:41:02', '2021-08-14 03:41:02');
+
+-- --------------------------------------------------------
+
+--
+-- Struktur dari tabel `jadwals`
+--
+
+CREATE TABLE `jadwals` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `user_id` bigint(20) UNSIGNED DEFAULT NULL,
+  `cabang_id` bigint(20) UNSIGNED DEFAULT NULL,
+  `shift_id` bigint(20) UNSIGNED DEFAULT NULL,
+  `ruangan_id` bigint(20) UNSIGNED DEFAULT NULL,
+  `tanggal` date NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data untuk tabel `jadwals`
+--
+
+INSERT INTO `jadwals` (`id`, `user_id`, `cabang_id`, `shift_id`, `ruangan_id`, `tanggal`, `created_at`, `updated_at`) VALUES
+(1, 2, 1, 1, 2, '2021-08-01', '2021-08-17 20:48:35', '2021-08-17 20:50:00'),
+(2, 2, 1, 1, 2, '2021-08-02', '2021-08-17 20:48:35', '2021-08-17 20:50:00');
+
+-- --------------------------------------------------------
+
+--
+-- Struktur dari tabel `ket_odontograms`
+--
+
+CREATE TABLE `ket_odontograms` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `customer_id` bigint(20) UNSIGNED NOT NULL,
+  `occlusi` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `t_palatinus` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `t_mandibularis` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `palatum` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `diastema` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `anomali` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `lain` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `d` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `m` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `f` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `ket_occlusi` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `ket_tp` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `ket_tm` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `ket_palatum` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `ket_diastema` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `ket_anomali` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data untuk tabel `ket_odontograms`
+--
+
+INSERT INTO `ket_odontograms` (`id`, `customer_id`, `occlusi`, `t_palatinus`, `t_mandibularis`, `palatum`, `diastema`, `anomali`, `lain`, `d`, `m`, `f`, `ket_occlusi`, `ket_tp`, `ket_tm`, `ket_palatum`, `ket_diastema`, `ket_anomali`, `created_at`, `updated_at`) VALUES
+(1, 1, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2021-08-01 20:59:59'),
+(2, 2, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2021-08-04 20:51:45', '2021-08-04 20:51:45');
 
 -- --------------------------------------------------------
 
@@ -432,7 +573,7 @@ INSERT INTO `harga_produk_cabangs` (`id`, `barang_id`, `cabang_id`, `harga`, `cr
 CREATE TABLE `komisis` (
   `id` bigint(20) UNSIGNED NOT NULL,
   `role_id` bigint(20) UNSIGNED NOT NULL,
-  `persentase` bigint(20) NOT NULL,
+  `persentase` varchar(5) COLLATE utf8mb4_unicode_ci NOT NULL,
   `min_transaksi` bigint(20) NOT NULL,
   `is_active` int(11) NOT NULL DEFAULT 1,
   `created_at` timestamp NULL DEFAULT NULL,
@@ -444,7 +585,12 @@ CREATE TABLE `komisis` (
 --
 
 INSERT INTO `komisis` (`id`, `role_id`, `persentase`, `min_transaksi`, `is_active`, `created_at`, `updated_at`) VALUES
-(1, 1, 10, 0, 1, '2021-07-21 05:53:55', '2021-07-21 06:02:29');
+(1, 1, '0', 0, 1, '2021-07-21 05:53:55', '2021-08-13 15:49:13'),
+(2, 2, '20', 0, 1, '2021-08-05 23:02:18', '2021-08-05 23:02:18'),
+(3, 3, '1', 900000, 1, '2021-08-05 23:02:36', '2021-08-13 15:49:46'),
+(4, 4, '1', 900000, 1, '2021-08-14 01:54:32', '2021-08-14 01:54:32'),
+(5, 5, '0.25', 900000, 1, '2021-08-14 01:56:30', '2021-08-14 01:56:30'),
+(6, 6, '1', 900000, 1, '2021-08-14 01:56:43', '2021-08-14 01:56:43');
 
 -- --------------------------------------------------------
 
@@ -479,7 +625,12 @@ INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
 (14, '2021_07_26_023617_create_odontograms_table', 4),
 (15, '2021_07_26_025104_add_field_to_odontograms_table', 5),
 (16, '2021_07_26_033809_create_simbol_odontograms_table', 6),
-(17, '2021_07_27_041134_create_rekam_medis_table', 7);
+(17, '2021_07_27_041134_create_rekam_medis_table', 7),
+(19, '2021_07_29_012337_create_ket_odontograms_table', 8),
+(21, '2021_08_02_031724_create_fisiks_table', 9),
+(22, '2021_08_05_030713_create_bookings_table', 10),
+(23, '2021_08_05_031124_create_tindakans_table', 10),
+(24, '2021_08_05_031423_create_rincian_pembayarans_table', 10);
 
 -- --------------------------------------------------------
 
@@ -511,8 +662,12 @@ CREATE TABLE `model_has_roles` (
 
 INSERT INTO `model_has_roles` (`role_id`, `model_type`, `model_id`) VALUES
 (1, 'App\\User', 1),
-(2, 'App\\User', 2),
-(2, 'App\\User', 3);
+(2, 'App\\User', 3),
+(3, 'App\\User', 2),
+(4, 'App\\User', 4),
+(5, 'App\\User', 6),
+(6, 'App\\User', 5),
+(7, 'App\\User', 8);
 
 -- --------------------------------------------------------
 
@@ -792,7 +947,8 @@ CREATE TABLE `odontogram_pasien` (
 --
 
 INSERT INTO `odontogram_pasien` (`id`, `customer_id`, `p11c`, `p11t`, `p11b`, `p11l`, `p11r`, `p12c`, `p12t`, `p12b`, `p12l`, `p12r`, `p13c`, `p13t`, `p13b`, `p13l`, `p13r`, `p14c`, `p14t`, `p14b`, `p14l`, `p14r`, `p15c`, `p15t`, `p15b`, `p15l`, `p15r`, `p16c`, `p16t`, `p16b`, `p16l`, `p16r`, `p17c`, `p17t`, `p17b`, `p17l`, `p17r`, `p18c`, `p18t`, `p18b`, `p18l`, `p18r`, `p21c`, `p21t`, `p21b`, `p21l`, `p21r`, `p22c`, `p22t`, `p22b`, `p22l`, `p22r`, `p23c`, `p23t`, `p23b`, `p23l`, `p23r`, `p24c`, `p24t`, `p24b`, `p24l`, `p24r`, `p25c`, `p25t`, `p25b`, `p25l`, `p25r`, `p26c`, `p26t`, `p26b`, `p26l`, `p26r`, `p27c`, `p27t`, `p27b`, `p27l`, `p27r`, `p28c`, `p28t`, `p28b`, `p28l`, `p28r`, `p51c`, `p51t`, `p51b`, `p51l`, `p51r`, `p52c`, `p52t`, `p52b`, `p52l`, `p52r`, `p53c`, `p53t`, `p53b`, `p53l`, `p53r`, `p54c`, `p54t`, `p54b`, `p54l`, `p54r`, `p55c`, `p55t`, `p55b`, `p55l`, `p55r`, `p61c`, `p61t`, `p61b`, `p61l`, `p61r`, `p62c`, `p62t`, `p62b`, `p62l`, `p62r`, `p63c`, `p63t`, `p63b`, `p63l`, `p63r`, `p64c`, `p64t`, `p64b`, `p64l`, `p64r`, `p65c`, `p65t`, `p65b`, `p65l`, `p65r`, `p81c`, `p81t`, `p81b`, `p81l`, `p81r`, `p82c`, `p82t`, `p82b`, `p82l`, `p82r`, `p83c`, `p83t`, `p83b`, `p83l`, `p83r`, `p84c`, `p84t`, `p84b`, `p84l`, `p84r`, `p85c`, `p85t`, `p85b`, `p85l`, `p85r`, `p71c`, `p71t`, `p71b`, `p71l`, `p71r`, `p72c`, `p72t`, `p72b`, `p72l`, `p72r`, `p73c`, `p73t`, `p73b`, `p73l`, `p73r`, `p74c`, `p74t`, `p74b`, `p74l`, `p74r`, `p75c`, `p75t`, `p75b`, `p75l`, `p75r`, `p41c`, `p41t`, `p41b`, `p41l`, `p41r`, `p42c`, `p42t`, `p42b`, `p42l`, `p42r`, `p43c`, `p43t`, `p43b`, `p43l`, `p43r`, `p44c`, `p44t`, `p44b`, `p44l`, `p44r`, `p45c`, `p45t`, `p45b`, `p45l`, `p45r`, `p46c`, `p46t`, `p46b`, `p46l`, `p46r`, `p47c`, `p47t`, `p47b`, `p47l`, `p47r`, `p48c`, `p48t`, `p48b`, `p48l`, `p48r`, `p31c`, `p31t`, `p31b`, `p31l`, `p31r`, `p32c`, `p32t`, `p32b`, `p32l`, `p32r`, `p33c`, `p33t`, `p33b`, `p33l`, `p33r`, `p34c`, `p34t`, `p34b`, `p34l`, `p34r`, `p35c`, `p35t`, `p35b`, `p35l`, `p35r`, `p36c`, `p36t`, `p36b`, `p36l`, `p36r`, `p37c`, `p37t`, `p37b`, `p37l`, `p37r`, `p38c`, `p38t`, `p38b`, `p38l`, `p38r`, `created_at`, `updated_at`) VALUES
-(1, 1, 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'red', 'Ivory', 'Ivory', 'Ivory', 'red', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', '2021-07-26 19:01:09', '2021-07-26 22:21:12');
+(1, 1, 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'AliceBlue', 'AliceBlue', 'AliceBlue', 'AliceBlue', 'AliceBlue', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Yellow', 'Yellow', 'Yellow', 'Yellow', 'Yellow', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Indigo', 'Indigo', 'Indigo', 'Indigo', 'Indigo', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'darkblue', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', '2021-07-26 19:01:09', '2021-08-20 04:24:24'),
+(2, 2, 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', 'Ivory', '2021-08-04 20:51:45', '2021-08-04 20:51:45');
 
 -- --------------------------------------------------------
 
@@ -816,10 +972,21 @@ CREATE TABLE `payments` (
   `id` bigint(20) UNSIGNED NOT NULL,
   `nama_metode` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   `potongan` varchar(15) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `rekening` int(20) NOT NULL,
   `is_active` int(11) NOT NULL DEFAULT 1,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data untuk tabel `payments`
+--
+
+INSERT INTO `payments` (`id`, `nama_metode`, `potongan`, `rekening`, `is_active`, `created_at`, `updated_at`) VALUES
+(1, 'Debit Visa', '5', 2222232, 1, '2021-08-05 17:48:04', '2021-08-05 17:50:20'),
+(2, 'Bank BCA', '3', 2222235, 1, '2021-08-05 17:48:25', '2021-08-05 17:50:26'),
+(3, 'Cash', '0', 0, 1, '2021-08-05 17:48:35', '2021-08-05 17:48:35'),
+(4, 'Voucher', '0', 0, 1, '2021-08-14 03:37:19', '2021-08-14 03:37:19');
 
 -- --------------------------------------------------------
 
@@ -888,7 +1055,16 @@ INSERT INTO `permissions` (`id`, `name`, `key`, `guard_name`, `created_at`, `upd
 (51, 'simbol-access', 'Simbol Access', 'web', '2021-07-28 08:27:23', '2021-07-28 08:27:23'),
 (52, 'simbol-create', 'Simbol Create', 'web', '2021-07-28 08:27:31', '2021-07-28 08:27:31'),
 (53, 'simbol-edit', 'Simbol Edit', 'web', '2021-07-28 08:27:39', '2021-07-28 08:27:39'),
-(54, 'simbol-delete', 'Simbol Delete', 'web', '2021-07-28 08:27:46', '2021-07-28 08:27:46');
+(54, 'simbol-delete', 'Simbol Delete', 'web', '2021-07-28 08:27:46', '2021-07-28 08:27:46'),
+(55, 'report-access', 'Report Access', 'web', '2021-08-12 17:01:14', '2021-08-12 17:01:14'),
+(56, 'dokter-access', 'Dokter Access', 'web', '2021-08-22 03:01:57', '2021-08-22 03:01:57'),
+(57, 'dokter-create', 'Dokter Create', 'web', '2021-08-22 03:02:03', '2021-08-22 03:02:03'),
+(58, 'dokter-edit', 'Dokter Edit', 'web', '2021-08-22 03:02:07', '2021-08-22 03:02:07'),
+(59, 'dokter-delete', 'Dokter Delete', 'web', '2021-08-22 03:02:14', '2021-08-22 03:02:14'),
+(60, 'appointment-access', 'Appointment Access', 'web', '2021-08-25 07:06:14', '2021-08-25 07:06:14'),
+(61, 'appointment-create', 'Appointment Create', 'web', '2021-08-25 07:06:23', '2021-08-25 07:06:23'),
+(62, 'appointment-edit', 'Appointment Edit', 'web', '2021-08-25 07:06:29', '2021-08-25 07:06:29'),
+(63, 'appointment-delete', 'Appointment Delete', 'web', '2021-08-25 07:06:39', '2021-08-25 07:06:39');
 
 -- --------------------------------------------------------
 
@@ -916,7 +1092,69 @@ CREATE TABLE `rekam_medis` (
 INSERT INTO `rekam_medis` (`id`, `customer_id`, `user_id`, `tanggal`, `no_gigi`, `simbol_id`, `keterangan`, `tindakan`, `created_at`, `updated_at`) VALUES
 (1, 1, 1, '2027-07-21', '17R', 1, 'Amalgam', 'Tambal', '2021-07-26 21:53:14', '2021-07-26 21:53:14'),
 (2, 1, 1, '2021-07-27', '17C', 2, 'Komposite', 'Cabut', '2021-07-26 22:05:12', '2021-07-26 22:05:12'),
-(3, 1, 1, '2021-07-27', '17C', 1, 'Amalgam', 'Tambal', '2021-07-26 22:21:12', '2021-07-26 22:21:12');
+(3, 1, 1, '2021-07-27', '17C', 1, 'Amalgam', 'Tambal', '2021-07-26 22:21:12', '2021-07-26 22:21:12'),
+(4, 1, 1, '2021-07-30', '75C', 2, 'Komposite', 'Cabut', '2021-07-30 01:18:24', '2021-07-30 01:18:24'),
+(5, 1, 1, '2021-08-18', '15ALL', 7, 'Un-Erupted', 'Un-Erupted', '2021-08-18 15:27:10', '2021-08-18 15:27:10'),
+(6, 1, 1, '2021-08-18', '17ALL', 20, 'Radix', 'Radix', '2021-08-18 15:28:49', '2021-08-18 15:28:49'),
+(7, 1, 1, '2021-08-20', '82ALL', 6, 'asf', 'asf', '2021-08-20 04:24:24', '2021-08-20 04:24:24');
+
+-- --------------------------------------------------------
+
+--
+-- Struktur dari tabel `rincian_komisi`
+--
+
+CREATE TABLE `rincian_komisi` (
+  `id` int(11) NOT NULL,
+  `booking_id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `nominal_komisi` varchar(50) NOT NULL,
+  `is_active` int(1) NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data untuk tabel `rincian_komisi`
+--
+
+INSERT INTO `rincian_komisi` (`id`, `booking_id`, `user_id`, `nominal_komisi`, `is_active`, `created_at`, `updated_at`) VALUES
+(1, 1, 3, '200000', 1, '2021-08-16 07:52:40', '2021-08-16 07:52:40'),
+(2, 1, 4, '10000', 1, '2021-08-16 07:52:40', '2021-08-16 07:52:40'),
+(3, 1, 6, '2500', 1, '2021-08-16 07:52:40', '2021-08-16 07:52:40'),
+(4, 1, 5, '10000', 1, '2021-08-16 07:52:40', '2021-08-16 07:52:40'),
+(5, 2, 3, '200000', 1, '2021-08-16 07:53:29', '2021-08-16 07:53:29'),
+(6, 2, 3, '220000', 1, '2021-08-16 07:54:19', '2021-08-16 07:54:19'),
+(7, 1, 3, '400000', 1, '2021-08-25 06:49:17', '2021-08-25 06:49:17'),
+(8, 1, 3, '200000', 1, '2021-08-25 06:56:30', '2021-08-25 06:56:30'),
+(9, 1, 3, '240000', 1, '2021-08-25 06:57:50', '2021-08-25 06:57:50'),
+(10, 1, 3, '200000', 1, '2021-08-25 07:04:38', '2021-08-25 07:04:38'),
+(11, 1, 3, '200000', 1, '2021-08-25 07:31:19', '2021-08-25 07:31:19'),
+(12, 1, 3, '240000', 1, '2021-08-25 07:32:27', '2021-08-25 07:32:27'),
+(13, 2, 2, '200000', 1, '2021-08-27 08:04:09', '2021-08-27 08:04:09');
+
+-- --------------------------------------------------------
+
+--
+-- Struktur dari tabel `rincian_pembayarans`
+--
+
+CREATE TABLE `rincian_pembayarans` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `booking_id` bigint(20) UNSIGNED NOT NULL,
+  `kasir_id` bigint(20) UNSIGNED NOT NULL,
+  `payment_id` bigint(20) UNSIGNED NOT NULL,
+  `tanggal_pembayaran` timestamp NOT NULL DEFAULT current_timestamp(),
+  `nominal` bigint(11) NOT NULL,
+  `dibayar` int(20) NOT NULL,
+  `kembali` int(11) NOT NULL,
+  `voucher_id` int(11) DEFAULT NULL,
+  `disc_vouc` int(11) DEFAULT NULL,
+  `biaya_kartu` int(11) NOT NULL,
+  `is_active` int(11) NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
 
@@ -939,7 +1177,12 @@ CREATE TABLE `roles` (
 
 INSERT INTO `roles` (`id`, `name`, `key`, `guard_name`, `created_at`, `updated_at`) VALUES
 (1, 'super-admin', 'Super Admin', 'web', '2021-07-16 19:56:23', '2021-07-16 19:56:23'),
-(2, 'dokter', 'Dokter', 'web', '2021-07-21 18:26:17', '2021-07-21 18:26:17');
+(2, 'dokter', 'Dokter', 'web', '2021-07-21 18:26:17', '2021-07-21 18:26:17'),
+(3, 'resepsionis', 'Resepsionis', 'web', '2021-08-01 18:38:02', '2021-08-01 18:38:02'),
+(4, 'marketing', 'Marketing', 'web', '2021-08-14 01:52:46', '2021-08-14 01:52:46'),
+(5, 'office-boy', 'Office Boy', 'web', '2021-08-14 01:54:47', '2021-08-14 01:54:47'),
+(6, 'perawat', 'Perawat', 'web', '2021-08-14 01:55:06', '2021-08-14 01:55:06'),
+(7, 'supervisor', 'Supervisor', 'web', '2021-08-25 07:07:13', '2021-08-25 07:07:13');
 
 -- --------------------------------------------------------
 
@@ -983,6 +1226,10 @@ INSERT INTO `role_has_permissions` (`permission_id`, `role_id`) VALUES
 (30, 1),
 (31, 1),
 (31, 2),
+(31, 3),
+(31, 4),
+(31, 5),
+(31, 6),
 (32, 1),
 (33, 1),
 (34, 1),
@@ -1005,7 +1252,19 @@ INSERT INTO `role_has_permissions` (`permission_id`, `role_id`) VALUES
 (51, 1),
 (52, 1),
 (53, 1),
-(54, 1);
+(54, 1),
+(55, 1),
+(56, 1),
+(56, 3),
+(57, 1),
+(58, 1),
+(59, 1),
+(60, 1),
+(60, 3),
+(60, 7),
+(61, 1),
+(62, 1),
+(63, 1);
 
 -- --------------------------------------------------------
 
@@ -1050,9 +1309,32 @@ CREATE TABLE `simbol_odontograms` (
 --
 
 INSERT INTO `simbol_odontograms` (`id`, `nama_simbol`, `singkatan`, `warna`, `created_at`, `updated_at`) VALUES
-(1, 'Amalgam', 'amf', 'red', '2021-07-25 20:53:57', '2021-07-26 22:03:18'),
-(2, 'Komposite', 'cof', 'darkblue', '2021-07-25 20:58:14', '2021-07-26 22:03:25'),
-(3, 'Normal/Baik', 'sou', 'Ivory', '2021-07-26 19:06:53', '2021-07-26 19:06:53');
+(1, 'Amalgam', 'amf', 'DarkGrey', NULL, NULL),
+(2, 'Komposite', 'cof', 'MediumBlue', NULL, NULL),
+(3, 'pit dan fissure sealant', 'fis', 'AntiqueWhite', NULL, NULL),
+(4, 'Nekrosis Pulpa', 'NP', 'DarkSlateGray', NULL, NULL),
+(5, 'Perawatan Saluran Akar', 'rct', 'Aquamarine', NULL, NULL),
+(6, 'gigi tidak ada, tidak diketahui ada atau tidak ada.', 'non', 'Indigo', NULL, NULL),
+(7, 'Un-Erupted', 'UE', 'AliceBlue', NULL, NULL),
+(8, 'Partial Eruption', 'PE', 'Orchid', NULL, NULL),
+(9, 'Normal/ baik', 'sou', 'Ivory', NULL, NULL),
+(10, 'Anomali ', 'A', 'LimeGreen', NULL, NULL),
+(11, 'Karies Media', 'KM', 'Brown', NULL, NULL),
+(12, 'Fractur', 'cfr', 'Teal', NULL, NULL),
+(13, 'Karies Profunda', 'KP', 'Chocolate', NULL, NULL),
+(14, 'Karies Superfisial', 'KS', 'BurlyWood', NULL, NULL),
+(15, 'Metal Crown', 'fmc', 'Green', NULL, NULL),
+(17, 'Crown Non Metal', 'cnm', 'ForestGreen', NULL, NULL),
+(18, 'Normal', 'TAK', 'LightCyan', NULL, NULL),
+(19, 'Mobility', 'M', 'Lime', NULL, NULL),
+(20, 'Radix', 'rx', 'Yellow', NULL, NULL),
+(21, 'Missing teeth', 'mis', 'Coral', NULL, NULL),
+(22, 'Implant + Porcelain crown', 'ipx-poc', 'LightGreen', NULL, NULL),
+(23, 'Bridge', 'Brg', 'OliveDrab', NULL, NULL),
+(24, 'GTSL', 'gtsl', 'Fuchsia', NULL, NULL),
+(25, 'plak dan kalkulus', 'calculus', 'Chartreuse', NULL, NULL),
+(26, 'GTL', 'GTL', 'HotPink', NULL, NULL),
+(27, 'Migrasi/ Version/Rotasi dibuat panahsesuai arah', 'mv', 'GoldenRod', NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -1063,6 +1345,7 @@ INSERT INTO `simbol_odontograms` (`id`, `nama_simbol`, `singkatan`, `warna`, `cr
 CREATE TABLE `status_pasiens` (
   `id` bigint(20) UNSIGNED NOT NULL,
   `status` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `warna` varchar(20) COLLATE utf8mb4_unicode_ci NOT NULL,
   `is_active` int(11) NOT NULL DEFAULT 1,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
@@ -1072,10 +1355,84 @@ CREATE TABLE `status_pasiens` (
 -- Dumping data untuk tabel `status_pasiens`
 --
 
-INSERT INTO `status_pasiens` (`id`, `status`, `is_active`, `created_at`, `updated_at`) VALUES
-(1, 'Datang & Waiting', 1, '2021-07-28 07:42:49', '2021-07-28 07:42:49'),
-(2, 'Masuk Ruangan', 1, '2021-07-28 07:42:53', '2021-07-28 07:42:53'),
-(3, 'Selesai', 1, '2021-07-28 07:42:58', '2021-07-28 07:42:58');
+INSERT INTO `status_pasiens` (`id`, `status`, `warna`, `is_active`, `created_at`, `updated_at`) VALUES
+(1, 'Belum Datang', 'red', 1, '2021-07-28 07:42:49', '2021-08-24 00:09:07'),
+(2, 'Datang & Waiting', 'orange', 1, '2021-07-28 07:42:53', '2021-08-24 00:09:17'),
+(3, 'Masuk Ruangan', 'blue', 1, '2021-07-28 07:42:58', '2021-08-24 00:09:25'),
+(4, 'Selesai', 'green', 1, '2021-08-20 04:17:59', '2021-08-24 00:09:30');
+
+-- --------------------------------------------------------
+
+--
+-- Struktur dari tabel `tabel_simbol`
+--
+
+CREATE TABLE `tabel_simbol` (
+  `id` int(11) NOT NULL,
+  `namasimbol` varchar(128) NOT NULL,
+  `singkatan` varchar(16) NOT NULL,
+  `warna` varchar(64) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Dumping data untuk tabel `tabel_simbol`
+--
+
+INSERT INTO `tabel_simbol` (`id`, `namasimbol`, `singkatan`, `warna`) VALUES
+(1, 'Amalgam', 'amf', 'DarkGrey'),
+(2, 'Komposite', 'cof', 'MediumBlue'),
+(3, 'pit dan fissure sealant', 'fis', 'AntiqueWhite'),
+(4, 'Nekrosis Pulpa', 'NP', 'DarkSlateGray'),
+(5, 'Perawatan Saluran Akar', 'rct', 'Aquamarine'),
+(6, 'gigi tidak ada, tidak diketahui ada atau tidak ada.', 'non', 'Indigo'),
+(7, 'Un-Erupted', 'UE', 'AliceBlue'),
+(8, 'Partial Eruption', 'PE', 'Orchid'),
+(9, 'Normal/ baik', 'sou', 'Ivory'),
+(10, 'Anomali ', 'A', 'LimeGreen'),
+(11, 'Karies Media', 'KM', 'Brown'),
+(12, 'Fractur', 'cfr', 'Teal'),
+(13, 'Karies Profunda', 'KP', 'Chocolate'),
+(14, 'Karies Superfisial', 'KS', 'BurlyWood'),
+(15, 'Metal Crown', 'fmc', 'Green'),
+(17, 'Crown Non Metal', 'cnm', 'ForestGreen'),
+(18, 'Normal', 'TAK', 'LightCyan'),
+(19, 'Mobility', 'M', 'Lime'),
+(20, 'Radix', 'rx', 'Yellow'),
+(21, 'Missing teeth', 'mis', 'Coral'),
+(22, 'Implant + Porcelain crown', 'ipx-poc', 'LightGreen'),
+(23, 'Bridge', 'Brg', 'OliveDrab'),
+(24, 'GTSL', 'gtsl', 'Fuchsia'),
+(25, 'plak dan kalkulus', 'calculus', 'Chartreuse'),
+(26, 'GTL', 'GTL', 'HotPink'),
+(27, 'Migrasi/ Version/Rotasi dibuat panahsesuai arah', 'mv', 'GoldenRod');
+
+-- --------------------------------------------------------
+
+--
+-- Struktur dari tabel `tindakans`
+--
+
+CREATE TABLE `tindakans` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `booking_id` bigint(20) UNSIGNED NOT NULL,
+  `barang_id` int(11) NOT NULL,
+  `durasi` int(11) NOT NULL,
+  `dokter` int(11) NOT NULL,
+  `nominal` int(11) NOT NULL,
+  `qty` int(11) NOT NULL,
+  `status` int(11) NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data untuk tabel `tindakans`
+--
+
+INSERT INTO `tindakans` (`id`, `booking_id`, `barang_id`, `durasi`, `dokter`, `nominal`, `qty`, `status`, `created_at`, `updated_at`) VALUES
+(1, 1, 3, 20, 1, 1500000, 1, 0, '2021-08-03 01:07:46', '2021-08-13 01:07:41'),
+(3, 2, 4, 20, 1, 1500000, 1, 0, '2021-08-05 03:50:07', '2021-08-05 03:50:07'),
+(4, 1, 4, 20, 1, 1500000, 1, 0, '2021-08-13 06:12:22', '2021-08-13 06:12:22');
 
 -- --------------------------------------------------------
 
@@ -1108,9 +1465,13 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`id`, `name`, `email`, `email_verified_at`, `password`, `remember_token`, `phone_number`, `is_active`, `cabang_id`, `mac_address`, `is_verified`, `updated_by`, `address`, `image`, `deleted_at`, `created_at`, `updated_at`) VALUES
-(1, 'Developer', 'admin@localhost.com', NULL, '$2y$10$s65sOQTaF9JIn86zFud9nOb1OU1KAAXzgHjDPtuKSj3ntEPWadFP6', NULL, '82114823280', 1, 1, NULL, 'pending', NULL, 'Tasikmalaya', 'images/users/Yf45aMOvOIfh8bw.jpg', NULL, '2021-07-16 19:36:06', '2021-07-16 19:59:26'),
-(2, 'Dr. Iqbal', 'iqbal@gmail.com', NULL, '$2y$10$tkIyw5YtpP2d/QchvO.I0OSvLr3Nd4sPSJ9qgGq8VsAznhiQKOB7e', NULL, '82114823280', 1, 1, NULL, 'pending', NULL, 'Tasikmalaya', 'images/users/2EvkSR5cUQdlBP8.jpg', NULL, '2021-07-21 18:27:00', '2021-07-21 18:27:00'),
-(3, 'Leni Hardiyanti', 'leni@gmail.com', NULL, '$2y$10$/ZwjGYI7.SrxGK9JzYkjXugTMKaZ1fCU6rVT3UnfF9HVVWOgNXVGW', NULL, '081236891733', 1, 1, NULL, 'pending', NULL, 'Tasikmalaya', 'images/users/325CStEvH3IHuO9.jpg', NULL, '2021-07-28 07:03:44', '2021-07-28 07:03:44');
+(1, 'Developer', 'admin@localhost.com', NULL, '$2y$10$f4lKm1p8MrgWWW4t7EG39.bCtVpFM8XFqb2fs.1trFwSkx8lfLoB6', NULL, '82114823280', 1, 1, '70-54-D2-17-22-92', 'pending', NULL, 'Tasikmalaya', 'images/users/Yf45aMOvOIfh8bw.jpg', NULL, '2021-07-16 19:36:06', '2021-07-30 07:40:16'),
+(2, 'Muhammad Iqbal', 'iqbal@gmail.com', NULL, '$2y$10$kJ0I./rSCQXuddZvhxYJFuTF3j.H5UnecI9QVYSIfAsMqXf/pPOWi', NULL, '82114823280', 1, 1, '70-54-D2-17-22-92', 'pending', NULL, 'Tasikmalaya', 'images/users/2EvkSR5cUQdlBP8.jpg', NULL, '2021-07-21 18:27:00', '2021-08-12 07:14:11'),
+(3, 'Dr. Yanti Jatnika', 'yanti@gmail.com', NULL, '$2y$10$kznzyIRz94mumyfpUNZcquTQ/F.xP7TTBaKMKwvGiHJoQSkXB0phS', NULL, '081236891733', 1, 1, '70-54-D2-17-22-92', 'pending', NULL, 'Tasikmalaya', 'images/users/aiHjBTanegvTtKJ.jpg', NULL, '2021-07-28 07:03:44', '2021-08-24 06:21:19'),
+(4, 'Marketing', 'mrk.tebet@gmail.com', NULL, '$2y$10$nUaCrXsSMNi7PqCXoe8JG.6s9O4AyXpOG33aZinVIUZF.xHHImJYi', NULL, '82114823280', 1, 1, NULL, 'pending', NULL, 'Jakarta', 'images/users/BjwaM9LxgwSDoa9.jpg', NULL, '2021-08-14 01:57:36', '2021-08-14 01:57:36'),
+(5, 'Noneng', 'prwt.tebet@gmail.com', NULL, '$2y$10$g4KUgBYYideSRTEh9Nr/h.1Pj79YSTfIX.5mApN/U97Po7A6eiE.e', NULL, '82114823890', 1, 1, NULL, 'pending', NULL, 'Bali', 'images/users/FiSC4dmXyOvoxEd.png', NULL, '2021-08-14 01:58:25', '2021-08-14 01:58:25'),
+(6, 'Joko', 'ob.tebet@gmail.com', NULL, '$2y$10$qoJ5SjBrvZqlZnEzLCiDbezxT9D0DC1EswXbZ0iQtQXLwMCcHKJbK', NULL, '6134618936291648', 1, 1, NULL, 'pending', NULL, 'Bandung', 'images/users/NZ4VhKz7p5jDOgw.jpg', NULL, '2021-08-14 01:59:03', '2021-08-14 01:59:03'),
+(8, 'Ridwanul Hakim', 'ridwan@gmail.com', NULL, '$2y$10$n0vq2jzfvMAeszIyDz9jGeOT2vdGl02STbCeWyXVYUxbBidUXyqLW', NULL, '0883475683645', 1, 1, '70-54-D2-17-22-92', 'pending', NULL, 'Bandung', 'images/users/7Sd80pACO4J2Cre.jpg', NULL, '2021-08-25 07:08:23', '2021-08-25 07:08:40');
 
 -- --------------------------------------------------------
 
@@ -1133,6 +1494,15 @@ CREATE TABLE `vouchers` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
+-- Dumping data untuk tabel `vouchers`
+--
+
+INSERT INTO `vouchers` (`id`, `kode_voucher`, `tgl_mulai`, `tgl_akhir`, `min_transaksi`, `nominal`, `type`, `persentase`, `is_active`, `created_at`, `updated_at`) VALUES
+(1, 'XXXX123', '2021-08-01', '2021-08-31', 1000000, 200000, 'Min', 0, 1, '2021-08-10 18:58:38', '2021-08-27 08:04:09'),
+(2, 'XXXX234', '2021-08-01', '2021-08-28', 1000000, 0, 'Per', 10, 1, '2021-08-16 06:56:48', '2021-08-25 07:31:19'),
+(3, 'XXXX345', '2021-08-01', '2021-08-25', 0, 100000, 'Per', 0, 1, '2021-08-16 07:00:25', '2021-08-16 07:54:19');
+
+--
 -- Indexes for dumped tables
 --
 
@@ -1140,6 +1510,12 @@ CREATE TABLE `vouchers` (
 -- Indeks untuk tabel `barangs`
 --
 ALTER TABLE `barangs`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indeks untuk tabel `bookings`
+--
+ALTER TABLE `bookings`
   ADD PRIMARY KEY (`id`);
 
 --
@@ -1152,12 +1528,19 @@ ALTER TABLE `cabangs`
 -- Indeks untuk tabel `customers`
 --
 ALTER TABLE `customers`
-  ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `nik_ktp` (`nik_ktp`);
 
 --
 -- Indeks untuk tabel `failed_jobs`
 --
 ALTER TABLE `failed_jobs`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indeks untuk tabel `fisiks`
+--
+ALTER TABLE `fisiks`
   ADD PRIMARY KEY (`id`);
 
 --
@@ -1171,6 +1554,18 @@ ALTER TABLE `gigipasien`
 -- Indeks untuk tabel `harga_produk_cabangs`
 --
 ALTER TABLE `harga_produk_cabangs`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indeks untuk tabel `jadwals`
+--
+ALTER TABLE `jadwals`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indeks untuk tabel `ket_odontograms`
+--
+ALTER TABLE `ket_odontograms`
   ADD PRIMARY KEY (`id`);
 
 --
@@ -1231,6 +1626,18 @@ ALTER TABLE `rekam_medis`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Indeks untuk tabel `rincian_komisi`
+--
+ALTER TABLE `rincian_komisi`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indeks untuk tabel `rincian_pembayarans`
+--
+ALTER TABLE `rincian_pembayarans`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indeks untuk tabel `roles`
 --
 ALTER TABLE `roles`
@@ -1263,6 +1670,19 @@ ALTER TABLE `status_pasiens`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Indeks untuk tabel `tabel_simbol`
+--
+ALTER TABLE `tabel_simbol`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `warna` (`warna`);
+
+--
+-- Indeks untuk tabel `tindakans`
+--
+ALTER TABLE `tindakans`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indeks untuk tabel `users`
 --
 ALTER TABLE `users`
@@ -1286,16 +1706,22 @@ ALTER TABLE `barangs`
   MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
+-- AUTO_INCREMENT untuk tabel `bookings`
+--
+ALTER TABLE `bookings`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+
+--
 -- AUTO_INCREMENT untuk tabel `cabangs`
 --
 ALTER TABLE `cabangs`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT untuk tabel `customers`
 --
 ALTER TABLE `customers`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT untuk tabel `failed_jobs`
@@ -1304,58 +1730,88 @@ ALTER TABLE `failed_jobs`
   MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
+-- AUTO_INCREMENT untuk tabel `fisiks`
+--
+ALTER TABLE `fisiks`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
 -- AUTO_INCREMENT untuk tabel `gigipasien`
 --
 ALTER TABLE `gigipasien`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT untuk tabel `harga_produk_cabangs`
 --
 ALTER TABLE `harga_produk_cabangs`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+
+--
+-- AUTO_INCREMENT untuk tabel `jadwals`
+--
+ALTER TABLE `jadwals`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+
+--
+-- AUTO_INCREMENT untuk tabel `ket_odontograms`
+--
+ALTER TABLE `ket_odontograms`
   MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT untuk tabel `komisis`
 --
 ALTER TABLE `komisis`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT untuk tabel `migrations`
 --
 ALTER TABLE `migrations`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
 
 --
 -- AUTO_INCREMENT untuk tabel `odontogram_pasien`
 --
 ALTER TABLE `odontogram_pasien`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT untuk tabel `payments`
 --
 ALTER TABLE `payments`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT untuk tabel `permissions`
 --
 ALTER TABLE `permissions`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=55;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=64;
 
 --
 -- AUTO_INCREMENT untuk tabel `rekam_medis`
 --
 ALTER TABLE `rekam_medis`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+
+--
+-- AUTO_INCREMENT untuk tabel `rincian_komisi`
+--
+ALTER TABLE `rincian_komisi`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
+
+--
+-- AUTO_INCREMENT untuk tabel `rincian_pembayarans`
+--
+ALTER TABLE `rincian_pembayarans`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT untuk tabel `roles`
 --
 ALTER TABLE `roles`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT untuk tabel `ruangans`
@@ -1367,25 +1823,37 @@ ALTER TABLE `ruangans`
 -- AUTO_INCREMENT untuk tabel `simbol_odontograms`
 --
 ALTER TABLE `simbol_odontograms`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=28;
 
 --
 -- AUTO_INCREMENT untuk tabel `status_pasiens`
 --
 ALTER TABLE `status_pasiens`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+
+--
+-- AUTO_INCREMENT untuk tabel `tabel_simbol`
+--
+ALTER TABLE `tabel_simbol`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=28;
+
+--
+-- AUTO_INCREMENT untuk tabel `tindakans`
+--
+ALTER TABLE `tindakans`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT untuk tabel `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT untuk tabel `vouchers`
 --
 ALTER TABLE `vouchers`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- Ketidakleluasaan untuk tabel pelimpahan (Dumped Tables)

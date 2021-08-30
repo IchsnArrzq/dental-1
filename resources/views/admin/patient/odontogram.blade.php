@@ -170,7 +170,7 @@
             <div class="card-body">
                 <a href="{{ route('admin.pasien.cetakriwayat', $customer->id) }}" class="btn btn-sm btn-danger mb-3"><i class="fa fa-print"></i> Cetak Riwayat</a>
                 <div class="table-responsive">
-                    <table class="table table-bordered table-striped">
+                    <table class="table table-bordered table-striped datatable">
                         <thead>
                             <tr>
                                 <th></th>

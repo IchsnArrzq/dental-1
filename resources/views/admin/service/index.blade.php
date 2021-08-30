@@ -19,7 +19,7 @@
     <div class="col-sm-12">
 
         <div class="table-responsive">
-            <table class="table table-bordered table-striped custom-table">
+            <table class="table table-bordered table-striped custom-table datatable">
                 <thead>
                     <tr>
                         <th>No</th>

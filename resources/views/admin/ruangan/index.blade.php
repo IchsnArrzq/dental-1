@@ -17,7 +17,7 @@
                 <a href="{{ route('admin.komisi.create') }}" class="btn btn-primary mb-3"><i class="fa fa-plus"></i> Add Komisi</a>
                 @endcan
                 <div class="table-responsive">
-                    <table class="table table-bordered table-striped">
+                    <table class="table table-bordered table-striped datatable">
                         <thead>
                             <tr>
                                 <th></th>

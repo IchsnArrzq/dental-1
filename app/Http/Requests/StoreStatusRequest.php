@@ -24,7 +24,8 @@ class StoreStatusRequest extends FormRequest
     public function rules()
     {
         return [
-            'status' => 'required'
+            'status' => 'required',
+            'warna' => 'required',
         ];
     }
 }

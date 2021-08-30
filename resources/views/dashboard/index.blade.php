@@ -1,47 +1,58 @@
 @extends('layouts.master', ['title' => 'Dashboard'])
 
 @section('content')
-<div class="row">
-    <div class="col-md-12">
-        <h1 class="page-title">Dashboard</h1>
-    </div>
-</div>
-<div class="row">
-    <div class="col-md-6 col-sm-6 col-lg-6 col-xl-3">
-        <div class="dash-widget">
-            <span class="dash-widget-bg1"><i class="fa fa-stethoscope" aria-hidden="true"></i></span>
-            <div class="dash-widget-info text-right">
-                <h3>98</h3>
-                <span class="widget-title1">Doctors <i class="fa fa-check" aria-hidden="true"></i></span>
-            </div>
-        </div>
-    </div>
-    <div class="col-md-6 col-sm-6 col-lg-6 col-xl-3">
-        <div class="dash-widget">
-            <span class="dash-widget-bg2"><i class="fa fa-user-o"></i></span>
-            <div class="dash-widget-info text-right">
-                <h3>1072</h3>
-                <span class="widget-title2">Patients <i class="fa fa-check" aria-hidden="true"></i></span>
-            </div>
-        </div>
-    </div>
-    <div class="col-md-6 col-sm-6 col-lg-6 col-xl-3">
-        <div class="dash-widget">
-            <span class="dash-widget-bg3"><i class="fa fa-user-md" aria-hidden="true"></i></span>
-            <div class="dash-widget-info text-right">
-                <h3>72</h3>
-                <span class="widget-title3">Attend <i class="fa fa-check" aria-hidden="true"></i></span>
-            </div>
-        </div>
-    </div>
-    <div class="col-md-6 col-sm-6 col-lg-6 col-xl-3">
-        <div class="dash-widget">
-            <span class="dash-widget-bg4"><i class="fa fa-heartbeat" aria-hidden="true"></i></span>
-            <div class="dash-widget-info text-right">
-                <h3>618</h3>
-                <span class="widget-title4">Pending <i class="fa fa-check" aria-hidden="true"></i></span>
-            </div>
-        </div>
-    </div>
-</div>
+
+@role('super-admin')
+@include('dashboard._super-admin')
+@endrole
+
+@role('resepsionis')
+<x-resepsionis._resepsionis :jadwal="$jadwal" :datang="$datang" :pasien="$pasien" :appointments="$appointments" :tindakan="$tindakan" :periksa="$periksa"></x-resepsionis._resepsionis>
+@endrole
+
+@role('supervisor')
+
+@endrole
+
 @stop
+
+@role('resepsionis')
+@section('footer')
+<link rel=" stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/izitoast/1.4.0/css/iziToast.min.css" integrity="sha512-O03ntXoVqaGUTAeAmvQ2YSzkCvclZEcPQu1eqloPaHfJ5RuNGiS4l+3duaidD801P50J28EHyonCV06CUlTSag==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/izitoast/1.4.0/js/iziToast.min.js" integrity="sha512-Zq9o+E00xhhR/7vJ49mxFNJ0KQw1E1TMWkPTxrWcnpfEFDEXgUiwJHIKit93EW/XxE31HSI5GEOW06G6BF1AtA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+<script>
+    $(document).ready(function() {
+
+        $('.stts').on('click', function(e) {
+            e.preventDefault();
+            var form = this;
+            Swal.fire({
+                title: 'Ubah status pasien ?',
+                text: "Apakah anda yakin ubah status pasien?",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes',
+                cancelButtonText: 'No'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    return form.submit();
+                }
+            })
+        });
+    })
+</script>
+
+@if(session('success'))
+<script>
+    iziToast.success({
+        title: 'Success',
+        position: 'topRight',
+        message: "{{ session('success') }}",
+    });
+</script>
+@endif
+@stop
+@endrole

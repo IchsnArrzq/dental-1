@@ -60,6 +60,6 @@ class Booking extends Model
 
     public function kedatangan()
     {
-        return $this->belongsTo(StatusPasien::class, 'status_kedatangan');
+        return $this->belongsTo(StatusPasien::class, 'status_kedatangan_id');
     }
 }

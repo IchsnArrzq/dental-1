@@ -88,6 +88,11 @@ Route::middleware('auth',)->group(function () {
         Route::get('ruangan/{cabang:id}/create', 'RuanganController@create');
         Route::resource('ruangan', 'RuanganController');
 
+        // Route Appointment
+        Route::post('appointments/voucher', 'AppointmentController@voucher')->name('appointments.voucher');
+        Route::post('appointments/bayar', 'AppointmentController@bayar')->name('appointments.bayar');
+        Route::resource('appointments', 'AppointmentController');
+
         // Route Report
         Route::get('report/pasien', 'ReportController@pasien')->name('report.pasien');
         Route::post('report/pasien', 'ReportController@pasien')->name('report.pasien');
@@ -103,11 +108,33 @@ Route::middleware('auth',)->group(function () {
         // Route::get('report/komisi/export/{role:id}', 'ReportController@komisireport')->name('komisi.export');
     });
 
+    // Route Resepsionis
+    Route::prefix('resepsionis')->namespace('Resepsionis')->as('resepsionis.')->group(function () {
+        // Route Appointment
+        Route::post('appointments/update/perawat', 'AppointmentController@updateperawat')->name('appointments.updateperawat');
+        Route::post('appointments/update/ob', 'AppointmentController@updateob')->name('appointments.updateob');
+        Route::post('appointments/status', 'AppointmentController@status')->name('appointments.status');
+        Route::post('appointments/voucher', 'AppointmentController@voucher')->name('appointments.voucher');
+        Route::post('appointments/bayar', 'AppointmentController@bayar')->name('appointments.bayar');
+        Route::resource('appointments', 'AppointmentController');
 
-    // Route Appointment
-    Route::post('appointments/voucher', 'AppointmentController@voucher')->name('appointments.voucher');
-    Route::post('appointments/bayar', 'AppointmentController@bayar')->name('appointments.bayar');
-    Route::resource('appointments', 'AppointmentController');
+        // Route Dokter
+        Route::resource('dokter', 'DokterController');
+
+        // Route Pasien
+        Route::get('/ajax/pasien', 'PasienController@ajaxPasien');
+        Route::resource('pasien', 'PasienController');
+    });
+
+    // Route Supervisor
+    Route::prefix('supervisor')->namespace('Supervisor')->as('supervisor.')->group(function () {
+        // Route Appointment
+        Route::get('appointments/ajax', 'AppointmentController@ajaxAppointment');
+        Route::post('appointments/deleterincian', 'AppointmentController@deleterincian')->name('appointments.deleterincian');
+        Route::resource('appointments', 'AppointmentController');
+    });
+
+
 
     // Route Rekam Medis
     Route::resource('rekam-medis', 'RekamMedisController');

@@ -18,11 +18,12 @@
 <div class="row">
     <div class="col-sm-12">
         <div class="table-responsive">
-            <table class="table table-bordered table-striped custom-table">
+            <table class="table table-bordered table-striped custom-table datatable">
                 <thead>
                     <tr>
                         <th>No</th>
                         <th>Status</th>
+                        <th>Warna</th>
                         <th>Action</th>
                     </tr>
                 </thead>
@@ -32,6 +33,7 @@
                     <tr>
                         <td>{{ $loop->iteration }}</td>
                         <td>{{ $stt->status }}</td>
+                        <td>{{ $stt->warna }}</td>
                         <td>
                             @can('status-edit')
                             <a href="{{ route('admin.status.edit', $stt->id) }}" class="btn btn-sm btn-info"><i class="fa fa-edit"></i></a>
