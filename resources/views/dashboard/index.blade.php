@@ -10,6 +10,14 @@
 <x-resepsionis._resepsionis :jadwal="$jadwal" :datang="$datang" :pasien="$pasien" :appointments="$appointments" :tindakan="$tindakan" :periksa="$periksa"></x-resepsionis._resepsionis>
 @endrole
 
+@role('dokter')
+@include('dokter.dashboard')
+@endrole
+
+@role('marketing')
+@include('marketing.dashboard')
+@endrole
+
 @role('supervisor')
 
 @endrole

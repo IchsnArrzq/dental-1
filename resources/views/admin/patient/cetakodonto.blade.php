@@ -63,7 +63,7 @@
                     <td>3.</td>
                     <td>No. Induk Kependudukan</td>
                     <td>:</td>
-                    <td>{{ $customer->nama }}</td>
+                    <td>{{ $customer->nik_ktp }}</td>
                 </tr>
                 <tr>
                     <td>4.</td>

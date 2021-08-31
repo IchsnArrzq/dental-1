@@ -27,6 +27,11 @@ class User extends Authenticatable
         return $this->belongsTo(Cabang::class, 'cabang_id');
     }
 
+    public function jadwal()
+    {
+        return $this->hasMany(Jadwal::class);
+    }
+
     public function customer()
     {
         return $this->hasMany(Customer::class);

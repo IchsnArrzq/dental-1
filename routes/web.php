@@ -106,6 +106,54 @@ Route::middleware('auth',)->group(function () {
         Route::get('report/komisi', 'ReportController@komisi')->name('report.komisi');
         Route::post('report/komisi', 'ReportController@komisi')->name('report.komisi');
         // Route::get('report/komisi/export/{role:id}', 'ReportController@komisireport')->name('komisi.export');
+
+        //Route Master Holidays
+        Route::resource('holidays', 'HolidaysController');
+        Route::get('holidays/datatables', 'HolidaysController@datatables')->name('holidays.datatables');
+        //Route Master Attendance
+        Route::get('/attendance/update_user', 'AttendanceController@update_user')->name('attendance.update_user');
+        Route::get('/attendance/search', 'AttendanceController@search')->name('attendance.search');
+        Route::resource('attendance', 'AttendanceController');
+    });
+
+    Route::prefix('dokter')->name('dokter.')->namespace('Dokter')->group(function () {
+        Route::get('/', function () {
+            return redirect()->route('dashboard');
+        })->name('dashboard');
+
+        Route::resource('/appointments', 'AppointmentsController');
+        Route::resource('/profile', 'ProfileController');
+        Route::get('/ajax/pasien', 'ServiceController@AjaxPasien');
+        Route::post('/ajax/pasien/post', 'ServiceController@AjaxPasienPost');
+        Route::get('/ajax/update/{id}/{value}/{id_booking}', 'ServiceController@ajax');
+        Route::get('dokter/show/{id}', 'ServiceController@show')->name('show');
+        Route::get('pasien', 'ServiceController@pasien')->name('pasien');
+    });
+
+    Route::prefix('marketing')->name('marketing.')->namespace('Marketing')->group(function () {
+        Route::get('/', function () {
+            return redirect()->route('dashboard');
+        })->name('dashboard');
+        Route::resource('/appointments', 'AppointmentsController');
+        Route::resource('/patient', 'PatientController');
+        Route::resource('/doctor', 'DoctorController');
+        Route::resource('/pricelist', 'PricelistController');
+        Route::resource('/profile', 'ProfileController');
+        Route::prefix('/service')->name('service.')->group(function () {
+            Route::get('/appointments/filter', 'ServiceController@AppointmentsFilter')->name('appointments.filter');
+            Route::post('/appointments/books', 'ServiceController@AppointmentsBook')->name('appointments.book');
+        });
+        Route::get('/jadwal/{id}/{dokter}', 'AjaxController@GetBook');
+        Route::get('/jadwal/now/{id}/{dokter}', 'AjaxController@GetBookNow');
+        Route::get('/resource/{id}', 'AjaxController@GetProduct');
+        Route::get('/barang', 'AjaxController@GetProducts');
+        Route::get('/where/customer', 'AjaxController@WhereCustomer');
+        Route::get('/where/product', 'AjaxController@WhereProduct');
+        Route::get('/cabang', 'AjaxController@GetCabang');
+        Route::get('/pasien/{id}', 'AjaxController@GetCustomer');
+        Route::get('/time/{jadwal}/{time}/{waktu_mulai}', 'AjaxController@GetTime');
+        Route::get('/show/{id}', 'AjaxController@show')->name('show');
+        Route::get('/datatable/appointments', 'AjaxController@DataTableAppointment');
     });
 
     // Route Resepsionis

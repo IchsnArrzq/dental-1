@@ -15,3 +15,11 @@
     </div>
 </div>
 @stop
+
+@section('footer')
+<script>
+    $(document).ready(function() {
+        $('.select2').select2();
+    })
+</script>
+@stop

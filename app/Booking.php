@@ -53,12 +53,22 @@ class Booking extends Model
         return $this->hasMany(Tindakan::class);
     }
 
+    public function jadwal()
+    {
+        return $this->belongsTo(Jadwal::class);
+    }
+
     public function komisi()
     {
         return $this->hasMany(RincianKomisi::class, 'booking_id');
     }
 
     public function kedatangan()
+    {
+        return $this->belongsTo(StatusPasien::class, 'status_kedatangan_id');
+    }
+
+    public function status()
     {
         return $this->belongsTo(StatusPasien::class, 'status_kedatangan_id');
     }

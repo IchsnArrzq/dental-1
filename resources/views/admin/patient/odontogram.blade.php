@@ -173,7 +173,6 @@
                     <table class="table table-bordered table-striped datatable">
                         <thead>
                             <tr>
-                                <th></th>
                                 <th>No.</th>
                                 <th>Tanggal</th>
                                 <th>Gigi</th>
@@ -186,7 +185,6 @@
                         <tbody>
                             @foreach($riwayat as $his)
                             <tr>
-                                <td></td>
                                 <td>{{ $loop->iteration }}</td>
                                 <td>{{ \Carbon\Carbon::parse($his->tanggal)->format('d-m-Y') }}</td>
                                 <td>{{ $his->no_gigi }}</td>

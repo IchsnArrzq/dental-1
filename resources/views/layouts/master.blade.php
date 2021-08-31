@@ -90,6 +90,12 @@
                     @role('super-admin')
                     <x-admin.sidebar></x-admin.sidebar>
                     @endrole
+                    @role('dokter')
+                    <x-dokter.sidebar></x-dokter.sidebar>
+                    @endrole
+                    @role('marketing')
+                    <x-marketing.sidebar></x-marketing.sidebar>
+                    @endrole
                     @role('resepsionis')
                     <x-resepsionis.sidebar></x-resepsionis.sidebar>
                     @endrole
@@ -131,10 +137,6 @@
     <script src="https://cdn.datatables.net/buttons/1.7.1/js/buttons.html5.min.js"></script>
 
     <script>
-        $(document).ready(function() {
-            $('.select2').select2();
-        })
-
         $('.delete-form').on('click', function(e) {
             e.preventDefault();
             var form = this;

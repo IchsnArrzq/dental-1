@@ -59,6 +59,13 @@
         <a href="{{ route('admin.simbol.index') }}"><i class="fa fa-question"></i> <span>Master Simbol</span></a>
     </li>
     @endcan
+    <li class="submenu">
+        <a href="#"><i class="fa fa-user"></i> <span> Master Invoice </span> <span class="menu-arrow"></span></a>
+        <ul style="display: none;">
+            <li><a class="{{ (request()->is('admin/holidays*')) ? 'active' : '' }}" href="{{ route('admin.holidays.index') }}">Holidays</a></li>
+            <li><a class="{{ (request()->is('admin/attendance*')) ? 'active' : '' }}" href="{{ route('admin.attendance.index') }}">Attendance</a></li>
+        </ul>
+    </li>
     @can('report-access')
     <li class="submenu">
         <a href="#"><i class="fa fa-flag-o"></i> <span> Reports </span> <span class="menu-arrow"></span></a>
