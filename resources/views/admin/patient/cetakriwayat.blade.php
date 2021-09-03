@@ -6,7 +6,7 @@
     <section class="sheet padding-15mm">
         <div class="header-doc" style="display: flex; margin-top: -20px; margin-bottom: 30px;">
             <div class="img" style="margin-right: auto;">
-                <img src="{{ asset('/') }}img/skydental.png" alt="" width="100px">
+                <img src="{{ asset('/storage/' . \App\Setting::find(1)->logo) }}" alt="" width="100px">
             </div>
             <div class="title" style="margin-right: auto;">
                 <h3 align="center">TABEL PERAWATAN</h3>

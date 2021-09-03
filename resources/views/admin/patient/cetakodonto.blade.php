@@ -8,7 +8,7 @@
     <section class="sheet padding-15mm">
         <div class="header-doc" style="display: flex; margin-top: -20px;">
             <div class="img" style="margin-right: auto;">
-                <img src="  {{ asset('/storage/' . \App\Setting::find(1)->logo) }}" alt="" width="120px">
+                <img src="{{ asset('/storage/' . \App\Setting::find(1)->logo) }}" alt="" width="120px">
             </div>
             <div class="title" style="margin-right: auto;">
                 <h3 align="center">REKAM MEDIK</h3>

@@ -9,7 +9,7 @@
         <div class="btn-group btn-group-sm">
             <button class="btn btn-white">CSV</button>
             <button class="btn btn-white">PDF</button>
-            <button class="btn btn-white"><i class="fa fa-print fa-lg"></i> Print</button>
+            <a href="{{ route('resepsionis.appointments.print', $appointment->id) }}" class="btn btn-white"><i class="fa fa-print fa-lg"></i> Print</a>
         </div>
     </div>
 </div>

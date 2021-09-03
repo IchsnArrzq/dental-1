@@ -17,6 +17,7 @@
         "laravel/ui": "2.x",
         "laravelcollective/html": "^6.2",
         "maatwebsite/excel": "^3.1",
+        "mike42/escpos-php": "2.*",
         "spatie/laravel-permission": "^4.2",
         "yajra/laravel-datatables-oracle": "^9.18"
     },

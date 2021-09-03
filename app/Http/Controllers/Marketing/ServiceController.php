@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Marketing;
 
-use App\{Barang , Booking , Customer, Holidays, Jadwal, Tindakan, User};
+use App\{Barang, Booking, Customer, Holidays, Jadwal, Tindakan, User};
 use App\Http\Controllers\Controller;
 use Carbon\Carbon;
 use Illuminate\Http\Request;

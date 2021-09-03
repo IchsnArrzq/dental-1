@@ -53,6 +53,10 @@
             height: 296mm
         }
 
+        body.struk .sheet {
+            width: 100mm;
+        }
+
         body.A4.landscape .sheet {
             width: 297mm;
             height: 209mm
@@ -69,6 +73,10 @@
         }
 
         /** Padding area **/
+        .sheet.padding-1mm {
+            padding: 1mm
+        }
+
         .sheet.padding-10mm {
             padding: 10mm
         }

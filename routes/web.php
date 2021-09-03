@@ -97,6 +97,7 @@ Route::middleware('auth')->group(function () {
             // Route Appointment
             Route::post('appointments/voucher', 'AppointmentController@voucher')->name('appointments.voucher');
             Route::post('appointments/bayar', 'AppointmentController@bayar')->name('appointments.bayar');
+            Route::get('appointments/print/{id}', 'AppointmentController@print')->name('appointments.print');
             Route::resource('appointments', 'AppointmentController');
 
             // Route Report
@@ -181,6 +182,7 @@ Route::middleware('auth')->group(function () {
             Route::post('appointments/status', 'AppointmentController@status')->name('appointments.status');
             Route::post('appointments/voucher', 'AppointmentController@voucher')->name('appointments.voucher');
             Route::post('appointments/bayar', 'AppointmentController@bayar')->name('appointments.bayar');
+            Route::get('appointments/print/{id}', 'AppointmentController@print')->name('appointments.print');
             Route::resource('appointments', 'AppointmentController');
 
             // Route Dokter

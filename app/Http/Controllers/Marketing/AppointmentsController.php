@@ -49,7 +49,7 @@ class AppointmentsController extends Controller
                 'no_booking' => $form['no_booking'],
                 'marketing_id' => auth()->user()->id,
                 'dokter_id' => $form['dokter_id'],
-                'resepsionis_id' => 1,
+                'resepsionis_id' => 0,
                 'ob_id' => $form['dokter_id'],
                 'perawat_id' => $form['dokter_id'],
                 'cabang_id' => auth()->user()->cabang->id,

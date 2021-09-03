@@ -244,7 +244,8 @@ class AppointmentController extends Controller
     {
         $booking = Booking::findOrFail(request('id'));
         $booking->update([
-            'status_kedatangan_id' => request('status')
+            'resepsionis_id' => auth()->user()->id,
+            'status_kedatangan_id' => request('status'),
         ]);
 
         return back()->with('success', 'Status kedatangan pasien berhasil diubah');
@@ -268,5 +269,12 @@ class AppointmentController extends Controller
         ]);
 
         return back()->with('success', 'Office Boy berhasil diubah');
+    }
+
+    public function print($id)
+    {
+        $appointment = Booking::with('pasien', 'dokter', 'cabang', 'perawat', 'resepsionis', 'rincian', 'tindakan')->where('id', $id)->first();
+
+        return view('resepsionis.appointments.print', compact('appointment'));
     }
 }

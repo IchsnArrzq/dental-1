@@ -316,4 +316,11 @@ class AppointmentController extends Controller
             ]);
         }
     }
+
+    public function print($id)
+    {
+        $appointment = Booking::with('pasien', 'dokter', 'cabang', 'perawat', 'resepsionis', 'rincian', 'tindakan')->where('id', $id)->first();
+
+        return view('admin.appointments.print', compact('appointment'));
+    }
 }
