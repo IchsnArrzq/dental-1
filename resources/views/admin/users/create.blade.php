@@ -3,7 +3,7 @@
 @section('content')
 <div class="row">
     <div class="col-lg-8">
-        <h4 class="page-title">Add Pasien</h4>
+        <h4 class="page-title">Add User</h4>
     </div>
 </div>
 
@@ -12,4 +12,10 @@
     @include('admin.users.form')
 
 </form>
+@stop
+
+@section('footer')
+<script>
+    $(".select2").select2()
+</script>
 @stop

@@ -33,30 +33,11 @@
                                 <input type="text" class="form-control" name="waktu_mulai" id="waktu_mulai" readonly>
                             </div>
                         </div>
-                        <div class="col-md-3">
-                            <div class="form-group">
-                                <label for="resepsionis_id">Resepsionis ID</label>
-                                <select class="form-control" name="resepsionis_id" id="resepsionis_id"><select>
-                            </div>
-                        </div>
-                        <div class="col-md-3">
-                            <div class="form-group">
-                                <label for="ob_id">OB ID</label>
-                                <select class="form-control" name="ob_id" id="ob_id"></select>
-                            </div>
-                        </div>
+
                         <div class="col-md-3">
                             <div class="form-group">
                                 <label for="pasien_id">Pasien ID</label>
                                 <select class="pasienList" name="pasien_id" id="pasien_id">
-                                </select>
-                            </div>
-                        </div>
-                        <div class="col-md-3">
-                            <div class="form-group">
-                                <label for="perawat_id">Perawat</label>
-                                <select class="form-control" name="perawat_id" id="perawat_id">
-
                                 </select>
                             </div>
                         </div>

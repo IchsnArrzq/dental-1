@@ -50,7 +50,7 @@
                             @php
                             $age = explode(",", $appointment->pasien->ttl)
                             @endphp
-                            <li>{{ \Carbon\Carbon::parse($age[1])->diff(\Carbon\Carbon::now())->format('%y Tahun') }}</li>
+                            <li>{{ \Carbon\Carbon::now()->format('Y') - \Carbon\Carbon::parse($appointment->pasien->tgl_lahir)->format('Y') }} Tahun</li>
                             <li>{{ $appointment->pasien->jk }}</li>
                             <li>{{ $appointment->pasien->nik_ktp }}</li>
                             <li><a href="#">{{ $appointment->pasien->email }}</a></li>

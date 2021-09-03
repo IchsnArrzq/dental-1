@@ -40,16 +40,8 @@
                                     <span class="text"><a href="">{{ $doctor->email }}</a></span>
                                 </li>
                                 <li>
-                                    <span class="title">Birthday:</span>
-                                    <span class="text">3rd March</span>
-                                </li>
-                                <li>
                                     <span class="title">Address:</span>
                                     <span class="text">{{ $doctor->address }}</span>
-                                </li>
-                                <li>
-                                    <span class="title">Gender:</span>
-                                    <span class="text">Female</span>
                                 </li>
                             </ul>
                         </div>
@@ -61,47 +53,108 @@
 </div>
 <div class="profile-tabs">
     <ul class="nav nav-tabs nav-tabs-bottom">
-        <li class="nav-item"><a class="nav-link active" href="#about-cont" data-toggle="tab">Jadwal</a></li>
+        <li class="nav-item"><a class="nav-link active" href="#appointment" data-toggle="tab">Appointment</a></li>
+        <li class="nav-item"><a class="nav-link" href="#attendance" data-toggle="tab">Attendance</a></li>
     </ul>
 
     <div class="tab-content">
-        <div class="tab-pane show active" id="about-cont">
-            <div class="card">
-                <div class="card-body">
-                    <table class="table table-striped">
-                        <thead>
-                            <tr>
-                                <th>#</th>
-                                <th>No Booking</th>
-                                <th>Nama Pasien</th>
-                                <th>Umur</th>
-                                <th>Nama Dokter</th>
-                                <th>Cabang</th>
-                                <th>Tanggal</th>
-                                <th>Waktu</th>
-                                <th>Status</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach($booking as $data)
-                            <tr>
-                                <td>{{ $data->id }}</td>
-                                <td><span class="badge badge-success">{{ $data->no_booking }}</span></td>
-                                <td>{{ $data->pasien->nama }}</td>
-                                <td>{{ (int)Carbon\Carbon::now()->format('Y') - (int)Carbon\Carbon::parse(substr($data->pasien->ttl, -10))->format('Y') }} Tahun</td>
-                                <td>{{ $data->dokter->name }}</td>
-                                <td>{{ $data->cabang->nama }}</td>
-                                <td>{{ $data->tanggal_status }}</td>
-                                <td>{{ $data->jam_status }} - {{ $data->jam_selesai }}</td>
-                                <td>
-                                    <span class="custom-badge status-blue">
-                                        {{ $data->kedatangan->status }}
-                                    </span>
-                                </td>
-                            </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
+        <div class="tab-pane show active" id="appointment">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="card shadow">
+                        <div class="card-body">
+                            <h3 class="card-title">Appointment List</h3>
+                            <div class="table-responsive">
+                                <table class="table table-striped">
+                                    <thead>
+                                        <tr>
+                                            <th>#</th>
+                                            <th>No Booking</th>
+                                            <th>Nama Pasien</th>
+                                            <th>Umur</th>
+                                            <th>Nama Dokter</th>
+                                            <th>Cabang</th>
+                                            <th>Tanggal</th>
+                                            <th>Waktu</th>
+                                            <th>Status</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach($booking as $data)
+                                        <tr>
+                                            <td>{{ $data->id }}</td>
+                                            <td><span class="badge badge-success">{{ $data->no_booking }}</span></td>
+                                            <td>{{ $data->pasien->nama }}</td>
+                                            <td>{{ \Carbon\Carbon::now()->format('Y') - \Carbon\Carbon::parse($data->pasien->tgl_lahir)->format('Y') }} Tahun</td>
+                                            <td>{{ $data->dokter->name }}</td>
+                                            <td>{{ $data->cabang->nama }}</td>
+                                            <td>{{ $data->tanggal_status }}</td>
+                                            <td>{{ $data->jam_status }} - {{ $data->jam_selesai }}</td>
+                                            <td>
+                                                <span class="custom-badge status-blue">
+                                                    {{ $data->kedatangan->status }}
+                                                </span>
+                                            </td>
+                                        </tr>
+                                        @endforeach
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="tab-pane show" id="attendance">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="card shadow">
+                        <div class="card-body">
+                            <h3 class="card-title">Attendance List</h3>
+                            <div class="table-responsive">
+                                <table class="table table-hover">
+                                    <thead class="bg-success">
+                                        <tr>
+                                            <th class="text-light">Tanggal</th>
+                                            <th class="text-light">Hari</th>
+                                            <th class="text-light">Shift</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach($attendance->unique('tanggal') as $data)
+                                        @if($data->tanggal == Carbon\Carbon::now()->startOfMonth()->addDays($loop->iteration - 1)->format('Y-m-d'))
+                                        <tr>
+                                            <td>
+                                                {{ $data->tanggal }}
+                                            </td>
+                                            <td>
+                                                {{ Carbon\Carbon::parse($data->tanggal)->format('l') }}
+                                            </td>
+                                            <td>
+                                                <ul class="list-unstyled">
+                                                    @foreach($data->shift->whereHas('jadwal', function($qr) use($data){ return $qr->where('tanggal', $data->tanggal); })->get() as $row)
+                                                    <li>
+                                                        @if($row->kode == 'SF1'|| $row->kode == 'SF2')
+                                                        <i class="fa fa-check text-success">{{ $row->kode }}</i>
+                                                        @else
+                                                        @if($row->kode == 'L')
+                                                        <i class="fa fa-close text-danger">{{ $row->kode }}</i>
+                                                        @else
+                                                        <i class="fa fa-info text-warning">{{ $row->kode }}</i>
+                                                        @endif
+                                                        @endif
+                                                    </li>
+                                                    @endforeach
+                                                </ul>
+                                            </td>
+                                        </tr>
+                                        @endif
+                                        @endforeach
+                                    </tbody>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

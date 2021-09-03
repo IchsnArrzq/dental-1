@@ -35,10 +35,10 @@
             <label for="role">Role</label>
             <select name="role[]" id="role" class="form-control select2" multiple="multiple">
                 @foreach($user->roles as $rol)
-                <option selected value="{{ $rol->id }}">{{ $rol->name }}</option>
+                <option selected value="{{ $rol->id }}">{{ $rol->key }}</option>
                 @endforeach
                 @foreach($roles as $role)
-                <option value="{{ $role->id }}">{{ $role->name }}</option>
+                <option value="{{ $role->id }}">{{ $role->key }}</option>
                 @endforeach
             </select>
 

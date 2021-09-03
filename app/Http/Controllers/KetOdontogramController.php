@@ -25,8 +25,8 @@ class KetOdontogramController extends Controller
             ],
             [
                 'occlusi' => $request->input('occlusi'),
-                'palatinus' => $request->input('palatinus'),
-                'mandibularis' => $request->input('mandibularis'),
+                't_palatinus' => $request->input('t_palatinus'),
+                't_mandibularis' => $request->input('t_mandibularis'),
                 'palatum' => $request->input('palatum'),
                 'occlusi' => $request->input('occlusi'),
                 'diastema' => $request->input('diastema'),
@@ -42,7 +42,7 @@ class KetOdontogramController extends Controller
         );
 
 
-        return redirect()->route('admin.patients.odontogram', $request->input('customer_id'));
+        return redirect()->route('admin.pasien.odontogram', $request->input('customer_id'));
     }
 
     public function show(KetOdontogram $ketOdontogram)

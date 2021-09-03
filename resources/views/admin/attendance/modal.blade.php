@@ -56,7 +56,7 @@
                 <div class="modal-footer">
                     <div class="row">
                         <div class="col-md-6 col-md-6">
-                            <button class="btn btn-primary" id="tombol-simpan" value="create">Simpan
+                            <button class="btn btn-primary" @if(Carbon\Carbon::parse($tahun.'-'.$bulan)->format('Y-m') != Carbon\Carbon::now()->format('Y-m')) disabled @endif id="tombol-simpan" value="create">Simpan
                             </button>
                         </div>
             </form>
@@ -64,7 +64,7 @@
                 <form action="" id="form-delete" method="post">
                     @csrf
                     @method('delete')
-                    <button class="btn btn-danger text-light" id="tombol-hapus" value="delete">Reset</button>
+                    <button class="btn btn-danger text-light" @if(Carbon\Carbon::parse($tahun.'-'.$bulan)->format('Y-m') != Carbon\Carbon::now()->format('Y-m')) disabled @endif id="tombol-hapus" value="delete">Reset</button>
                 </form>
             </div>
         </div>

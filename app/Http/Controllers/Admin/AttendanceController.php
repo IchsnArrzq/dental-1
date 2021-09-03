@@ -27,18 +27,27 @@ class AttendanceController extends Controller
     private $array = [];
     public function index()
     {
+        $user = User::whereHas('roles', function ($e) {
+            return $e->where('name', 'dokter');
+        })->orWhereHas('roles', function ($qr) {
+            return $qr->where('name', 'perawat');
+        })->orWhereHas('roles', function ($qr) {
+            return $qr->where('name', 'office-boy');
+        })->whereHas('jadwal', function ($q) {
+            return $q->whereMonth('tanggal', Carbon::now()->format('m'))->whereYear('tanggal', Carbon::now()->format('Y'));
+        })->get();
+        $bulan = Carbon::now()->format('m');
+        $tahun = Carbon::now()->format('Y');
         return view('admin.attendance.index', [
-            'user' => User::whereHas('roles', function($e){
-                return $e->where('name','dokter');
-            })->whereHas('jadwal', function ($q) {
-                return $q->whereMonth('tanggal', Carbon::now()->format('m'));
-            })->get(),
+            'user' => $user,
             'user_mode' => User::latest()->get(),
             'holiday' => Holidays::whereMonth('holiday_date', Carbon::now()->format('m'))->get(),
             'last_date' => Carbon::now()->endOfMonth()->format('d'),
             'cabangs' => Cabang::get(),
             'ruangans' => Ruangan::get(),
-            'shift' => Shift::pluck('kode')
+            'shift' => Shift::pluck('kode'),
+            'bulan' => $bulan,
+            'tahun' => $tahun
         ]);
     }
     /**
@@ -285,25 +294,45 @@ class AttendanceController extends Controller
         }
         return $array;
     }
-    public function update_user()
+    public function update_user($month, $year)
     {
+        // $jadwal = User::doesntHave('jadwal')
+        // ->whereHas('roles', function($qr){
+        //     return $qr->whereIn('name', ['dokter', 'office-boy', 'perawat']);
+        // })
+        // ->get();
+        // dd($jadwal);
         try {
-            $user = User::doesntHave('jadwal')->whereHas('roles', function($q){
-                return $q->where('name', 'dokter');
+            $user = User::whereHas('roles', function ($qr) {
+                return $qr->whereIn('name', ['dokter ', 'office-boy', 'perawat']);
+            })->whereDoesntHave('jadwal', function ($re) use ($month, $year) {
+                return $re->whereMonth('tanggal', $month)->whereYear('tanggal', $year);
             })->get();
 
+            // $count = User::doesntHave('jadwal')->whereHas('roles', function($qr){
+            //     return $qr->whereIn('name', ['dokter', 'office-boy', 'perawat']);
+            // })->get()->count();
+            // if($count == 0){
+            //     $user = User::whereHas('roles', function($qr ){
+            //         return $qr->whereIn('name',['dokter', 'office-boy', 'perawat']);
+            //     })->get();
+            // }else{ 
+            //     $user = User::whereHas('roles',function($qr){
+            //         return $qr->whereIn('name', ['dokter', 'office-boy', 'perawat']);
+            //     })->get();
+            // }
             foreach ($user as $data) {
-                $bulan = Carbon::now()->format('m');
-                $tanggal_akhir = Carbon::now()->endOfMonth()->format('d');
+                $bulan = Carbon::parse($year . '-' . $month)->format('m');
+                $tanggal_akhir = Carbon::parse($year . '-' . $month)->endOfMonth()->format('d');
                 $holiday = Holidays::whereMonth('holiday_date', $bulan)->pluck('holiday_date');
 
-                Jadwal::where('user_id', $data->id)->whereMonth('tanggal', Carbon::now()->format('m'))->delete();
+                Jadwal::where('user_id', $data->id)->whereMonth('tanggal', Carbon::parse($year . '-' . $month)->format('m'))->delete();
                 // dd(Jadwal::where('user_id', $id)->get());
                 for ($i = 0; $i < $tanggal_akhir; $i++) {
-                    if (in_array(Carbon::now()->startOfMonth()->addDays($i)->format('Y-m-d'), $holiday->toArray())) {
+                    if (in_array(Carbon::parse($year . '-' . $month)->startOfMonth()->addDays($i)->format('Y-m-d'), $holiday->toArray())) {
                         Jadwal::create([
                             'user_id' => $data->id,
-                            'tanggal' => Carbon::now()->startOfMonth()->addDays($i)->format('Y-m-d'),
+                            'tanggal' => Carbon::parse($year . '-' . $month)->startOfMonth()->addDays($i)->format('Y-m-d'),
                             'cabang_id' => $data->cabang_id,
                             'ruangan_id' => $data->cabang->ruangan->first()->id,
                             'shift_id' => 3
@@ -311,7 +340,7 @@ class AttendanceController extends Controller
                     } else {
                         Jadwal::create([
                             'user_id' => $data->id,
-                            'tanggal' => Carbon::now()->startOfMonth()->addDays($i)->format('Y-m-d'),
+                            'tanggal' => Carbon::parse($year . '-' . $month)->startOfMonth()->addDays($i)->format('Y-m-d'),
                             'cabang_id' => $data->cabang_id,
                             'ruangan_id' => $data->cabang->ruangan->first()->id,
                             'shift_id' => 1
@@ -319,7 +348,8 @@ class AttendanceController extends Controller
                     }
                 }
             }
-            return back()->with('success', 'Berhasil Mengupdate Data Jadwal '.Carbon::now()->format('Y M').' => '.$user->pluck('name'));
+
+            return back()->with('success', 'Berhasil Mengupdate Data Jadwal ' . Carbon::parse($year . '-' . $month)->format('Y M') . ' => ' . $user->pluck('name') . ', => ' . Jadwal::get()->count());
         } catch (Exception $err) {
             return back()->with('error', $err->getMessage());
         }
@@ -380,7 +410,7 @@ class AttendanceController extends Controller
                 for ($i = 0; $i < $tanggal_akhir; $i++) {
                     if (in_array(Carbon::now()->startOfMonth()->addDays($i)->format('Y-m-d'), $holiday->toArray())) {
                         $datatable->editColumn($row, function ($data) use ($row, $id) {
-                            return '<input type="checkbox" disabled name="' . $row . '[]" value="' . $data->tanggal . '">';
+                            return '<input type="checkbox" name="' . $row . '[]" value="' . $data->tanggal . '">';
                         });
                     } else {
                         $datatable->editColumn($row, function ($data) use ($row, $id) {
@@ -454,12 +484,16 @@ class AttendanceController extends Controller
 
     public function search(Request $request)
     {
-
-        $hari_ini = date("Y-m-d");
-        $tgl_terakhir = date('t', strtotime($hari_ini));
         $pegawai = $request->pegawai;
         $month = $request->month;
         $year = $request->year;
+        if (!$request->month) {
+            $month = Carbon::now()->format('m');
+        }
+        if (!$request->year) {
+            $year = Carbon::now()->format('Y');
+        }
+        $last_date = Carbon::parse($year . '-' . $month)->endOfMonth()->format('d');
         if ($year == null && $month == null) {
             $user = User::where('name', 'like', '%' . $pegawai . '%')->get();
         } elseif ($year == '') {
@@ -479,10 +513,12 @@ class AttendanceController extends Controller
             'date' => $request->all(),
             'user' => $user,
             'holiday' => Holidays::whereMonth('holiday_date', $month)->get(),
-            'last_date' => $tgl_terakhir,
+            'last_date' => $last_date,
             'cabangs' => Cabang::get(),
             'ruangans' => Ruangan::get(),
-            'shift' => Shift::pluck('kode')
+            'shift' => Shift::pluck('kode'),
+            'bulan' => $month,
+            'tahun' => $year
         ]);
     }
 }

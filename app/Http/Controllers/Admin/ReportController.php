@@ -96,6 +96,7 @@ class ReportController extends Controller
         $payments = [];
         $from = '';
         $to = '';
+        $mt = '';
 
         if (request('from') && request('to')) {
             $from = Carbon::createFromFormat('d/m/Y', request('from'))->format('Y-m-d H:i:s');

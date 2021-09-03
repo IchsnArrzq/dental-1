@@ -4,7 +4,10 @@ namespace App\Http\Controllers\Marketing;
 
 use App\Booking;
 use App\Http\Controllers\Controller;
+use App\Jadwal;
+use App\Shift;
 use App\User;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 class DoctorController extends Controller
@@ -16,8 +19,8 @@ class DoctorController extends Controller
      */
     public function index()
     {
-        return view('marketing.doctor.index',[
-            'doctors' => User::whereHas('roles', function($qr){
+        return view('marketing.doctor.index', [
+            'doctors' => User::whereHas('roles', function ($qr) {
                 return $qr->where('name', 'dokter');
             })->get()
         ]);
@@ -54,7 +57,9 @@ class DoctorController extends Controller
     {
         return view('marketing.doctor.show', [
             'doctor' => User::findOrFail($id),
-            'booking' => Booking::where('dokter_id', $id)->get()
+            'booking' => Booking::where('dokter_id', $id)->get(),
+            'shift' => Shift::get(),
+            'attendance' => Jadwal::where('user_id', $id)->whereMonth('tanggal', Carbon::now()->format('m'))->whereYear('tanggal', Carbon::now()->format('Y'))->get()
         ]);
     }
 

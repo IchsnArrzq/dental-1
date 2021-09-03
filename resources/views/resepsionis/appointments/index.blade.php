@@ -34,7 +34,7 @@
                         <td>{{ $appointment->pasien->nama }}</td>
                         <td>{{ $appointment->dokter->name }}</td>
                         <td>{{ $appointment->cabang->nama }}</td>
-                        <td>{{ \Carbon\Carbon::parse($appointment->created_at)->format('d/m/Y') }}</td>
+                        <td>{{ \Carbon\Carbon::parse($appointment->tanggal_status)->format('d/m/Y') }}</td>
                         <td>{{ \Carbon\Carbon::parse($appointment->jam_status)->format('H.i')  }} - {{ \Carbon\Carbon::parse($appointment->jam_selesai)->format('H.i')  }}</td>
                         <td><span class="custom-badge status-{{ $appointment->kedatangan->warna}}">{{ $appointment->kedatangan->status}}</span></td>
                     </tr>

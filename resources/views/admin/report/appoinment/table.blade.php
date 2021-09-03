@@ -19,20 +19,23 @@
                 $unpaid = 0;
                 @endphp
                 <tbody>
-                    @foreach($appointments as $appoinment)
+                    @foreach($appointments as $appointment)
                     <tr>
                         <td class="text-center">{{ $loop->iteration }}</td>
-                        <td>{{ $appoinment->pasien->nama }}</td>
-                        <td>{{ $appoinment->cabang->nama }}</td>
-                        <td>{{ $appoinment->no_booking }}</td>
-                        <td>@currency($appoinment->tindakan->sum('nominal')) </td>
-                        <td>@currency($appoinment->rincian->sum('dibayar')) </td>
-                        <td>@currency($appoinment->tindakan->sum('nominal') - $appoinment->rincian->sum('dibayar')) </td>
+                        <td>{{ $appointment->pasien->nama }}</td>
+                        <td>{{ $appointment->cabang->nama }}</td>
+                        <td>{{ $appointment->no_booking }}</td>
+                        @php
+                        $pajak = $appointment->tindakan->sum('nominal') * $appointment->cabang->ppn / 100
+                        @endphp
+                        <td>@currency($appointment->tindakan->sum('nominal') + $pajak) </td>
+                        <td>@currency($appointment->rincian->sum('dibayar')) </td>
+                        <td>@currency($appointment->tindakan->sum('nominal') + $pajak - $appointment->rincian->sum('dibayar')) </td>
                     </tr>
                     @php
-                    $amount += $appoinment->tindakan->sum('nominal');
-                    $paid += $appoinment->rincian->sum('dibayar');
-                    $unpaid += $appoinment->tindakan->sum('nominal') - $appoinment->rincian->sum('dibayar');
+                    $amount += $appointment->tindakan->sum('nominal') + $pajak;
+                    $paid += $appointment->rincian->sum('dibayar');
+                    $unpaid += $appointment->tindakan->sum('nominal') + $pajak - $appointment->rincian->sum('dibayar');
                     @endphp
                     @endforeach
                 </tbody>

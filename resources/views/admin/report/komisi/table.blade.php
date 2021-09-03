@@ -14,6 +14,9 @@
                         <th>Kasir</th>
                     </tr>
                 </thead>
+                @php
+                $total = 0;
+                @endphp
                 @if($komisi != null)
                 <tbody>
                     @foreach($komisi as $kms)
@@ -40,6 +43,9 @@
                         @endphp
                         <td>{{ $kasir->name }}</td>
                     </tr>
+                    @php
+                    $total += $kms->sum('nominal_komisi');
+                    @endphp
                     @endforeach
                 </tbody>
                 <tfoot>
@@ -50,7 +56,7 @@
                         <td></td>
                         <td></td>
                         <td></td>
-                        <td>@currency($kms->sum('nominal_komisi'))</td>
+                        <td>@currency($total)</td>
                         <td></td>
                     </tr>
                 </tfoot>

@@ -14,6 +14,7 @@
                         <th>Nominal</th>
                     </tr>
                 </thead>
+                @if($payments != null)
                 @php
                 $total = 0;
                 @endphp
@@ -43,6 +44,7 @@
                         <td>@currency($payments->sum('nominal'))</td>
                     </tr>
                 </tfoot>
+                @endif
             </table>
         </div>
     </div>

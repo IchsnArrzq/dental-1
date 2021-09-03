@@ -11,16 +11,6 @@ use Illuminate\Http\Request;
 
 class RekamMedisController extends Controller
 {
-    public function index()
-    {
-        //
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function create()
     {
         $pasien = Customer::find(request('pasien'));
@@ -31,12 +21,6 @@ class RekamMedisController extends Controller
         return view('rekam-medis.create', compact('pasien', 'gigi', 'kondisi', 'history'));
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
     public function store(Request $request)
     {
         $customer = Customer::find($request->input('customer_id'));
@@ -85,8 +69,8 @@ class RekamMedisController extends Controller
                 'tindakan' => $request->input('tindakan'),
             ];
         } else {
-            $gigi[$no_gigi] = $simbol->singkatan;
-            $customer->gigi()->update($gigi);
+            $upgigi[$no_gigi] = $simbol->singkatan;
+            $customer->gigi()->update($upgigi);
 
             $odon[$no_gigi] = $simbol->warna;
             $customer->odontogram()->update($odon);
@@ -104,51 +88,10 @@ class RekamMedisController extends Controller
 
         RekamMedis::create($data);
 
-        return redirect()->route('admin.pasien.odontogram', $customer->id)->with('success', 'Odontogram has been added');
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\RekamMedis  $rekamMedis
-     * @return \Illuminate\Http\Response
-     */
-    public function show(RekamMedis $rekamMedis)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\RekamMedis  $rekamMedis
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(RekamMedis $rekamMedis)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\RekamMedis  $rekamMedis
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, RekamMedis $rekamMedis)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\RekamMedis  $rekamMedis
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(RekamMedis $rekamMedis)
-    {
-        //
+        if (auth()->user()->hasRole('super-admin')) {
+            return redirect()->route('admin.pasien.odontogram', $customer->id)->with('success', 'Odontogram has been added');
+        } else {
+            return redirect()->route('dokter.pasien.odontogram', $customer->id)->with('success', 'Odontogram has been added');
+        }
     }
 }

@@ -2,9 +2,13 @@
 
 namespace App\Http\Controllers\Resepsionis;
 
+use App\Booking;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\DokterRequest;
+use App\Jadwal;
+use App\Shift;
 use App\User;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
@@ -62,7 +66,12 @@ class DokterController extends Controller
      */
     public function show($id)
     {
-        //
+        return view('resepsionis.dokter.show', [
+            'dokter' => User::find($id),
+            'booking' => Booking::where('dokter_id', $id)->get(),
+            'shift' => Shift::get(),
+            'attendance' => Jadwal::where('user_id', $id)->whereMonth('tanggal', Carbon::now()->format('m'))->whereYear('tanggal', Carbon::now()->format('Y'))->get()
+        ]);
     }
 
     /**

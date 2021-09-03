@@ -17,7 +17,7 @@
 <div class="row">
     <div class="col-sm-12">
         <div class="table-responsive">
-            <table class="table table-bordered table-striped custom-table datatable">
+            <table class="table table-bordered table-striped custom-table datatable" width="100%">
                 <thead>
                     <tr>
                         <th>No</th>
@@ -42,7 +42,7 @@
                         <td>{{ $patient->nama }}</td>
                         <td>{{ $patient->no_telp }}</td>
                         <td>{{ $patient->email }}</td>
-                        <td>{{ $patient->ttl }}</td>
+                        <td>{{ $patient->tempat_lahir }}, {{ $patient->tgl_lahir }}</td>
                         <!-- <td>{{ $patient->jk }}</td> -->
                         <!-- <td>{{ $patient->suku }}</td> -->
                         <td>{{ $patient->alamat }}</td>

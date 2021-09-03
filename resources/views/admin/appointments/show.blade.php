@@ -19,7 +19,7 @@
             <div class="card-body">
                 <div class="row custom-invoice">
                     <div class="col-6 col-sm-6 m-b-20">
-                        <img src="{{ asset('/') }}img/skydental.png" class="inv-logo" alt="">
+                        <img src="{{ asset('/storage/' . \App\Setting::find(1)->logo) }}" class="inv-logo" alt="">
                         <ul class="list-unstyled">
                             <li>Sky dental</li>
                             <li>{{ $appointment->cabang->nama }}</li>
@@ -50,26 +50,28 @@
                             @php
                             $age = explode(",", $appointment->pasien->ttl)
                             @endphp
-                            <li>{{ \Carbon\Carbon::parse($age[1])->diff(\Carbon\Carbon::now())->format('%y Tahun') }}</li>
+                            <li>{{ \Carbon\Carbon::now()->format('Y') - \Carbon\Carbon::parse($appointment->pasien->tgl_lahir)->format('Y') }} Tahun</li>
                             <li>{{ $appointment->pasien->jk }}</li>
-                            <li>{nik_ktp}</li>
+                            <li>{{ $appointment->pasien->nik_ktp }}</li>
                             <li><a href="#">{{ $appointment->pasien->email }}</a></li>
                         </ul>
 
                     </div>
+                    @php
+                    $pajak = $appointment->tindakan->sum('nominal') * $appointment->cabang->ppn / 100
+                    @endphp
                     <div class="col-sm-6 col-lg-6 m-b-20">
                         <div class="invoices-view">
                             <span class="text-muted">Payment Details:</span>
                             <ul class="list-unstyled invoice-payment-details">
                                 <li>
-                                    <h5>Total Due: <span class="text-right">@currency($appointment->tindakan->sum('nominal'))</span></h5>
+                                    <h5>Total Due: <span class="text-right">@currency($appointment->tindakan->sum('nominal') + $pajak)</span></h5>
                                 </li>
-                                <li>Perawat: <span>{{ $appointment->perawat->name }}</span></li>
-                                <li>Office boy: <span>{{ $appointment->ob->name }}</span></li>
+                                <li>Perawat: <span data-toggle="modal" data-target="#perawatModal" id="perawat">{{ $appointment->perawat->name }}
+                                    </span></li>
+                                <li>Office boy: <span data-toggle="modal" data-target="#obModal" id="ob">{{ $appointment->ob->name }}</span></li>
                                 <li>Resepsionis: <span>{{ $appointment->resepsionis->name }}</span></li>
                                 <li>Address: <span>{{ $appointment->cabang->alamat }}</span></li>
-                                <li>IBAN: <span>KFH37784028476740</span></li>
-                                <li>SWIFT code: <span>BPT4E</span></li>
                             </ul>
                         </div>
                     </div>
@@ -102,7 +104,7 @@
                                 <td>@currency($harga->harga)</td>
                                 <td>{{ $tindakan->qty }}</td>
                                 <td>@currency($harga->harga * $tindakan->qty)</td>
-                                <td><span class="custom-badge status-{{ $tindakan->status == 0 ? 'red' : 'green' }}">{{ $tindakan->status == 0 ? 'belum' : 'lunas' }}</span></td>
+                                <td><span class="custom-badge status-{{ $tindakan->status == 0 ? 'red' : 'green' }}">{{ $tindakan->status == 0 ? 'Belum' : 'Selesai' }}</span></td>
                             </tr>
                             @php
                             $total += $harga->harga * $tindakan->qty
@@ -137,13 +139,17 @@
                                             </tr>
                                             @endif
                                             <tr>
+                                                <th>Grand Total :</th>
+                                                <td class="text-right">@currency($total + $pajak)</td>
+                                            </tr>
+                                            <tr>
                                                 <th>Dibayar:</th>
-                                                <td class="text-right">@currency($appointment->rincian->sum('dibayar'))</td>
+                                                <td class="text-right">@currency($appointment->rincian->sum('dibayar') + $appointment->rincian->sum('disc_vouc'))</td>
                                             </tr>
                                             <tr>
                                                 <th>Sisa Pembayaran:</th>
-                                                <td class="text-right text-primary sisa">
-                                                    <h5>@currency($total - $appointment->rincian->sum('dibayar') + $pajak)</h5>
+                                                <td class="text-right text-primary sisa" id="@currency($total - $appointment->rincian->sum('dibayar') + $pajak)">
+                                                    <h5 class="tsisa">@currency($total - $appointment->rincian->sum('dibayar') + $pajak - $appointment->rincian->sum('disc_vouc'))</h5>
                                                 </td>
                                             </tr>
                                         </tbody>
@@ -152,7 +158,9 @@
                             </div>
                         </div>
                     </div>
+
                     <div class="invoice-info">
+                        @if($appointment->status_pembayaran == 0)
                         <h5>Pembayaran</h5>
                         <p class="text-muted"></p>
                         <table width="519" border="0" class="table">
@@ -165,21 +173,27 @@
                                     <td width="188">Waktu Pembayaran</td>
                                 </tr>
                                 <tr>
-                                    <form action="{{ route('admin.appointments.bayar') }}" method="post">
+                                    <form action="{{ route('resepsionis.appointments.bayar') }}" method="post">
                                         @csrf
                                         <input type="hidden" name="booking_id" value="{{ $appointment->id }}" id="booking_id">
                                         <input type="hidden" name="nominal" value="{{ $total - $appointment->rincian->sum('dibayar') + $pajak }}" id="nml">
                                         <input type="hidden" name="bayar" value="" id="bayar">
                                         <input type="hidden" name="kembali" value="0" id="kembali">
+                                        <input type="hidden" name="voucher_id" value="0" id="voucher_id">
+                                        <input type="hidden" name="diskon" value="0" id="diskon">
                                         <td>
-                                            <select name="payment" class="form-control" id="metode">
+                                            <select name="payment" class="form-control" id="metode" required>
                                                 <option selected disabled>-- Metode --</option>
                                                 @foreach($payments as $payment)
                                                 <option value="{{ $payment->id }}">{{ $payment->nama_metode }}</option>
                                                 @endforeach
                                             </select>
+
+                                            @error('payment')
+                                            <small class="text-danger">{{ $message }}</small>
+                                            @enderror
                                         </td>
-                                        <td><input type="text" value="@rp($total - $appointment->rincian->sum('dibayar') + $pajak)" class="form-control" id="nominal"></td>
+                                        <td><input type="text" value="@rp($total - $appointment->rincian->sum('dibayar') + $pajak - $appointment->rincian->sum('disc_vouc'))" class="form-control" id="nominal"></td>
                                         <td><input type="text" value="0" class="form-control" id="dibayar"></td>
                                         <td><input type="text" value="0" class="form-control" id="change" readonly></td>
                                         <td><input type="datetime" value="{{ \Carbon\Carbon::now()->format('Y-m-d H:i') }}" class="form-control" name="tanggal_pembayaran" id="tanggal_pembayaran" readonly></td>
@@ -202,7 +216,7 @@
                                     <td width="200" height="47">Kode Voucher</td>
                                     <td></td>
                                 </tr>
-                                <tr>
+                                <tr class="voucher">
                                     <td><input type="text" class="form-control" id="voc" placeholder="Kode Voucher"></td>
                                     <td><button type="button" class="btn btn-success voc">Apply</button></td>
                                 </tr>
@@ -211,6 +225,7 @@
                                 </tr>
                             </tbody>
                         </table>
+                        @endif
 
                         <p></p>
                         <table width="520" border="0" class="table">
@@ -218,22 +233,24 @@
                                 <tr>
                                     <td>No</td>
                                     <td>Metode </td>
-                                    <td>Nominal</td>
                                     <td>Waktu </td>
                                     <td>Cashier</td>
                                     <td>Potongan</td>
+                                    <td>Nominal</td>
                                     <td>Biaya Kartu</td>
+                                    <td>Diskon</td>
                                     <td>Dibayar</td>
                                 </tr>
                                 @foreach($appointment->rincian as $rincian)
                                 <tr>
                                     <td>{{ $loop->iteration }}</td>
                                     <td>{{ $rincian->payment->nama_metode }}</td>
-                                    <td>@currency($rincian->nominal)</td>
-                                    <td>{{ \Carbon\Carbon::parse($rincian->tanggal_pembayaran)->format('d-m-Y H:i') }}</td>
+                                    <td>{{ \Carbon\Carbon::parse($rincian->tanggal_pembayaran)->format('d/m/Y H:i') }}</td>
                                     <td>{{ $rincian->kasir->name }}</td>
                                     <td>{{ $rincian->payment->potongan }}%</td>
+                                    <td>@currency($rincian->nominal)</td>
                                     <td>@currency($rincian->biaya_kartu)</td>
+                                    <td>@currency($rincian->disc_vouc)</td>
                                     <td>@currency($rincian->dibayar)</td>
                                 </tr>
                                 @endforeach
@@ -245,6 +262,7 @@
         </div>
     </div>
 </div>
+
 @stop
 
 @section('footer')
@@ -252,6 +270,9 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/izitoast/1.4.0/js/iziToast.min.js" integrity="sha512-Zq9o+E00xhhR/7vJ49mxFNJ0KQw1E1TMWkPTxrWcnpfEFDEXgUiwJHIKit93EW/XxE31HSI5GEOW06G6BF1AtA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <script>
     $(document).ready(function() {
+        $('#perawat').css('cursor', 'pointer');
+        $('#ob').css('cursor', 'pointer');
+
         var dibayar = document.getElementById('dibayar');
         dibayar.addEventListener('keyup', function(e) {
             dibayar.value = formatRupiah(this.value, 'Rp. ');
@@ -272,10 +293,15 @@
             }
 
             $("#bayar").val(bayar)
+
+            voucher()
         });
 
-
         $(".voc").on('click', function() {
+            voucher()
+        })
+
+        function voucher() {
             let kode_voucher = $("#voc").val();
             // let date = $("#tanggal_pembayaran").val()
             let dibayar = $("#bayar").val()
@@ -283,7 +309,7 @@
             let nominal = $("#nml").val();
             let booking_id = $("#booking_id").val()
 
-            let route = "{{ route('admin.appointments.voucher') }}";
+            let route = "{{ route('resepsionis.appointments.voucher') }}";
             let _token = $('meta[name="csrf-token"]').attr('content');
 
             $("#voucher").empty()
@@ -301,27 +327,42 @@
                     _token: _token
                 },
                 success: function(result) {
-                    console.log(result)
                     if (result.status == 400) {
                         $("#voucher").append(`<span class="text-danger">*` + result.message + `</span>`)
                     } else {
                         if (result.status) {
-                            iziToast.success({
-                                title: 'Success',
-                                position: 'topRight',
-                                message: result.message,
-                            });
-                            $(".sisa").empty().append("Rp. " + result.nominal)
-                            $("#nml").val(result.nml)
-                            $("#nominal").val(result.nominal)
-                            $(".table-voc").remove();
+                            $(".sisa").empty().append(`<h5><s class="text-muted">Rp. ` + $("#nominal").val() + `</s> Rp. ` + result.sisa + `</h5>`);
+                            $("#nominal").val(result.sisa)
+                            $("#voucher").append(`<span class="text-success">*` + result.message + `</span>`)
+                            $("#voucher_id").val(result.voucher_id)
+                            $("#diskon").val(result.diskon)
                         } else {
                             $("#voucher").append(`<span>` + result.message + `</span>`)
                         }
                     }
                 }
             })
-        })
+        }
+
+        function formatRupiah(angka, prefix) {
+            var number_string = angka.replace(/[^,\d]/g, '').toString(),
+                split = number_string.split(','),
+                sisa = split[0].length % 3,
+                rupiah = split[0].substr(0, sisa),
+                ribuan = split[0].substr(sisa).match(/\d{3}/gi);
+
+            // tambahkan titik jika yang di input sudah menjadi angka ribuan
+            if (ribuan) {
+                separator = sisa ? '.' : '';
+                rupiah += separator + ribuan.join('.');
+            }
+
+            rupiah = split[1] != undefined ? rupiah + ',' + split[1] : rupiah;
+            return prefix == undefined ? rupiah : (rupiah ? rupiah : '');
+        }
+
+
+
 
         $("#metode").on('change', function() {
             var id = $(this).val();
@@ -343,24 +384,16 @@
                 }
             })
         })
-
-        function formatRupiah(angka, prefix) {
-            var number_string = angka.replace(/[^,\d]/g, '').toString(),
-                split = number_string.split(','),
-                sisa = split[0].length % 3,
-                rupiah = split[0].substr(0, sisa),
-                ribuan = split[0].substr(sisa).match(/\d{3}/gi);
-
-            // tambahkan titik jika yang di input sudah menjadi angka ribuan
-            if (ribuan) {
-                separator = sisa ? '.' : '';
-                rupiah += separator + ribuan.join('.');
-            }
-
-            rupiah = split[1] != undefined ? rupiah + ',' + split[1] : rupiah;
-            return prefix == undefined ? rupiah : (rupiah ? rupiah : '');
-        }
-
     })
 </script>
+
+@if(session('success'))
+<script>
+    iziToast.success({
+        title: 'Success',
+        position: 'topRight',
+        message: "{{ session('success') }}",
+    });
+</script>
+@endif
 @stop

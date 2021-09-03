@@ -59,8 +59,8 @@
                                 <th>
                                     <div class="d-flex justify-content-start">
                                         <h5>
-                                            <a href="{{ asset('') }}" class="avatar"></a>
-                                            {{ $data->customer->nama }} - {{ (int)Carbon\Carbon::now()->format('Y') - (int)Carbon\Carbon::parse(substr($data->customer->ttl, -10))->format('Y') }} Tahun
+                                            <a href="#" class="avatar"><img src="{{ asset('/storage/' . $data->pasien->pict) }}" alt=""></a>
+                                            {{ $data->pasien->nama }} - {{ (int)Carbon\Carbon::now()->format('Y') - (int)Carbon\Carbon::parse(substr($data->pasien->ttl, -10))->format('Y') }} Tahun
                                             <h5>
                                     </div>
                                 </th>
@@ -87,11 +87,14 @@
                     <li>
                         <div class="contact-cont">
                             <div class="float-left user-img m-r-10">
-                                <a href="profile.html" title="John Doe"><img class="avatar w-40 rounded-circle"><span class="status online"></span></a>
+                                <a href="" title="John Doe"><img class="avatar w-40 rounded-circle" src="{{ asset('/storage/'. $data->pasien->pict) }}"><span class="status online"></span></a>
+                            </div>
+                            <div class="float-right m-r-10">
+                                <a href="{{ route('dokter.pasien.odontogram', $data->customer_id) }}" class="btn btn-sm btn-success"><i class="fa fa-plus-square"></i></a>
                             </div>
                             <div class="contact-info">
-                                <a href="{{route('dokter.appointments.show', $data->id)}}"><span class="contact-name text-ellipsis">{{ $data->customer->nama }}</span></a>
-                                <span class="contact-date">{{ $data->customer->alamat }}</span>
+                                <a href="{{route('dokter.appointments.show', $data->id)}}"><span class="contact-name text-ellipsis">{{ $data->pasien->nama }}</span></a>
+                                <span class="contact-date">{{ $data->pasien->alamat }}</span>
                             </div>
                         </div>
                     </li>

@@ -83,6 +83,9 @@
         <a href="#" class=""><i class="fa fa-cog"></i> <span> Settings </span> <span class="menu-arrow"></span></a>
         <ul style="display: none;">
             @can('permission-access')
+            <li class="{{ request()->is('admin/setting*') ? 'active' : '' }}"><a href="{{ route('admin.setting.index') }}">Basic Setting</a></li>
+            @endcan
+            @can('permission-access')
             <li class="{{ request()->is('admin/permissions*') ? 'active' : '' }}"><a href="{{ route('admin.permissions.index') }}">Permissions</a></li>
             @endcan
             @can('roles-access')

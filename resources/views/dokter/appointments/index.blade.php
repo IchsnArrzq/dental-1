@@ -10,7 +10,7 @@
 <div class="row">
     <div class="col-md-12">
         <div class="table-responsive">
-            <table class="table table-striped">
+            <table class="table table-striped custom-table datatable">
                 <thead>
                     <tr>
                         <th>#</th>
@@ -34,12 +34,12 @@
                             </a>
                         </td>
                         <td>{{ $data->pasien->nama }}</td>
-                        <td>{{ (int)Carbon\Carbon::now()->format('Y') - (int)Carbon\Carbon::parse(substr($data->pasien->ttl, -10))->format('Y') }}</td>
+                        <td>{{ (int)Carbon\Carbon::now()->format('Y') - (int)Carbon\Carbon::parse($data->pasien->tgl_lahir)->format('Y') }}</td>
                         <td><a href="{{ route('dokter.show', $data->dokter->id) }}">{{ $data->dokter->name }}</a></td>
                         <td>{{ $data->tanggal_status }}</td>
                         <td>{{ $data->jam_status }} - {{ $data->jam_selesai }}</td>
                         <td>
-                            <span class="custom-badge status-blue">
+                            <span class="custom-badge status-{{ $data->kedatangan->warna }}">
                                 {{ $data->kedatangan->status }}
                             </span>
                         </td>

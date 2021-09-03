@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <link rel="shortcut icon" type="image/x-icon" href="{{ asset('/') }}img/favicon.ico">
-    <title>{{ $title }} - Sky Dental Care</title>
+    <title>{{ \App\Setting::find(1)->web_name }} - {{ $title }}</title>
     <link rel="stylesheet" type="text/css" href="{{ asset('/') }}css/bootstrap.min.css">
     <link rel="stylesheet" type="text/css" href="{{ asset('/') }}css/font-awesome.min.css">
     <link rel="stylesheet" type="text/css" href="{{ asset('/') }}css/style.css">
@@ -44,7 +44,7 @@
         <div class="header">
             <div class="header-left">
                 <a href="/dashboard" class="logo">
-                    <img src="{{ asset('/') }}img/skydental.png" width="35" height="35" alt=""> <span>Dental Clinic</span>
+                    <img src="{{ asset('/storage/' . \App\Setting::find(1)->logo) }}" width="35" height="35" alt=""> <span>Dental Clinic</span>
                 </a>
             </div>
             <a id="toggle_btn" href="javascript:void(0);"><i class="fa fa-bars"></i></a>
@@ -52,14 +52,14 @@
             <ul class="nav user-menu float-right">
                 <li class="nav-item dropdown has-arrow">
                     <a href="#" class="dropdown-toggle nav-link user-link" data-toggle="dropdown">
-                        <span class="user-img"><img class="rounded-circle" src="{{ asset('/') }}img/user.jpg" width="40" alt="Admin">
+                        <span class="user-img"><img class="rounded-circle" src="{{ asset('/storage/' . auth()->user()->image ) }}" width="40">
                             <span class="status online"></span></span>
                         <span>{{ auth()->user()->name }}</span>
                     </a>
                     <div class="dropdown-menu">
                         <a class="dropdown-item" href="{{ route('profile') }}">My Profile</a>
-                        <a class="dropdown-item" href="edit-profile.html">Edit Profile</a>
-                        <a class="dropdown-item" href="settings.html">Settings</a>
+                        <a class="dropdown-item" href="{{ route('edit.profile') }}">Edit Profile</a>
+                        <!-- <a class="dropdown-item" href="settings.html">Settings</a> -->
                         <a class="dropdown-item" href="{{ route('logout') }}" onclick="event.preventDefault();
                     document.getElementById('logout').submit();">Logout</a>
 
@@ -73,8 +73,8 @@
                 <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><i class="fa fa-ellipsis-v"></i></a>
                 <div class="dropdown-menu dropdown-menu-right">
                     <a class="dropdown-item" href="{{ route('profile') }}">My Profile</a>
-                    <a class="dropdown-item" href="edit-profile.html">Edit Profile</a>
-                    <a class="dropdown-item" href="settings.html">Settings</a>
+                    <a class="dropdown-item" href="{{ route('edit.profile') }}">Edit Profile</a>
+                    <!-- <a class="dropdown-item" href="settings.html">Settings</a> -->
                     <a class="dropdown-item" href="{{ route('logout') }}" onclick="event.preventDefault();
                     document.getElementById('logout-form').submit();">Logout</a>
 

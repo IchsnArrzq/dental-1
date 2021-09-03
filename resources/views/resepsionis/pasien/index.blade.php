@@ -15,13 +15,13 @@
                     <table class="table table-striped custom-table" id="table" width="100%">
                         <thead>
                             <tr>
-                                <th>ID</th>
+                                <th>No</th>
                                 <th>Nik</th>
-                                <th>Name</th>
-                                <th>Age</th>
-                                <th>Address</th>
-                                <th>Phone</th>
+                                <th>Nama</th>
                                 <th>Email</th>
+                                <th>Usia</th>
+                                <th>Alamat</th>
+                                <th>Telp</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -49,8 +49,8 @@
                 get: 'get'
             },
             columns: [{
-                    data: 'id',
-                    name: 'id'
+                    data: 'DT_RowIndex',
+                    name: 'DT_RowIndex'
                 },
                 {
                     data: 'nik_ktp',
@@ -59,6 +59,10 @@
                 {
                     data: 'nama',
                     name: 'nama'
+                },
+                {
+                    data: 'email',
+                    name: 'email'
                 },
                 {
                     data: 'umur',
@@ -72,10 +76,6 @@
                     data: 'no_telp',
                     name: 'no_telp'
                 },
-                {
-                    data: 'email',
-                    name: 'email'
-                }
             ]
         })
     })

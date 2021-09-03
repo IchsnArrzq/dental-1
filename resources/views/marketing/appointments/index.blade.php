@@ -11,13 +11,14 @@
 <div class="row">
     <div class="col-md-12">
         <div class="table-responsive">
-            <table class="table table-striped custom-table datatable" id="table-appointments">
+            <table class="table table-striped custom-table datatable">
                 <thead>
                     <tr>
+                        <th>No</th>
                         <th>No Booking</th>
                         <th>Nama Pasien</th>
                         <th>Umur</th>
-                        <th>Nama Dokter</th>
+                        <th>Dokter</th>
                         <th>Cabang</th>
                         <th>Tanggal</th>
                         <th>Waktu</th>
@@ -28,19 +29,16 @@
                 <tbody>
                     @foreach($booking as $data)
                     <tr>
+                        <td>{{ $loop->iteration }}</td>
                         <td><a href="{{ route('marketing.appointments.show', $data->id) }}"><span class="badge badge-success">{{ $data->no_booking }}</span></a></td>
                         <td>{{ $data->pasien->nama }}</td>
-                        <td>{{ (int)Carbon\Carbon::now()->format('Y') - (int)Carbon\Carbon::parse(substr($data->pasien->ttl, -10))->format('Y') }}</td>
+                        <td>{{ (int)Carbon\Carbon::now()->format('Y') - (int)Carbon\Carbon::parse($data->pasien->tgl_lahir)->format('Y') }}</td>
                         <td>{{ $data->dokter->name }}</td>
                         <td>{{ $data->cabang->nama }}</td>
                         <td>{{ $data->tanggal_status }}</td>
                         <td>{{ $data->jam_status }} - {{ $data->jam_selesai }}</td>
                         <td>
-                            @if($data->is_active)
-                            <span class="custom-badge status-green">Active</span>
-                            @else
-                            <span class="custom-badge status-red">Inactive</span>
-                            @endif
+                            <span class="custom-badge status-{{ $data->kedatangan->warna }}">{{ $data->kedatangan->status }}</span>
                         </td>
                         <td class="text-right">
                             <div class="dropdown dropdown-action">

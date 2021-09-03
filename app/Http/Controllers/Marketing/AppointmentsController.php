@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use Exception;
 use Session;
+
 class AppointmentsController extends Controller
 {
     /**
@@ -53,9 +54,8 @@ class AppointmentsController extends Controller
                 'perawat_id' => $form['dokter_id'],
                 'cabang_id' => auth()->user()->cabang->id,
                 'customer_id' => $form['customer_id'],
-                'tindakan_id' => 1,
                 'jadwal_id' => $form['jadwal_id'],
-                'status_pembayaran' => 1,
+                'status_pembayaran' => 0,
                 'tanggal_status' => $form['tanggal_status'],
                 'jam_status' => $form['waktu_mulai'],
                 'jam_selesai' => $form['waktu_selesai'],
@@ -78,7 +78,8 @@ class AppointmentsController extends Controller
             return redirect()->route('marketing.dashboard')->with('success', 'Berhasil Booking');
         } catch (Exception $err) {
             DB::rollBack();
-            return redirect()->route('marketing.dashboard')->with('error', 'Booking Gagal : '.$err->getMessage());
+            dd($err->getMessage());
+            return redirect()->route('marketing.dashboard')->with('error', 'Booking Gagal : ' . $err->getMessage());
         }
     }
 

@@ -173,20 +173,12 @@ $a = $a;
         var button = $(this).attr('id')
         var dokter = $(this).attr('title')
         $('#pasien_id').html('')
-        $('#ob_id').html('')
-        $('#resepsionis_id').html('')
-        $('#perawat_id').html('')
+
         $.ajax({
             url: `/marketing/jadwal/now/${button}/${dokter}`,
             success: (data) => {
                 console.log(data)
                 $('#jadwal_id').val(button)
-                $('#ob_id').append(`<option value="">--Pilih OB--</option>`)
-                $('#resepsionis_id').append(`<option value="">--Pilih Resepsionis--</option>`)
-                $('#perawat_id').append(`<option value="">--Pilih Perawat--</option>`)
-                $('#ob_id').append(`<option value="1">Joko</option>`)
-                $('#resepsionis_id').append(`<option value="1">Wati</option>`)
-                $('#perawat_id').append(`<option value="1">Angga</option>`)
                 $('#dokter_id').val(`${data.dokter.id}`)
                 $('#waktu_mulai').val(data.booking)
 
@@ -198,20 +190,12 @@ $a = $a;
         var button = $(this).attr('id')
         var dokter = $(this).attr('title')
         $('#pasien_id').html('')
-        $('#ob_id').html('')
-        $('#resepsionis_id').html('')
-        $('#perawat_id').html('')
         $.ajax({
             url: `/marketing/jadwal/${button}/${dokter}`,
             success: (data) => {
                 console.log(data)
                 $('#jadwal_id').val(button)
-                $('#ob_id').append(`<option value="">--Pilih OB--</option>`)
-                $('#resepsionis_id').append(`<option value="">--Pilih Resepsionis--</option>`)
-                $('#perawat_id').append(`<option value="">--Pilih Perawat--</option>`)
-                $('#ob_id').append(`<option value="1">Joko</option>`)
-                $('#resepsionis_id').append(`<option value="1">Wati</option>`)
-                $('#perawat_id').append(`<option value="1">Angga</option>`)
+
 
                 $('#dokter_id').val(`${data.dokter.id}`)
                 $('#waktu_mulai').val(data.booking)

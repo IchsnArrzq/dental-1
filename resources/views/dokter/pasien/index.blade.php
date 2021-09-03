@@ -10,16 +10,17 @@
 <div class="row">
     <div class="col-md-12">
         <div class="table-responsive">
-            <table class="table table-border table-striped" id="table" width="100%">
+            <table class="table table-border table-striped custom-table" id="table" width="100%">
                 <thead>
                     <tr>
-                        <th>ID</th>
+                        <th>No</th>
+                        <th>Nik KTP</th>
                         <th>Nama</th>
                         <th>Umur</th>
                         <th>Alamat</th>
                         <th>Jenis Kelamin</th>
-                        <th>NIK KTP</th>
                         <th>Suku</th>
+                        <th>Action</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -41,11 +42,15 @@
             serverSide: true,
             ajax: {
                 url: '/dokter/ajax/pasien',
-                get: 'get'
+                type: 'get'
             },
             columns: [{
-                    data: 'id',
-                    name: 'id'
+                    data: 'DT_RowIndex',
+                    name: 'DT_RowIndex'
+                },
+                {
+                    data: 'nik_ktp',
+                    name: 'nik_ktp'
                 },
                 {
                     data: 'nama',
@@ -64,12 +69,12 @@
                     name: 'jk'
                 },
                 {
-                    data: 'nik_ktp',
-                    name: 'nik_ktp'
-                },
-                {
                     data: 'suku',
                     name: 'suku'
+                },
+                {
+                    data: 'action',
+                    name: 'action'
                 }
             ]
         })

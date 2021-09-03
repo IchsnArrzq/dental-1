@@ -21,7 +21,7 @@
             <div class="col-md-4 col-sm-4  col-lg-3">
                 <div class="profile-widget">
                     <div class="doctor-img">
-                        <a class="avatar" href=""><img alt="" src="{{ asset('storage/'. $dok->image) }}" style="object-fit: cover; object-position: center;"></a>
+                        <a class="avatar" href="{{ route('resepsionis.dokter.show', $dok->id) }}"><img alt="" src="{{ asset('storage/'. $dok->image) }}" style="object-fit: cover; object-position: center;"></a>
                     </div>
                     @can('dokter-edit')
                     <div class="dropdown profile-action">
@@ -40,7 +40,7 @@
                         </div>
                     </div>
                     @endcan
-                    <h4 class="doctor-name text-ellipsis"><a href="profile.html">{{ $dok->name }}</a></h4>
+                    <h4 class="doctor-name text-ellipsis"><a href="{{ route('resepsionis.dokter.show', $dok->id) }}">{{ $dok->name }}</a></h4>
                     <div class="user-country">
                         <i class="fa fa-map-marker"></i> {{ $dok->address }}
                     </div>

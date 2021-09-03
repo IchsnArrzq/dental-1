@@ -7,7 +7,7 @@
     </div>
     <div class="col-sm-8 col-9 text-right m-b-20">
         @can('patient-create')
-        <a href="{{ route('admin.pasien.create') }}" class="btn btn btn-primary btn-rounded float-right"><i class="fa fa-plus"></i> Add Pasien</a>
+        <a href="{{ route('marketing.patient.create') }}" class="btn btn btn-primary btn-rounded float-right"><i class="fa fa-plus"></i> Add Pasien</a>
         @endcan
     </div>
 </div>
@@ -42,7 +42,7 @@
                         <td>{{ $patient->nama }}</td>
                         <td>{{ $patient->no_telp }}</td>
                         <td>{{ $patient->email }}</td>
-                        <td>{{ $patient->ttl }}</td>
+                        <td>{{ $patient->tempat_lahir }}, {{ $patient->tgl_lahir }}</td>
                         <!-- <td>{{ $patient->jk }}</td> -->
                         <!-- <td>{{ $patient->suku }}</td> -->
                         <td>{{ $patient->alamat }}</td>
@@ -51,10 +51,10 @@
                         <td>{{ $patient->cabang->nama }}</td>
                         <td>
                             @can('patient-edit')
-                            <a href="{{ route('admin.pasien.edit', $patient->id) }}" class="btn btn-sm btn-info"><i class="fa fa-edit"></i></a>
+                            <a href="{{ route('marketing.patient.edit', $patient->id) }}" class="btn btn-sm btn-info"><i class="fa fa-edit"></i></a>
                             @endcan
                             @can('patient-delete')
-                            <form action="{{ route('admin.pasien.destroy', $patient->id) }}" method="post" style="display: inline;" class="delete-form">
+                            <form action="{{ route('marketing.patient.destroy', $patient->id) }}" method="post" style="display: inline;" class="delete-form">
                                 @method('DELETE')
                                 @csrf
                                 <button type="submit" class="btn btn-sm btn-danger"><i class="fa fa-trash"></i></button>

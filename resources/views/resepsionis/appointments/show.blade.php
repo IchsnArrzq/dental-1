@@ -19,7 +19,7 @@
             <div class="card-body">
                 <div class="row custom-invoice">
                     <div class="col-6 col-sm-6 m-b-20">
-                        <img src="{{ asset('/') }}img/skydental.png" class="inv-logo" alt="">
+                        <img src="{{ asset('/storage/' . \App\Setting::find(1)->logo) }}" class="inv-logo" alt="">
                         <ul class="list-unstyled">
                             <li>Sky dental</li>
                             <li>{{ $appointment->cabang->nama }}</li>
@@ -50,7 +50,7 @@
                             @php
                             $age = explode(",", $appointment->pasien->ttl)
                             @endphp
-                            <li>{{ \Carbon\Carbon::parse($age[1])->diff(\Carbon\Carbon::now())->format('%y Tahun') }}</li>
+                            <li>{{ \Carbon\Carbon::now()->format('Y') - \Carbon\Carbon::parse($appointment->pasien->tgl_lahir)->format('Y') }} Tahun</li>
                             <li>{{ $appointment->pasien->jk }}</li>
                             <li>{{ $appointment->pasien->nik_ktp }}</li>
                             <li><a href="#">{{ $appointment->pasien->email }}</a></li>
@@ -104,7 +104,7 @@
                                 <td>@currency($harga->harga)</td>
                                 <td>{{ $tindakan->qty }}</td>
                                 <td>@currency($harga->harga * $tindakan->qty)</td>
-                                <td><span class="custom-badge status-{{ $tindakan->status == 0 ? 'red' : 'green' }}">{{ $tindakan->status == 0 ? 'belum' : 'lunas' }}</span></td>
+                                <td><span class="custom-badge status-{{ $tindakan->status == 0 ? 'red' : 'green' }}">{{ $tindakan->status == 0 ? 'Belum' : 'Selesai' }}</span></td>
                             </tr>
                             @php
                             $total += $harga->harga * $tindakan->qty
@@ -158,7 +158,9 @@
                             </div>
                         </div>
                     </div>
+
                     <div class="invoice-info">
+                        @if($appointment->status_pembayaran == 0)
                         <h5>Pembayaran</h5>
                         <p class="text-muted"></p>
                         <table width="519" border="0" class="table">
@@ -186,8 +188,12 @@
                                                 <option value="{{ $payment->id }}">{{ $payment->nama_metode }}</option>
                                                 @endforeach
                                             </select>
+
+                                            @error('payment')
+                                            <small class="text-danger">{{ $message }}</small>
+                                            @enderror
                                         </td>
-                                        <td><input type="text" value="@rp($total - $appointment->rincian->sum('dibayar') + $pajak)" class="form-control" id="nominal"></td>
+                                        <td><input type="text" value="@rp($total - $appointment->rincian->sum('dibayar') + $pajak - $appointment->rincian->sum('disc_vouc'))" class="form-control" id="nominal"></td>
                                         <td><input type="text" value="0" class="form-control" id="dibayar"></td>
                                         <td><input type="text" value="0" class="form-control" id="change" readonly></td>
                                         <td><input type="datetime" value="{{ \Carbon\Carbon::now()->format('Y-m-d H:i') }}" class="form-control" name="tanggal_pembayaran" id="tanggal_pembayaran" readonly></td>
@@ -219,6 +225,7 @@
                                 </tr>
                             </tbody>
                         </table>
+                        @endif
 
                         <p></p>
                         <table width="520" border="0" class="table">
@@ -326,6 +333,9 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/izitoast/1.4.0/js/iziToast.min.js" integrity="sha512-Zq9o+E00xhhR/7vJ49mxFNJ0KQw1E1TMWkPTxrWcnpfEFDEXgUiwJHIKit93EW/XxE31HSI5GEOW06G6BF1AtA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <script>
     $(document).ready(function() {
+        $('#perawat').css('cursor', 'pointer');
+        $('#ob').css('cursor', 'pointer');
+
         var dibayar = document.getElementById('dibayar');
         dibayar.addEventListener('keyup', function(e) {
             dibayar.value = formatRupiah(this.value, 'Rp. ');
@@ -414,8 +424,7 @@
             return prefix == undefined ? rupiah : (rupiah ? rupiah : '');
         }
 
-        $('#perawat').css('cursor', 'pointer');
-        $('#ob').css('cursor', 'pointer');
+
 
 
         $("#metode").on('change', function() {

@@ -42,7 +42,7 @@
                             @enderror
                         </div>
                         <div class="form-group text-right">
-                            <a href="forgot-password.html">Forgot your password?</a>
+                            <!-- <a href="forgot-password.html">Forgot your password?</a> -->
                         </div>
                         <div class="form-group text-center">
                             <button type="submit" class="btn btn-primary account-btn">Login</button>

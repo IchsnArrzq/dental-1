@@ -6,8 +6,8 @@
         <h4 class="page-title">Add Pasien</h4>
     </div>
 </div>
-<form action="{{ route('admin.pasien.store') }}" method="post">
+<form action="{{ route('marketing.patient.store') }}" method="post" enctype="multipart/form-data">
     @csrf
-    @include('admin.patient.form')
+    @include('marketing.patient.form')
 </form>
 @stop

@@ -2,14 +2,8 @@
 
 @section('content')
 <div class="row">
-    <div class="col-sm-4">
+    <div class="col-sm-12">
         <h4 class="page-title">Attendance Sheet</h4>
-    </div>
-
-    <div class="col-sm-8 text-right m-b-20">
-        @can('cabang-create')
-        <a href="{{ route('admin.attendance.update_user') }}" class="btn btn btn-primary btn-rounded float-right" id="tombol-hapus" value="delete"><i class="fa fa-plus"></i> Update User Bulan ini</a>
-        @endcan
     </div>
 </div>
 
@@ -47,6 +41,7 @@
                 <label class="focus-label">Select Year</label>
                 <select class="select floating" name="year" value="{{ old('year') }}">
                     <option value="">-</option>
+                    <option>2023</option>
                     <option>2022</option>
                     <option>2021</option>
                     <option>2020</option>
@@ -84,70 +79,69 @@
     </div>
 </div>
 @endif
-
 <div class="row">
     <div class="col-lg-12">
-        <!-- <div class="card shadow">
+        <div class="card shadow">
             <div class="card-header">
                 <div class="d-flex justify-content-round">
                     <div>
-                        <a href="{{ route('admin.attendance.update_user') }}" class="btn btn-info text-light btn-block" id="tombol-hapus" value="delete">Update User Bulan ini</a>
+                        <a href="{{ route('admin.attendance.update_user', [$bulan,$tahun]) }}" class="btn btn-info text-light btn-block" id="tombol-hapus" value="delete">Update User Bulan {{ $bulan }} {{ $tahun }}</a>
                     </div>
                 </div>
             </div>
             <div class="card-body">
-                
+                <div class="table-responsive">
+                    <table class="table border table-bordered table-hover">
+                        <tr class="text-center bg-success">
+                            <th colspan="33">
+                                <h5 class="text-light">Attendance - @if(request('month')) {{ Carbon\Carbon::now()->startOfYear()->addMonth(request('month') - 1)->format('M') }} @else {{ Carbon\Carbon::now()->format('M')}} @endif @if(request('year')) {{ request('year') }} @else {{ Carbon\Carbon::now()->format('Y')}} @endif</h5>
+                            </th>
+                        </tr>
+                        <tr class="text-center bg-info">
+                            <th class="text-light">#</th>
+                            <th class="text-light">Pegawai</th>
+                            @for($i = 1;$i <= $last_date;$i++) <th class="text-light">{{ $i }}</th> @endfor
+                        </tr>
+                        @forelse($user as $data)
+                        <tr class="text-center">
+                            <td>{{ $data->id }}</td>
+                            <td><button type="button" id="{{ $data->id }}" class="btn btn-outline-primary button-show" @if(Carbon\Carbon::now()->format('m') != $bulan || Carbon\Carbon::now()->format('Y') != $tahun) disabled @endif data-toggle="modal" data-target=".bd-example-modal-lg">{{ $data->name }}</button></td>
+                            @for($i = 1; $i <= $last_date; $i++) <td>
+                                @foreach($data->jadwal as $row)
+                                @if(Carbon\Carbon::parse($row->tanggal)->format('Y') == $tahun)
+                                @if(Carbon\Carbon::parse($row->tanggal)->format('m') == $bulan)
+                                @if(Carbon\Carbon::parse($row->tanggal)->format('d') == $i)
+                                @if($row->shift->kode == 'SF1'|| $row->shift->kode == 'SF2')
+                                <i class="fa fa-check text-success">{{ $row->shift->kode }}</i>
+                                @else
+                                @if($row->shift->kode == 'L')
+                                <i class="fa fa-close text-danger">{{ $row->shift->kode }}</i>
+                                @else
+                                <i class="fa fa-info text-warning">{{ $row->shift->kode }}</i>
+                                @endif
+                                @endif
+                                @endif
+                                @endif
+                                @endif
+                                @endforeach
+                                @foreach($holiday as $list)
+                                @if(Carbon\Carbon::parse($list->holiday_date)->format('d') == $i)
+                                <i class="fa fa-close text-danger">{{ $list ->title }}</i>
+                                @endif
+                                @endforeach
+                                </td>
+                                @endfor
+                        </tr>
+                        @empty
+                        <tr>
+                            <td colspan="40">
+                                <div class="alert alert-warning text-center">Data Kosong</div>
+                            </td>
+                        </tr>
+                        @endforelse
+                    </table>
+                </div>
             </div>
-        </div> -->
-
-        <div class="table-responsive">
-            <table class="table border table-bordered table-hover">
-                <tr class="text-center bg-success">
-                    <th colspan="33">
-                        <h5 class="text-light">Attendance - @if(request('month')) {{ Carbon\Carbon::now()->startOfYear()->addMonth(request('month') - 1)->format('M') }} @else {{ Carbon\Carbon::now()->format('M')}} @endif @if(request('year')) {{ request('year') }} @else {{ Carbon\Carbon::now()->format('Y')}} @endif</h5>
-                    </th>
-                </tr>
-                <tr class="text-center bg-info">
-                    <th class="text-light">#</th>
-                    <th class="text-light">Pegawai</th>
-                    @for($i = 1;$i <= $last_date;$i++) <th class="text-light">{{ $i }}</th> @endfor
-                </tr>
-                @forelse($user as $data)
-                <tr class="text-center">
-                    <td>{{ $data->id }}</td>
-                    <td><button type="button" id="{{ $data->id }}" class="btn btn-outline-primary button-show" data-toggle="modal" data-target=".bd-example-modal-lg">{{ $data->name }}</button></td>
-                    @for($i = 1; $i <= $last_date; $i++) <td>
-                        @foreach($data->jadwal as $row)
-                        @if(Carbon\Carbon::parse($row->tanggal)->format('m') == Carbon\Carbon::now()->format('m'))
-                        @if(Carbon\Carbon::parse($row->tanggal)->format('d') == $i)
-                        @if($row->shift->kode == 'SF1'|| $row->shift->kode == 'SF2')
-                        <i class="fa fa-check text-success">{{ $row->shift->kode }}</i>
-                        @else
-                        @if($row->shift->kode == 'L')
-                        <i class="fa fa-close text-danger">{{ $row->shift->kode }}</i>
-                        @else
-                        <i class="fa fa-info text-warning">{{ $row->shift->kode }}</i>
-                        @endif
-                        @endif
-                        @endif
-                        @endif
-                        @endforeach
-                        @foreach($holiday as $list)
-                        @if(Carbon\Carbon::parse($list->holiday_date)->format('d') == $i)
-                        <i class="fa fa-close text-danger">{{ $list ->title }}</i>
-                        @endif
-                        @endforeach
-                        </td>
-                        @endfor
-                </tr>
-                @empty
-                <tr>
-                    <td colspan="40">
-                        <div class="alert alert-warning text-center">Data Kosong</div>
-                    </td>
-                </tr>
-                @endforelse
-            </table>
         </div>
     </div>
 </div>

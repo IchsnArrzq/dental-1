@@ -22,7 +22,7 @@
             <span class="dash-widget-bg4"><i class="fa fa-heartbeat" aria-hidden="true"></i></span>
             <div class="dash-widget-info text-right">
                 <h4 class="p-1">{{ $tindakan }} </h4>
-                <span class="widget-title4">Tindakan<i class="fa fa-check" aria-hidden="true"></i></span>
+                <span class="widget-title4">Tindakan Pending<i class="fa fa-check" aria-hidden="true"></i></span>
             </div>
         </div>
     </div>
@@ -39,7 +39,7 @@
                         @foreach($jadwal as $jdw)
                         <tr>
                             <td style="min-width: 100px;">
-                                <a class="avatar" href=""><img src="{{ asset('storage/' . $jdw->pasien->pict) }}" alt=""></a>
+                                <a class="avatar" href="#"><img src="{{ asset('storage/' . $jdw->pasien->pict) }}" alt=""></a>
                                 @php
                                 $age = explode(",", $jdw->pasien->ttl)
                                 @endphp
@@ -75,7 +75,7 @@
                     <li class="d-flex">
                         <div class="contact-cont mr-auto">
                             <div class="float-left user-img m-r-10">
-                                <a href="profile.html" title="John Doe"><img src="{{asset('/')}}img/user.jpg" alt="" class="w-40 rounded-circle"><span class="status online"></span></a>
+                                <a href="#" class="avatar"><img src="{{ asset('/storage/' . $dtng->pasien->pict) }}" alt="" class="w-40 rounded-circle"><span class="status online"></span></a>
                             </div>
                             <div class="contact-info">
                                 <span class="contact-name text-ellipsis">{{ $dtng->pasien->nama }}</span>
@@ -94,9 +94,9 @@
                     @endforeach
                 </ul>
             </div>
-            <div class="card-footer text-center bg-white">
+            <!-- <div class="card-footer text-center bg-white">
                 <a href="doctors.html" class="text-muted">View all Doctors</a>
-            </div>
+            </div> -->
         </div>
     </div>
     <div class="col-12 col-md-6 col-lg-4 col-xl-4">
@@ -110,7 +110,7 @@
                     <li class="d-flex">
                         <div class="contact-cont mr-auto">
                             <div class="float-left user-img m-r-10">
-                                <a href="profile.html" title="John Doe"><img src="{{asset('/')}}img/user.jpg" alt="" class="w-40 rounded-circle"><span class="status away"></span></a>
+                                <a href="#" class="avatar"><img src="{{asset('/storage/' . $prk->pasien->pict)}}" alt="" class="w-40 rounded-circle"><span class="status away"></span></a>
                             </div>
                             <div class="contact-info">
                                 <span class="contact-name text-ellipsis">{{ $prk->pasien->nama }}</span>
@@ -129,9 +129,9 @@
                     @endforeach
                 </ul>
             </div>
-            <div class="card-footer text-center bg-white">
+            <!-- <div class="card-footer text-center bg-white">
                 <a href="doctors.html" class="text-muted">View all Doctors</a>
-            </div>
+            </div> -->
         </div>
     </div>
 </div>

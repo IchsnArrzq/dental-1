@@ -4,14 +4,17 @@ namespace App\Http\Controllers\Marketing;
 
 use App\Booking;
 use App\Customer;
+use App\Fisik;
 use App\GigiPasien;
 use App\Http\Controllers\Controller;
+use App\KetOdontogram;
 use App\Odontogram;
 use App\Tindakan;
 use App\User;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 
 class PatientController extends Controller
 {
@@ -64,6 +67,12 @@ class PatientController extends Controller
         GigiPasien::create([
             'customer_id' => $customer->id
         ]);
+        Fisik::create([
+            'customer_id' => $customer->id
+        ]);
+        KetOdontogram::create([
+            'customer_id' => $customer->id
+        ]);
 
         return redirect()->route('marketing.patient.index')->with('success', 'Patient has been added');
     }
@@ -101,7 +110,26 @@ class PatientController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        try {
+            if ($request->pict) {
+                $pasien = Customer::find($id);
+                $attr = $request->except(['_token', '_method']);
+                $pict = $request->file('pict');
+                Storage::delete(Customer::findOrFail($id)->pict);
+                $pictUrl = $pict->storeAs('images/patients', \Str::random(15) . '.' . $pict->extension());
+                $attr['pict'] = $pictUrl;
+                $pasien->update($attr);
+                return redirect()->route('marketing.patient.index');
+            } else {
+                $pasien = Customer::find($id);
+
+                $attr = $request->except(['_token', '_method']);
+                $pasien->update($attr);
+                return redirect()->route('marketing.patient.index');
+            }
+        } catch (Exception $err) {
+            dd($err->getMessage());
+        }
     }
 
     /**

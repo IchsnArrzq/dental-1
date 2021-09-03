@@ -8,19 +8,29 @@ use App\Holidays;
 use App\Tindakan;
 use App\User;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
 
 class DashboardController extends Controller
 {
     public function index()
     {
-        $macAddr = substr(exec('getmac'), 0, 17);
+        // $macAddr = substr(exec('getmac'), 0, 17);
 
-        if (auth()->user()->mac_address == null) {
-            $user = User::find(auth()->user()->id);
-            $user->update([
-                'mac_address' => $macAddr
-            ]);
-        }
+        // if (auth()->user()->mac_address == null) {
+        //     $user = User::find(auth()->user()->id);
+        //     $user->update([
+        //         'mac_address' => $macAddr
+        //     ]);
+        // }
+
+        $macAddr = substr(exec('getmac'), 0, 17);
+        // return $macAddr;
+        // if (auth()->user()->mac_address != $macAddr) {
+        //     Auth::logout();
+        //     return redirect('login');
+        // }
 
         $jadwal = [];
         $datang = [];
@@ -49,7 +59,7 @@ class DashboardController extends Controller
             $waktu = Carbon::now()->format('Y-m-d');
             $cabang = auth()->user()->cabang_id;
 
-            $jadwal = Booking::with('pasien', 'dokter')->where('created_at', 'like', '%' . $waktu . '%')->where('status_kedatangan_id', 1)->where('cabang_id', $cabang)->get();
+            $jadwal = Booking::with('pasien', 'dokter')->where('tanggal_status', $waktu)->where('status_kedatangan_id', 1)->where('cabang_id', $cabang)->get();
             $datang = Booking::with('pasien', 'dokter')->where('status_kedatangan_id', 2)->where('cabang_id', $cabang)->get();
             $periksa = Booking::with('pasien', 'dokter')->where('status_kedatangan_id', 3)->get();
             $pasien =  Customer::where('cabang_id', $cabang)->count();
@@ -67,12 +77,12 @@ class DashboardController extends Controller
             $now = Carbon::now()->format('Y-m-d');
             $total_pasien = Customer::where('cabang_id', auth()->user()->cabang_id)->get()->count();
 
-            $finish = Booking::where('dokter_id', auth()->user()->id)->whereDate('tanggal_status', $now)->where('status_kedatangan_id', 3)->orderBy('jam_status', 'asc')->get();
-            $pending = Booking::where('dokter_id', auth()->user()->id)->whereDate('tanggal_status', $now)->where('status_kedatangan_id', '!=', 3)->orderBy('jam_status', 'asc')->get();
+            $finish = Booking::where('dokter_id', auth()->user()->id)->whereDate('tanggal_status', $now)->where('status_kedatangan_id', 4)->orderBy('jam_status', 'asc')->get();
+            $pending = Booking::where('dokter_id', auth()->user()->id)->whereDate('tanggal_status', $now)->where('status_kedatangan_id', '!=', 4)->orderBy('jam_status', 'asc')->get();
             $appointment_count = Booking::where('dokter_id', auth()->user()->id)->whereDate('tanggal_status', $now)->get()->count();
             // $appointment_pending = Booking::where('dokter_id', auth()->user()->id)->whereDate('tanggal_status', $now)->where('status_kedatangan_id','!=',3)->get()->count();
             $appointment_pending = Tindakan::whereHas('booking', function ($qr) use ($now) {
-                return $qr->where('dokter_id', auth()->user()->id)->whereDate('tanggal_status', $now)->where('status_kedatangan_id', '!=', 3);
+                return $qr->where('dokter_id', auth()->user()->id)->whereDate('tanggal_status', $now)->where('status_kedatangan_id', '!=', 4);
             })->where('status', 0)->get()->count();
 
             return view('dashboard.index', [
@@ -108,5 +118,42 @@ class DashboardController extends Controller
     {
         $profile = User::with('roles')->find(auth()->user()->id);
         return view('dashboard.profile', compact('profile'));
+    }
+
+    public function edit()
+    {
+        $profile = User::with('roles')->find(auth()->user()->id);
+        return view('dashboard.edit-profile', compact('profile'));
+    }
+
+    public function update()
+    {
+        $attr = request()->validate([
+            'name' => 'required',
+            'email' => 'required',
+            'address' => 'required'
+        ]);
+
+        $user = User::find(auth()->user()->id);
+
+        if (request('password') == null) {
+            $attr['password'] = $user->password;
+        } else {
+            $attr['password'] =  Hash::make(request('password'));
+        }
+
+        $image = request()->file('image');
+
+        if (request()->file('image')) {
+            Storage::delete($user->image);
+            $imageUrl = $image->storeAs('images/users', \Str::random(15) . '.' . $image->extension());
+            $attr['image'] = $imageUrl;
+        } else {
+            $attr['image'] = $user->image;
+        }
+
+        $user->update($attr);
+
+        return back()->with('success', 'Your profile has been updated');
     }
 }

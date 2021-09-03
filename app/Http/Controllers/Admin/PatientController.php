@@ -6,6 +6,7 @@ use App\{Customer, Fisik, GigiPasien, KetOdontogram, Odontogram, RekamMedis, Use
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StorePatientRequest;
 use Carbon\Carbon;
+use Exception;
 use Illuminate\Http\Request;
 
 class PatientController extends Controller
@@ -31,7 +32,6 @@ class PatientController extends Controller
 
         $attr['user_id'] = $user->id;
         $attr['cabang_id'] = $user->cabang_id;
-        $attr['ttl'] = $request->input('place') . ', ' . Carbon::parse($request->input('date'))->format('d-m-Y');
         $attr['pict'] = $pictUrl;
         $attr['is_active'] = 1;
 
@@ -48,6 +48,10 @@ class PatientController extends Controller
             'customer_id' => $customer->id
         ]);
 
+        Fisik::create([
+            'customer_id' => $customer->id
+        ]);
+
         return redirect()->route('admin.pasien.index')->with('success', 'Patient has been added');
     }
 
@@ -56,14 +60,31 @@ class PatientController extends Controller
         //
     }
 
-    public function edit(Customer $customer)
+    public function edit(Customer $pasien)
     {
-        //
+        return view('admin.patient.edit', compact('pasien'));
     }
 
-    public function update(Request $request, Customer $customer)
+    public function update(Request $request, Customer $pasien)
     {
-        //
+        try {
+            if ($request->pict) {
+                $attr = $request->except(['_token', '_method']);
+                $pict = $request->file('pict');
+                \Storage::delete($pasien->pict);
+                $pictUrl = $pict->storeAs('images/patients', \Str::random(15) . '.' . $pict->extension());
+                $attr['pict'] = $pictUrl;
+                $pasien->update($attr);
+                return redirect()->route('admin.pasien.index');
+            } else {
+
+                $attr = $request->except(['_token', '_method']);
+                $pasien->update($attr);
+                return redirect()->route('admin.pasien.index');
+            }
+        } catch (Exception $err) {
+            dd($err->getMessage());
+        }
     }
 
     public function destroy(Customer $customer)

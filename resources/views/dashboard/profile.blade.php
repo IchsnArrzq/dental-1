@@ -7,7 +7,7 @@
     </div>
 
     <div class="col-sm-5 col-6 text-right m-b-30">
-        <a href="" class="btn btn-primary btn-rounded"><i class="fa fa-edit"></i> Edit
+        <a href="{{ route('edit.profile') }}" class="btn btn-primary btn-rounded"><i class="fa fa-edit"></i> Edit
             Profile</a>
     </div>
 </div>
@@ -18,7 +18,7 @@
                 <div class="profile-img-wrap">
                     <div class="profile-img">
                         <a href="#">
-                            <img class="avatar" src="assets/img/doctor-03.jpg" alt="">
+                            <img class="avatar" src="{{ asset('/storage/'. $profile->image) }}" alt="">
                         </a>
                     </div>
                 </div>
@@ -32,6 +32,7 @@
                                     {{ $role->key }}
                                     @endforeach</small>
                                 <div class="staff-id">Employee ID : DR-0001</div>
+                                <div class="staff-msg"><a href="#" class="btn btn-primary">Send Message</a></div>
                             </div>
                         </div>
                         <div class="col-md-7">

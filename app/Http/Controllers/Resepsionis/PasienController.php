@@ -20,8 +20,9 @@ class PasienController extends Controller
 
         return datatables()
             ->of($pasien)
+            ->addIndexColumn()
             ->editColumn('umur', function ($data) {
-                return (int)Carbon::now()->format('Y') - (int)Carbon::parse(substr($data->ttl, -10))->format('Y') . ' Tahun';
+                return (int)Carbon::now()->format('Y') - (int)Carbon::parse($data->tgl_lahir)->format('Y') . ' Tahun';
             })
             ->make(true);
     }

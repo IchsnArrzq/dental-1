@@ -8,7 +8,7 @@
     <section class="sheet padding-15mm">
         <div class="header-doc" style="display: flex; margin-top: -20px;">
             <div class="img" style="margin-right: auto;">
-                <img src=" {{ asset('/') }}img/skydental.png" alt="" width="120px">
+                <img src="  {{ asset('/storage/' . \App\Setting::find(1)->logo) }}" alt="" width="120px">
             </div>
             <div class="title" style="margin-right: auto;">
                 <h3 align="center">REKAM MEDIK</h3>
@@ -26,19 +26,19 @@
             <div class="dokter">
                 <table class="tabel-nama">
                     <tr>
-                        <td>Nama Dokter</td>
+                        <td>Nama Klinik</td>
                         <td>:</td>
-                        <td>{{ $customer->nama }}</td>
+                        <td>{{ \App\Setting::find(1)->web_name }} - {{ $customer->cabang->nama }}</td>
                     </tr>
                     <tr>
                         <td>Alamat Praktek</td>
                         <td>:</td>
-                        <td>{{ $customer->ttl }}</td>
+                        <td>{{ $customer->cabang->alamat }}</td>
                     </tr>
                     <tr>
                         <td>Telepon</td>
                         <td>:</td>
-                        <td>{{ $customer->nama }}</td>
+                        <td>{{ $customer->cabang->telpon }}</td>
                     </tr>
                 </table>
             </div>
@@ -57,7 +57,7 @@
                     <td>2.</td>
                     <td>Tempat, Tanggal Lahir</td>
                     <td>:</td>
-                    <td>{{ $customer->ttl }}</td>
+                    <td>{{ $customer->tempat_lahir }}, {{ $customer->tgl_lahir }}</td>
                 </tr>
                 <tr>
                     <td>3.</td>
@@ -174,7 +174,7 @@
     <section class="sheet padding-15mm">
         <div class="header-doc" style="display: flex; margin-top: -20px;">
             <div class="img" style="margin-right: auto;">
-                <img src="{{ asset('/') }}img/skydental.png" alt="" width="80px">
+                <img src=" {{ asset('/storage/' . \App\Setting::find(1)->logo) }}" alt="" width="80px">
             </div>
             <div class="box" style="border: 1px solid black; border-radius: 20px; height: 60px; width: 150px; text-align: center;">
                 <h5>No. Rekam Medik :</h5>
@@ -203,7 +203,7 @@
             <tr>
                 <td>TTL</td>
                 <td>:</td>
-                <td>{{ $customer->ttl }}</td>
+                <td>{{ $customer->tempat_lahir }}, {{ $customer->tgl_lahir }}</td>
             </tr>
         </table>
         <hr>

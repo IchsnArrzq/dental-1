@@ -24,7 +24,7 @@
                         <td>{{ $pas->nama }}</td>
                         <td>{{ $pas->no_telp }}</td>
                         <td>{{ $pas->email }}</td>
-                        <td>{{ $pas->ttl }}</td>
+                        <td>{{ $pas->tempat_lahir }}, {{ $pas->tgl_lahir }}</td>
                         <td>{{ $pas->jk }}</td>
                         <td>{{ $pas->suku }}</td>
                         <td>{{ $pas->alamat }}</td>

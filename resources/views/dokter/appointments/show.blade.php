@@ -19,7 +19,7 @@
             <div class="card-body">
                 <div class="row custom-invoice">
                     <div class="col-6 col-sm-6 m-b-20">
-                        <img src="/img/logo-dark.png" class="inv-logo" alt="">
+                        <img src="{{ asset('/storage/' . \App\Setting::find(1)->logo) }}" class="inv-logo" alt="">
                         <ul class="list-unstyled">
                             <li>Sky dental</li>
                             <li>{{$customer->cabang->nama}}</li>
@@ -47,7 +47,7 @@
                             </li>
                             <li><span>{{$customer->alamat}}</span></li>
                             <li>{{$customer->no_telp}}</li>
-                            <li> {{ (int)Carbon\Carbon::now()->format('Y') - (int)Carbon\Carbon::parse(substr($customer->ttl, -10))->format('Y') }} Tahun ({{ $customer->ttl }})</li>
+                            <li> {{ (int)Carbon\Carbon::now()->format('Y') - (int)Carbon\Carbon::parse($customer->tgl_lahir)->format('Y') }} Tahun</li>
                             <li>{{$customer->jk}}</li>
                             <li>{{$customer->nik_ktp}}</li>
                             <li><a href="#">{{$customer->email}}</a></li>
@@ -58,13 +58,16 @@
                             <span class="text-muted">Payment Details:</span>
                             <ul class="list-unstyled invoice-payment-details">
                                 <li>
-                                    <h5>Total Due: <span class="text-right">Rp. {{ number_format($booking->tindakan->sum('nominal')) }}</span></h5>
+                                    @php
+                                    $pajak = $booking->tindakan->sum('nominal') * $booking->cabang->ppn / 100
+                                    @endphp
+                                    <h5>Total Due: <span class="text-right">Rp. {{ number_format($booking->tindakan->sum('nominal') + $pajak) }}</span></h5>
                                 </li>
                                 <li>Dokter: <span>{{ $booking->dokter->name }}</span></li>
                                 <input type="hidden" name="dokter_id" value="{{ $customer->id }}">
-                                <li>Perawat: <span>{nama_perawat}</span></li>
-                                <li>Office boy: <span>{ob}</span></li>
-                                <li>Resepsionis: <span>{nama_resepsionis}</span></li>
+                                <li>Perawat: <span>{{ $booking->perawat->name }}</span></li>
+                                <li>Office boy: <span>{{ $booking->ob->name }}</span></li>
+                                <li>Resepsionis: <span>{{ $booking->resepsionis->name }}</span></li>
                                 <li>Address: <span>{{ auth()->user()->cabang->alamat }}</span></li>
                                 <li>IBAN: <span>KFH37784028476740</span></li>
                                 <li>SWIFT code: <span>BPT4E</span></li>
@@ -72,14 +75,14 @@
                         </div>
                     </div>
                 </div>
-                <h3><span class="badge badge-primary" id="status">{{ $booking->kedatangan->status }}</span></h3>
+                <!-- <h3><span class="badge badge-primary" id="status">{{ $booking->kedatangan->status }}</span></h3> -->
                 <input type="hidden" id="id_booking" value="{{$booking->id}}">
                 <div class="row">
                     <div class="col-md-12">
                         <div class="table-responsive">
                             <table class="table custom-table table-hover border" id="table-show">
                                 <tr class="bg-success">
-                                    <th class="text-light">ID</th>
+                                    <th class="text-light">No</th>
                                     <th class="text-light">Item</th>
                                     <th class="text-light">Harga</th>
                                     <th class="text-light">Qty</th>
@@ -90,7 +93,7 @@
                                 </tr>
                                 @foreach($booking->tindakan as $data)
                                 <tr>
-                                    <td>{{ $data->id }}</td>
+                                    <td>{{ $loop->iteration }}</td>
                                     <td>{{ $data->item->nama_barang }}</td>
                                     <td>Rp. {{ number_format($data->item->produkharga->where('cabang_id',auth()->user()->cabang_id)->first()->harga) }}</td>
                                     <td>{{ $data->qty }}</td>

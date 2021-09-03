@@ -114,9 +114,18 @@ class AppointmentController extends Controller
 
     public function bayar(Request $request)
     {
+        $request->validate(
+            [
+                'payment' => 'required'
+            ],
+            [
+                'payment.required' => 'Pilih Metode Pembayaran'
+            ]
+        );
+
         $payment = Payment::find($request->input('payment'));
         $biaya =  ($request->input('bayar') * $payment->potongan) / 100;
-        $booking = Booking::with('kedatangan')->find($request->input('booking_id'));
+        $booking = Booking::with('kedatangan', 'tindakan', 'cabang')->find($request->input('booking_id'));
 
         $rincian = RincianPembayaran::where('booking_id', $booking->id)->get();
         if (request('voucher_id') != 0) {
@@ -140,7 +149,17 @@ class AppointmentController extends Controller
 
         $rincian = RincianPembayaran::where('booking_id', $booking->id)->get();
 
-        if ($booking->kedatangan->id == 3) {
+        $pajak = $booking->tindakan->sum('nominal') * $booking->cabang->ppn / 100;
+        $tagihan = $booking->tindakan->sum('nominal') + $pajak;
+        $totalRincian = $rincian->sum('nominal') + $rincian->sum('disc_vouc');
+
+        if ($totalRincian == $tagihan) {
+            $booking->update(['status_pembayaran' => 1]);
+        }
+
+
+
+        if ($booking->kedatangan->id == 4) {
 
             $this->dokter($rincian, $booking);
             $this->resepsionis($rincian, $booking);
