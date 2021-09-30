@@ -9,7 +9,7 @@
                         <th>No Booking</th>
                         <th>Nama</th>
                         <th>Persentase</th>
-                        <th>Role</th>
+                        <!-- <th>Role</th> -->
                         <th>Nominal</th>
                         <th>Kasir</th>
                     </tr>
@@ -32,11 +32,11 @@
                             {{ $persentase->persentase }} %
                             @endforeach
                         </td>
-                        <td>
+                        <!-- <td>
                             @foreach($kms->user->roles as $rl)
                             {{ $rl->key }}
                             @endforeach
-                        </td>
+                        </td> -->
                         <td>@currency($kms->nominal_komisi)</td>
                         @php
                         $kasir = \App\User::find($kms->booking->resepsionis_id)
@@ -44,7 +44,7 @@
                         <td>{{ $kasir->name }}</td>
                     </tr>
                     @php
-                    $total += $kms->sum('nominal_komisi');
+                    $total += $kms->nominal_komisi;
                     @endphp
                     @endforeach
                 </tbody>
@@ -53,7 +53,7 @@
                         <td><strong>Grand Total</strong></td>
                         <td></td>
                         <td></td>
-                        <td></td>
+                        <!-- <td></td> -->
                         <td></td>
                         <td></td>
                         <td>@currency($total)</td>

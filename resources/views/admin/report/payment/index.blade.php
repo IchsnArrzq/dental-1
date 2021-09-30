@@ -13,11 +13,11 @@
         <div class="col-sm-6 col-md-3">
             <div class="form-group form-focus select-focus focused">
                 <label class="focus-label">Cabang</label>
-                <select name="metode" class="select floating select2" tabindex="-1" aria-hidden="true">
-                    <option disabled selected>Select Metode</option>
-                    <option {{ request('metode') == 'all' ? 'selected' : '' }} value="all">Semua Metode</option>
-                    @foreach($metode as $mtd)
-                    <option {{ request('metode') == $mtd->id ? 'selected' : '' }} value="{{ $mtd->id }}" required>{{ $mtd->nama_metode }}</option>
+                <select name="cabang" class="select floating select2" tabindex="-1" aria-hidden="true">
+                    <option disabled selected>Select Cabang</option>
+                    <option {{ request('cabang') == 'all' ? 'selected' : '' }} value="all">Semua Cabang</option>
+                    @foreach($cabang as $cb)
+                    <option {{ request('cabang') == $cb->id ? 'selected' : '' }} value="{{ $cb->id }}" required>{{ $cb->nama }}</option>
                     @endforeach
                 </select>
             </div>
@@ -65,7 +65,7 @@
             {
                 extend: 'excel',
                 className: 'btn-default',
-                title: 'Laporan {{ $mt ? " Metode Pembayaran " . $mt->nama_metode : "Semua Metode Pembayaran" }}',
+                title: 'Laporan {{ $cb ? " Pembayaran Cabang " . $cb->nama : "Pembayaran Semua Cabang" }}',
                 messageTop: 'Tanggal {{ $from }}  -  {{ $to }}',
                 footer: true,
                 exportOptions: {
@@ -75,7 +75,7 @@
             {
                 extend: 'pdf',
                 className: 'btn-default',
-                title: 'Laporan {{ $mt ? "Metode Pembayaran " . $mt->nama_metode : "Semua Metode Pembayaran" }}',
+                title: 'Laporan {{ $cb ? "Pembayaran Cabang " . $cb->nama : "Pembayaran Semua Cabang" }}',
                 messageTop: 'Tanggal {{ $from }}  -  {{ $to }}',
                 footer: true,
                 exportOptions: {
