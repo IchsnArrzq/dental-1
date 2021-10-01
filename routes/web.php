@@ -122,6 +122,8 @@ Route::middleware('auth')->group(function () {
             Route::get('/attendance/search', 'AttendanceController@search')->name('attendance.search');
             Route::resource('attendance', 'AttendanceController');
 
+            Route::resource('jadwal', 'JadwalController');
+
             Route::resource('/setting', 'SettingController');
         });
 

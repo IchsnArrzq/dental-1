@@ -9,23 +9,28 @@
 
 <div class="row">
     <div class="col-md-12">
-        <div class="table-responsive">
-            <table class="table table-border table-striped custom-table" id="table" width="100%">
-                <thead>
-                    <tr>
-                        <th>No</th>
-                        <th>Nik KTP</th>
-                        <th>Nama</th>
-                        <th>Umur</th>
-                        <th>Alamat</th>
-                        <th>Jenis Kelamin</th>
-                        <th>Suku</th>
-                        <th>Action</th>
-                    </tr>
-                </thead>
-                <tbody>
-                </tbody>
-            </table>
+        <div class="card shadow">
+            <div class="card-body">
+
+                <div class="table-responsive">
+                    <table class="table table-border table-striped custom-table" id="table" width="100%">
+                        <thead>
+                            <tr>
+                                <th>No</th>
+                                <th>Nik KTP</th>
+                                <th>Nama</th>
+                                <th>Umur</th>
+                                <th>Alamat</th>
+                                <th>Jenis Kelamin</th>
+                                <th>Suku</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
         </div>
     </div>
 </div>

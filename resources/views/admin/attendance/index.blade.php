@@ -100,29 +100,37 @@
                         <tr class="text-center bg-info">
                             <th class="text-light">#</th>
                             <th class="text-light">Pegawai</th>
+                            <th class="text-light">Role</th>
                             @for($i = 1;$i <= $last_date;$i++) <th class="text-light">{{ $i }}</th> @endfor
                         </tr>
                         @forelse($user as $data)
                         <tr class="text-center">
                             <td>{{ $data->id }}</td>
-                            <td><button type="button" id="{{ $data->id }}" class="btn btn-outline-primary button-show" @if(Carbon\Carbon::now()->format('m') != $bulan || Carbon\Carbon::now()->format('Y') != $tahun) disabled @endif data-toggle="modal" data-target=".bd-example-modal-lg">{{ $data->name }}</button></td>
+                            <td><button type="button" id="{{ $data->id }}" year="{{ $year ?? Carbon\Carbon::now()->format('Y') }}" month="{{ $month ?? Carbon\Carbon::now()->format('m') }}" class="btn btn-outline-primary button-show" @if(Carbon\Carbon::now()->format('m') != $bulan || Carbon\Carbon::now()->format('Y') != $tahun) disabled @endif data-toggle="modal" data-target=".bd-example-modal-lg">{{ $data->name }}</button></td>
+                            <td>
+                                <ul class="list-unstyled">
+                                    @foreach($data->roles as $role)
+                                    <li>{{ $role->name }}</li>
+                                    @endforeach
+                                </ul>
+                            </td>
                             @for($i = 1; $i <= $last_date; $i++) <td>
                                 @foreach($data->jadwal as $row)
-                                @if(Carbon\Carbon::parse($row->tanggal)->format('Y') == $tahun)
-                                @if(Carbon\Carbon::parse($row->tanggal)->format('m') == $bulan)
-                                @if(Carbon\Carbon::parse($row->tanggal)->format('d') == $i)
-                                @if($row->shift->kode == 'SF1'|| $row->shift->kode == 'SF2')
-                                <i class="fa fa-check text-success">{{ $row->shift->kode }}</i>
-                                @else
-                                @if($row->shift->kode == 'L')
-                                <i class="fa fa-close text-danger">{{ $row->shift->kode }}</i>
-                                @else
-                                <i class="fa fa-info text-warning">{{ $row->shift->kode }}</i>
-                                @endif
-                                @endif
-                                @endif
-                                @endif
-                                @endif
+                                    @if(Carbon\Carbon::parse($row->tanggal)->format('Y') == $tahun)
+                                        @if(Carbon\Carbon::parse($row->tanggal)->format('m') == $bulan)
+                                            @if(Carbon\Carbon::parse($row->tanggal)->format('d') == $i)
+                                                @if($row->shift->kode == 'SF1'|| $row->shift->kode == 'SF2')
+                                                <i class="fa fa-check text-success">{{ $row->shift->kode }}</i>
+                                                @else
+                                                    @if($row->shift->kode == 'L')
+                                                    <i class="fa fa-close text-danger">{{ $row->shift->kode }}</i>
+                                                    @else
+                                                    <i class="fa fa-info text-warning">{{ $row->shift->kode }}</i>
+                                                    @endif
+                                                @endif
+                                            @endif
+                                        @endif
+                                    @endif
                                 @endforeach
                                 @foreach($holiday as $list)
                                 @if(Carbon\Carbon::parse($list->holiday_date)->format('d') == $i)
@@ -130,7 +138,7 @@
                                 @endif
                                 @endforeach
                                 </td>
-                                @endfor
+                            @endfor
                         </tr>
                         @empty
                         <tr>
@@ -151,6 +159,9 @@
 <script>
     $('.button-show').click(function() {
         event.preventDefault()
+        let year = $(this).attr('year')
+        let month = $(this).attr('month')
+        
         dataId = $(this).attr('id');
         $.ajax({
             url: `/admin/attendance/${dataId}`,
