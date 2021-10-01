@@ -12,12 +12,12 @@
     <div class="row filter-row">
         <div class="col-sm-6 col-md-3">
             <div class="form-group form-focus select-focus focused">
-                <label class="focus-label">Role</label>
-                <select name="role" class="select floating select2" tabindex="-1" aria-hidden="true">
-                    <option disabled selected>Select Role</option>
-                    <option {{ request('role') == 'all' ? 'selected' : '' }} value="all">Semua Role</option>
-                    @foreach($roles as $role)
-                    <option {{ request('role') == $role->name ? 'selected' : '' }} value="{{ $role->name }}" required>{{ $role->key }}</option>
+                <label class="focus-label">Pegawai</label>
+                <select name="pegawai" class="select floating select2" tabindex="-1" aria-hidden="true">
+                    <option disabled selected>Select Pegawai</option>
+                    <option {{ request('pegawai') == 'all' ? 'selected' : '' }} value="all">Semua Pegawai</option>
+                    @foreach($users as $user)
+                    <option {{ request('pegawai') == $user->id ? 'selected' : '' }} value="{{ $user->id }}" required>{{ $user->name }}</option>
                     @endforeach
                 </select>
             </div>
@@ -65,7 +65,7 @@
             {
                 extend: 'excel',
                 className: 'btn-default',
-                title: 'Laporan Komisi {{ $rl ? " Role " . $rl : "Semua Role" }}',
+                title: 'Laporan Komisi {{ $rl ? " Pegawai " . $rl : "Semua Pegawai" }}',
                 messageTop: 'Tanggal {{ $from }}  -  {{ $to }}',
                 footer: true,
                 exportOptions: {
@@ -75,7 +75,7 @@
             {
                 extend: 'pdf',
                 className: 'btn-default',
-                title: 'Laporan Komisi {{ $rl ? "Role " . $rl : "Semua Role" }}',
+                title: 'Laporan Komisi {{ $rl ? "Pegawai " . $rl : "Semua Pegawai" }}',
                 messageTop: 'Tanggal {{ $from }}  -  {{ $to }}',
                 footer: true,
                 exportOptions: {

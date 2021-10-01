@@ -92,25 +92,27 @@ class ReportController extends Controller
 
     public function payment()
     {
-        $metode = Payment::all();
+        $cabang = Cabang::all();
         $payments = [];
         $from = '';
         $to = '';
-        $mt = '';
+        $cb = '';
 
         if (request('from') && request('to')) {
             $from = Carbon::createFromFormat('d/m/Y', request('from'))->format('Y-m-d H:i:s');
             $to = Carbon::createFromFormat('d/m/Y', request('to'))->format('Y-m-d H:i:s');
 
-            if (request('metode') != 'all') {
-                $mt = Payment::find(request('metode'));
-                $payments = RincianPembayaran::with('payment', 'kasir')->where('payment_id', request('metode'))->whereBetween('tanggal_pembayaran', [$from, $to])->get();
+            if (request('cabang') != 'all') {
+                $cb = Cabang::find(request('cabang'));
+                $payments = RincianPembayaran::with('payment', 'kasir', 'booking')->whereHas('booking', function ($booking) {
+                    return $booking->where('cabang_id', request('cabang'));
+                })->whereBetween('tanggal_pembayaran', [$from, $to])->get();
             } else {
-                $payments = RincianPembayaran::with('payment', 'kasir')->whereBetween('tanggal_pembayaran', [$from, $to])->get();
+                $payments = RincianPembayaran::with('payment', 'kasir', 'booking')->whereBetween('tanggal_pembayaran', [$from, $to])->get();
             }
         }
 
-        return view('admin.report.payment.index', compact('payments', 'metode', 'mt', 'from', 'to'));
+        return view('admin.report.payment.index', compact('payments', 'cabang', 'cb', 'from', 'to'));
     }
 
     // public function paymentreport($payment_id)
@@ -132,18 +134,16 @@ class ReportController extends Controller
 
     public function komisi()
     {
-        $roles = Role::get();
+        $users = User::get();
         $komisi = null;
         $from = '';
         $to = '';
         $rl = '';
 
-        if (request('role') && request('from') && request('to')) {
-            if (request('role') != 'all') {
-                $rl = request('role');
-                $komisi = RincianKomisi::with('booking', 'user')->whereHas('user', function ($user) {
-                    return $user->role(request('role'))->with('roles');
-                })->whereHas('booking', function ($query) {
+        if (request('pegawai') && request('from') && request('to')) {
+            if (request('pegawai') != 'all') {
+                $rl = User::find(request('pegawai'))->name;
+                $komisi = RincianKomisi::with('booking', 'user')->where('user_id', request('pegawai'))->whereHas('booking', function ($query) {
                     return $query->with('rincian')->whereHas('rincian', function ($rincian) {
                         $from = Carbon::createFromFormat('d/m/Y', request('from'))->format('Y-m-d H:i:s');
                         $to = Carbon::createFromFormat('d/m/Y', request('to'))->format('Y-m-d H:i:s');
@@ -162,6 +162,6 @@ class ReportController extends Controller
             }
         }
 
-        return view('admin.report.komisi.index', compact('roles', 'komisi', 'rl', 'from', 'to'));
+        return view('admin.report.komisi.index', compact('users', 'komisi', 'rl', 'from', 'to'));
     }
 }

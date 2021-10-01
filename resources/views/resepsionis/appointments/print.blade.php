@@ -33,6 +33,11 @@
                 <td>{{ $appointment->tanggal_status }}</td>
             </tr>
             <tr>
+                <td width="50px">Tanggal Lahir</td>
+                <td>:</td>
+                <td>{{ $appointment->pasien->tgl_lahir }}</td>
+            </tr>
+            <tr>
                 <td width="50px">Patient</td>
                 <td>:</td>
                 <td>{{ $appointment->pasien->nama }}</td>

@@ -6,6 +6,7 @@
                     <tr>
                         <th style="text-align: center;">No</th>
                         <th>Tanggal</th>
+                        <th>Cabang</th>
                         <th>Metode Pembayaran</th>
                         <th>Change</th>
                         <th>Dibayar</th>
@@ -23,6 +24,7 @@
                     <tr>
                         <td style="text-align: center;">{{ $loop->iteration }}</td>
                         <td>{{ $pay->tanggal_pembayaran }}</td>
+                        <td>{{ $pay->booking->cabang->nama }}</td>
                         <td>{{ $pay->payment->nama_metode }}</td>
                         <td>@currency($pay->change)</td>
                         <td>@currency($pay->dibayar)</td>
@@ -35,6 +37,7 @@
                 <tfoot>
                     <tr>
                         <td><strong>Grand Total</strong></td>
+                        <td></td>
                         <td></td>
                         <td></td>
                         <td>@currency($payments->sum('change'))</td>
