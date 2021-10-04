@@ -71,7 +71,7 @@ class AppointmentsController extends Controller
                             if ($data->item->type) {
                                 if ($data->booking->dokter->name != User::find($form['dokter_id'])->name) {
                                     DB::rollBack();
-                                    return redirect('/dashboard')->with('error', $data->booking->dokter->name . ' != ' . User::find($form['dokter_id'])->name . ' Tidak bisa booking karena service berupa lanjutan ' . $data->item->type);
+                                    return redirect('/dashboard')->with('error','Tidak bisa booking karena service bertype lanjutan, harus dokter yang sama!');
                                 }
                             }
                         }
@@ -88,7 +88,7 @@ class AppointmentsController extends Controller
                 ]);
             }
             DB::commit();
-            return redirect('/dashboard')->with('success', 'Berhasil Booking');
+            return redirect('/dashboard')->with('success', 'Booking Berhasil!');
         } catch (Exception $err) {
             DB::rollBack();
             return redirect('/dashboard')->with('error', 'Booking Gagal : ' . $err->getMessage());
