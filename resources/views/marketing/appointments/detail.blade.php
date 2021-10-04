@@ -188,28 +188,28 @@
         let template = `
                 <tr class="rowComponent">
                     <td hidden>
-                        <input type="hidden" name="barang_id[${index}][barang_id]" class="barang_id-${index}">
+                        <input type="hidden" name="barang_id[${index}]" class="barang_id-${index}">
                     </td>
                     <td>
-                        <select required name="item[${index}][item]" onchange="GetResource(this)" id="${index}" class="form-control select-${index}"></select>
+                        <select required name="item[${index}]" onchange="GetResource(this)" id="${index}" class="form-control select-${index}"></select>
                     </td>
                     <td>
-                        <input type="text" name="price[${index}][price]"  class="form-control price-${index}" placeholder="0" readonly>
+                        <input type="text" name="price[${index}]"  class="form-control price-${index}" placeholder="0" readonly>
                     </td>
                     <td>
-                        <input type="text" name="time[${index}][time]" class="form-control time-${index} waktu"  readonly>
+                        <input type="text" name="time[${index}]" class="form-control time-${index} waktu"  readonly>
                     </td>
                     <td>
-                        <input type="text" name="duration[${index}][duration]" class="form-control duration-${index}" readonly>
+                        <input type="text" name="duration[${index}]" class="form-control duration-${index}" readonly>
                     </td>
                     <td>
-                        <input type="text" name="type[${index}][type]" class="form-control type-${index}" readonly>
+                        <input type="text" name="type[${index}]" class="form-control type-${index}" readonly>
                     </td>
                     <td>
-                        <input type="number" name="quantity[${index}][quantity]" class="form-control quantity-${index}" data="${index}" placeholder="0" oninput="hitung(this) , HowAboutIt(this) , HowWith(this)">
+                        <input type="number" name="quantity[${index}]" class="form-control quantity-${index}" data="${index}" placeholder="0" oninput="hitung(this) , HowAboutIt(this) , HowWith(this)">
                     </td>
                     <td>
-                        <input type="text" name="total[${index}][total]" class="form-control total-${index} total-form"  placeholder="0" readonly>
+                        <input type="text" name="total[${index}]" class="form-control total-${index} total-form"  placeholder="0" readonly>
                     </td>
                     <td>
                         <button type="button" class="btn btn-danger btn-sm" onclick="remove(this)">Delete</button>

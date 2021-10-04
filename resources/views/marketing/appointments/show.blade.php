@@ -44,12 +44,23 @@
                             <tr>
                                 <th>Nama Barang</th>
                                 <th>Qty</th>
+                                <th>Type</th>
                                 <th>Total</th>
                             </tr>
                             @foreach($booking->tindakan as $data)
                             <tr>
                                 <td>{{ $data->item->nama_barang }}</td>
                                 <td>{{ $data->qty }}</td>
+                                <td>
+                                    <div class="btn-group">
+                                        <button class="btn btn-info">
+                                            @if($data->item->type) Lanjutan @else Umum @endif
+                                        </button>
+                                        <button class="btn btn-warning">
+                                            {{ $data->booking->dokter->name }}
+                                        </button>
+                                    </div>
+                                    </td>
                                 <td>{{ $data->nominal }}</td>
                             </tr>
                             @endforeach
