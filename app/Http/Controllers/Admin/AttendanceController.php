@@ -2,20 +2,13 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Cabang;
-use App\Holidays;
 use App\Http\Controllers\Controller;
-use App\Jadwal;
-use App\Ruangan;
-use App\Shift;
-use App\User;
+use App\{Cabang, Holidays, Jadwal, Ruangan, Shift, User};
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
-use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
-use Yajra\DataTables\Facades\DataTables;
 
 class AttendanceController extends Controller
 {
@@ -36,18 +29,23 @@ class AttendanceController extends Controller
         })->whereHas('jadwal', function ($q) {
             return $q->whereMonth('tanggal', Carbon::now()->format('m'))->whereYear('tanggal', Carbon::now()->format('Y'));
         })->get();
-        $bulan = Carbon::now()->format('m');
-        $tahun = Carbon::now()->format('Y');
+        
+        $datetime = Carbon::now();
+
+        $month = $datetime->format('m');
+        $year = $datetime->format('Y');
+        $day = $datetime->endOfMonth()->format('d');
+
         return view('admin.attendance.index', [
             'user' => $user,
             'user_mode' => User::latest()->get(),
             'holiday' => Holidays::whereMonth('holiday_date', Carbon::now()->format('m'))->get(),
-            'last_date' => Carbon::now()->endOfMonth()->format('d'),
             'cabangs' => Cabang::get(),
             'ruangans' => Ruangan::get(),
             'shift' => Shift::pluck('kode'),
-            'bulan' => $bulan,
-            'tahun' => $tahun
+            'month' => $month,
+            'year' => $year,
+            'day' => $day
         ]);
     }
     /**
@@ -68,10 +66,10 @@ class AttendanceController extends Controller
      */
     public function store(Request $request)
     {
-        $bulan = Carbon::now()->format('m');
-        $tahun = Carbon::now()->format('Y');
+        $year = $request->year;
+        $month = $request->month;
         $tanggal_akhir = Carbon::now()->endOfMonth()->format('d');
-        $holiday = Holidays::whereMonth('holiday_date', $bulan)->pluck('holiday_date');
+        $holiday = Holidays::whereMonth('holiday_date', $month)->pluck('holiday_date');
 
         if (isset($request->SF1)) {
             for ($i = 0; $i < count($request->SF1); $i++) {
@@ -89,18 +87,18 @@ class AttendanceController extends Controller
             }
         }
 
-        if (Jadwal::where('user_id', $request->user_id)->whereMonth('tanggal', Carbon::now()->format('m'))->count() < Carbon::now()->endOfMonth()->format('d') || Jadwal::where('user_id', '=', $request->user_id)->get()->count() == 0) {
+        if (Jadwal::where('user_id', $request->user_id)->whereMonth('tanggal', Carbon::parse($year.'-'.$month)->format('m'))->count() < Carbon::parse($year.'-'.$month)->endOfMonth()->format('d') || Jadwal::where('user_id', '=', $request->user_id)->get()->count() == 0) {
             for ($i = 0; $i < $tanggal_akhir; $i++) {
-                if (in_array(Carbon::now()->startOfMonth()->addDays($i)->format('Y-m-d'), $holiday->toArray())) {
+                if (in_array(Carbon::parse($year.'-'.$month)->startOfMonth()->addDays($i)->format('Y-m-d'), $holiday->toArray())) {
                     Jadwal::create([
                         'user_id' => $request->user_id,
-                        'tanggal' => Carbon::now()->addDays($i)->format('Y-m-d'),
+                        'tanggal' => Carbon::parse($year.'-'.$month)->addDays($i)->format('Y-m-d'),
                         'shift_id' => 3
                     ]);
                 } else {
                     Jadwal::create([
                         'user_id' => $request->user_id,
-                        'tanggal' => Carbon::now()->addDays($i)->format('Y-m-d'),
+                        'tanggal' => Carbon::parse($year.'-'.$month)->addDays($i)->format('Y-m-d'),
                         'shift_id' => 1
                     ]);
                 }
@@ -110,19 +108,16 @@ class AttendanceController extends Controller
         $SF1 = [];
         try {
             if (isset($request->SF1)) {
-                for ($i = 0; $i < Carbon::now()->endOfMonth()->format('d'); $i++) {
-                    if (in_array(Carbon::now()->startOfMonth()->addDays($i)->format('Y-m-d'), $request->SF1)) {
-                        echo Carbon::now()->startOfMonth()->addDays($i)->format('Y-m-d') . ' yang di pilih <br>';
-                        Jadwal::where('user_id', $request->user_id)->whereDate('tanggal', Carbon::now()->startOfMonth()->addDays($i)->format('Y-m-d'))->update([
+                for ($i = 0; $i < Carbon::parse($year.'-'.$month)->endOfMonth()->format('d'); $i++) {
+                    if (in_array(Carbon::parse($year.'-'.$month)->startOfMonth()->addDays($i)->format('Y-m-d'), $request->SF1)) {
+                        Jadwal::where('user_id', $request->user_id)->whereDate('tanggal', Carbon::parse($year.'-'.$month)->startOfMonth()->addDays($i)->format('Y-m-d'))->update([
                             'ruangan_id' => $request->ruangan_id,
                             'shift_id' => 1
                         ]);
-                        if (Jadwal::where('user_id', $request->user_id)->whereDate('tanggal', Carbon::now()->startOfMonth()->addDays($i)->format('Y-m-d'))->where('shift_id', 1)->get()->count() > 1) {
-                            Jadwal::where('user_id', $request->user_id)->whereDate('tanggal', Carbon::now()->startOfMonth()->addDays($i)->format('Y-m-d'))->where('shift_id', 1)->first()->delete();
+                        if (Jadwal::where('user_id', $request->user_id)->whereDate('tanggal', Carbon::parse($year.'-'.$month)->startOfMonth()->addDays($i)->format('Y-m-d'))->where('shift_id', 1)->get()->count() > 1) {
+                            Jadwal::where('user_id', $request->user_id)->whereDate('tanggal', Carbon::parse($year.'-'.$month)->startOfMonth()->addDays($i)->format('Y-m-d'))->where('shift_id', 1)->first()->delete();
                         }
-                        array_push($SF1, Jadwal::where('user_id', $request->user_id)->whereDate('tanggal', Carbon::now()->startOfMonth()->addDays($i)->format('Y-m-d'))->first());
-                    } else {
-                        echo Carbon::now()->startOfMonth()->addDays($i)->format('Y-m-d') . '<br>';
+                        array_push($SF1, Jadwal::where('user_id', $request->user_id)->whereDate('tanggal', Carbon::parse($year.'-'.$month)->startOfMonth()->addDays($i)->format('Y-m-d'))->first());
                     }
                 }
             } else {
@@ -131,30 +126,28 @@ class AttendanceController extends Controller
                     $update = array_diff($request->SF2, $SF2);
                     $update = array_values($update);
 
-                    for ($i = 0; $i < Carbon::now()->endOfMonth()->format('d'); $i++) {
-                        if (in_array(Carbon::now()->startOfMonth()->addDays($i)->format('Y-m-d'), $update)) {
-                            echo Carbon::now()->startOfMonth()->addDays($i)->format('Y-m-d') . '  yang di pilih  SF2 <br>';
-                            Jadwal::where('user_id', $request->user_id)->whereDate('tanggal', Carbon::now()->startOfMonth()->addDays($i)->format('Y-m-d'))->update([
+                    for ($i = 0; $i < Carbon::parse($year.'-'.$month)->endOfMonth()->format('d'); $i++) {
+                        if (in_array(Carbon::parse($year.'-'.$month)->startOfMonth()->addDays($i)->format('Y-m-d'), $update)) {
+                            echo Carbon::parse($year.'-'.$month)->startOfMonth()->addDays($i)->format('Y-m-d') . '  yang di pilih  SF2 <br>';
+                            Jadwal::where('user_id', $request->user_id)->whereDate('tanggal', Carbon::parse($year.'-'.$month)->startOfMonth()->addDays($i)->format('Y-m-d'))->update([
                                 'ruangan_id' => $request->ruangan_id,
                                 'shift_id' => 2
                             ]);
-                            if (Jadwal::where('user_id', $request->user_id)->whereDate('tanggal', Carbon::now()->startOfMonth()->addDays($i)->format('Y-m-d'))->where('shift_id', 2)->get()->count() > 1) {
-                                Jadwal::where('user_id', $request->user_id)->whereDate('tanggal', Carbon::now()->startOfMonth()->addDays($i)->format('Y-m-d'))->where('shift_id', 2)->first()->delete();
+                            if (Jadwal::where('user_id', $request->user_id)->whereDate('tanggal', Carbon::parse($year.'-'.$month)->startOfMonth()->addDays($i)->format('Y-m-d'))->where('shift_id', 2)->get()->count() > 1) {
+                                Jadwal::where('user_id', $request->user_id)->whereDate('tanggal', Carbon::parse($year.'-'.$month)->startOfMonth()->addDays($i)->format('Y-m-d'))->where('shift_id', 2)->first()->delete();
                             }
-                        } else {
-                            echo Carbon::now()->startOfMonth()->addDays($i)->format('Y-m-d') . ' <br>';
                         }
                     }
                 }
                 if (isset($request->L)) {
-                    for ($i = 0; $i < Carbon::now()->endOfMonth()->format('d'); $i++) {
-                        if (in_array(Carbon::now()->startOfMonth()->addDays($i)->format('Y-m-d'), $request->L)) {
-                            Jadwal::where('user_id', $request->user_id)->whereDate('tanggal', Carbon::now()->startOfMonth()->addDays($i)->format('Y-m-d'))->update([
+                    for ($i = 0; $i < Carbon::parse($year.'-'.$month)->endOfMonth()->format('d'); $i++) {
+                        if (in_array(Carbon::parse($year.'-'.$month)->startOfMonth()->addDays($i)->format('Y-m-d'), $request->L)) {
+                            Jadwal::where('user_id', $request->user_id)->whereDate('tanggal', Carbon::parse($year.'-'.$month)->startOfMonth()->addDays($i)->format('Y-m-d'))->update([
                                 'ruangan_id' => $request->ruangan_id,
                                 'shift_id' => 3,
                             ]);
-                            if (Jadwal::where('user_id', $request->user_id)->where('tanggal', Carbon::now()->startOfMonth()->addDays($i)->format('Y-m-d'))->where('shift_id', 3)->get()->count() > 1) {
-                                Jadwal::where('user_id', $request->user_id)->where('tanggal', Carbon::now()->startOfMonth()->addDays($i)->format('Y-m-d'))->where('shift_id', 3)->first()->delete();
+                            if (Jadwal::where('user_id', $request->user_id)->where('tanggal', Carbon::parse($year.'-'.$month)->startOfMonth()->addDays($i)->format('Y-m-d'))->where('shift_id', 3)->get()->count() > 1) {
+                                Jadwal::where('user_id', $request->user_id)->where('tanggal', Carbon::parse($year.'-'.$month)->startOfMonth()->addDays($i)->format('Y-m-d'))->where('shift_id', 3)->first()->delete();
                             }
                         }
                     }
@@ -163,39 +156,39 @@ class AttendanceController extends Controller
             }
             $SF2 = [];
             if (isset($request->SF2)) {
-                for ($i = 0; $i < Carbon::now()->endOfMonth()->format('d'); $i++) {
-                    if (in_array(Carbon::now()->startOfMonth()->addDays($i)->format('Y-m-d'), $request->SF1) && in_array(Carbon::now()->startOfMonth()->addDays($i)->format('Y-m-d'), $request->SF2)) {
-                        echo Carbon::now()->startOfMonth()->addDays($i)->format('Y-m-d') . 'create SF1 dan SF2 <br>';
+                for ($i = 0; $i < Carbon::parse($year.'-'.$month)->endOfMonth()->format('d'); $i++) {
+                    if (in_array(Carbon::parse($year.'-'.$month)->startOfMonth()->addDays($i)->format('Y-m-d'), $request->SF1) && in_array(Carbon::parse($year.'-'.$month)->startOfMonth()->addDays($i)->format('Y-m-d'), $request->SF2)) {
+                        echo Carbon::parse($year.'-'.$month)->startOfMonth()->addDays($i)->format('Y-m-d') . 'create SF1 dan SF2 <br>';
 
                         Jadwal::create([
                             'user_id' => $request->user_id,
                             'cabang_id' => $request->cabang_id,
                             'shift_id' => 2,
                             'ruangan_id' => $request->ruangan_id,
-                            'tanggal' => Carbon::now()->startOfMonth()->addDays($i)->format('Y-m-d')
+                            'tanggal' => Carbon::parse($year.'-'.$month)->startOfMonth()->addDays($i)->format('Y-m-d')
                         ]);
 
-                        array_push($SF2, Carbon::now()->startOfMonth()->addDays($i)->format('Y-m-d'));
+                        array_push($SF2, Carbon::parse($year.'-'.$month)->startOfMonth()->addDays($i)->format('Y-m-d'));
                     } else {
-                        echo Carbon::now()->startOfMonth()->addDays($i)->format('Y-m-d') . ' <br>';
+                        echo Carbon::parse($year.'-'.$month)->startOfMonth()->addDays($i)->format('Y-m-d') . ' <br>';
                     }
                 }
 
                 $update = array_diff($request->SF2, $SF2);
                 $update = array_values($update);
 
-                for ($i = 0; $i < Carbon::now()->endOfMonth()->format('d'); $i++) {
-                    if (in_array(Carbon::now()->startOfMonth()->addDays($i)->format('Y-m-d'), $update)) {
-                        echo Carbon::now()->startOfMonth()->addDays($i)->format('Y-m-d') . '  yang di pilih  SF2 <br>';
-                        Jadwal::where('user_id', $request->user_id)->whereDate('tanggal', Carbon::now()->startOfMonth()->addDays($i)->format('Y-m-d'))->update([
+                for ($i = 0; $i < Carbon::parse($year.'-'.$month)->endOfMonth()->format('d'); $i++) {
+                    if (in_array(Carbon::parse($year.'-'.$month)->startOfMonth()->addDays($i)->format('Y-m-d'), $update)) {
+                        echo Carbon::parse($year.'-'.$month)->startOfMonth()->addDays($i)->format('Y-m-d') . '  yang di pilih  SF2 <br>';
+                        Jadwal::where('user_id', $request->user_id)->whereDate('tanggal', Carbon::parse($year.'-'.$month)->startOfMonth()->addDays($i)->format('Y-m-d'))->update([
                             'ruangan_id' => $request->ruangan_id,
                             'shift_id' => 2
                         ]);
-                        if (Jadwal::where('user_id', $request->user_id)->whereDate('tanggal', Carbon::now()->startOfMonth()->addDays($i)->format('Y-m-d'))->where('shift_id', 2)->get()->count() > 1) {
-                            Jadwal::where('user_id', $request->user_id)->whereDate('tanggal', Carbon::now()->startOfMonth()->addDays($i)->format('Y-m-d'))->where('shift_id', 2)->first()->delete();
+                        if (Jadwal::where('user_id', $request->user_id)->whereDate('tanggal', Carbon::parse($year.'-'.$month)->startOfMonth()->addDays($i)->format('Y-m-d'))->where('shift_id', 2)->get()->count() > 1) {
+                            Jadwal::where('user_id', $request->user_id)->whereDate('tanggal', Carbon::parse($year.'-'.$month)->startOfMonth()->addDays($i)->format('Y-m-d'))->where('shift_id', 2)->first()->delete();
                         }
                     } else {
-                        echo Carbon::now()->startOfMonth()->addDays($i)->format('Y-m-d') . ' <br>';
+                        echo Carbon::parse($year.'-'.$month)->startOfMonth()->addDays($i)->format('Y-m-d') . ' <br>';
                     }
                 }
                 for ($i = 0; $i < count($SF2); $i++) {
@@ -207,14 +200,14 @@ class AttendanceController extends Controller
                 }
             }
             if (isset($request->L)) {
-                for ($i = 0; $i < Carbon::now()->endOfMonth()->format('d'); $i++) {
-                    if (in_array(Carbon::now()->startOfMonth()->addDays($i)->format('Y-m-d'), $request->L)) {
-                        Jadwal::where('user_id', $request->user_id)->whereDate('tanggal', Carbon::now()->startOfMonth()->addDays($i)->format('Y-m-d'))->update([
+                for ($i = 0; $i < Carbon::parse($year.'-'.$month)->endOfMonth()->format('d'); $i++) {
+                    if (in_array(Carbon::parse($year.'-'.$month)->startOfMonth()->addDays($i)->format('Y-m-d'), $request->L)) {
+                        Jadwal::where('user_id', $request->user_id)->whereDate('tanggal', Carbon::parse($year.'-'.$month)->startOfMonth()->addDays($i)->format('Y-m-d'))->update([
                             'ruangan_id' => $request->ruangan_id,
                             'shift_id' => 3,
                         ]);
-                        if (Jadwal::where('user_id', $request->user_id)->where('tanggal', Carbon::now()->startOfMonth()->addDays($i)->format('Y-m-d'))->where('shift_id', 3)->get()->count() > 1) {
-                            Jadwal::where('user_id', $request->user_id)->where('tanggal', Carbon::now()->startOfMonth()->addDays($i)->format('Y-m-d'))->where('shift_id', 3)->first()->delete();
+                        if (Jadwal::where('user_id', $request->user_id)->where('tanggal', Carbon::parse($year.'-'.$month)->startOfMonth()->addDays($i)->format('Y-m-d'))->where('shift_id', 3)->get()->count() > 1) {
+                            Jadwal::where('user_id', $request->user_id)->where('tanggal', Carbon::parse($year.'-'.$month)->startOfMonth()->addDays($i)->format('Y-m-d'))->where('shift_id', 3)->first()->delete();
                         }
                     }
                 }
@@ -296,37 +289,18 @@ class AttendanceController extends Controller
     }
     public function update_user($month, $year)
     {
-        // $jadwal = User::doesntHave('jadwal')
-        // ->whereHas('roles', function($qr){
-        //     return $qr->whereIn('name', ['dokter', 'office-boy', 'perawat']);
-        // })
-        // ->get();
-        // dd($jadwal);
         try {
             $user = User::whereHas('roles', function ($qr) {
                 return $qr->whereIn('name', ['dokter ', 'office-boy', 'perawat']);
             })->whereDoesntHave('jadwal', function ($re) use ($month, $year) {
                 return $re->whereMonth('tanggal', $month)->whereYear('tanggal', $year);
             })->get();
-
-            // $count = User::doesntHave('jadwal')->whereHas('roles', function($qr){
-            //     return $qr->whereIn('name', ['dokter', 'office-boy', 'perawat']);
-            // })->get()->count();
-            // if($count == 0){
-            //     $user = User::whereHas('roles', function($qr ){
-            //         return $qr->whereIn('name',['dokter', 'office-boy', 'perawat']);
-            //     })->get();
-            // }else{ 
-            //     $user = User::whereHas('roles',function($qr){
-            //         return $qr->whereIn('name', ['dokter', 'office-boy', 'perawat']);
-            //     })->get();
-            // }
             foreach ($user as $data) {
                 $bulan = Carbon::parse($year . '-' . $month)->format('m');
                 $tanggal_akhir = Carbon::parse($year . '-' . $month)->endOfMonth()->format('d');
                 $holiday = Holidays::whereMonth('holiday_date', $bulan)->pluck('holiday_date');
 
-                Jadwal::where('user_id', $data->id)->whereMonth('tanggal', Carbon::parse($year . '-' . $month)->format('m'))->delete();
+                Jadwal::where('user_id', $data->id)->whereYear('tanggal',$month)->whereMonth('tanggal', $month)->delete();
                 // dd(Jadwal::where('user_id', $id)->get());
                 for ($i = 0; $i < $tanggal_akhir; $i++) {
                     if (in_array(Carbon::parse($year . '-' . $month)->startOfMonth()->addDays($i)->format('Y-m-d'), $holiday->toArray())) {
@@ -429,6 +403,81 @@ class AttendanceController extends Controller
             return response()->json($err->getMessage());
         }
     }
+    public function AttendanceEditYearMonth($id, $year, $month)
+    {
+        try {
+            $collection = new Collection();
+            $shift = Shift::pluck('kode');
+            $user = DB::table('users')
+                ->join('jadwals', 'jadwals.user_id', '=', 'users.id')
+                ->join('shifts', 'shifts.id', '=', 'jadwals.shift_id')
+                ->join('cabangs', 'cabangs.id', '=', 'jadwals.cabang_id')
+                ->join('ruangans', 'ruangans.id', '=', 'jadwals.ruangan_id')
+                ->select([
+                    'jadwals.tanggal as tanggal',
+                ])
+                ->where('jadwals.user_id', $id)
+                ->whereYear('jadwals.tanggal', $year)
+                ->whereMonth('jadwals.tanggal', $month)
+                ->orderBy('tanggal')
+                ->distinct()
+                ->get();
+            $child = DB::table('users')
+                ->join('jadwals', 'jadwals.user_id', '=', 'users.id')
+                ->join('shifts', 'shifts.id', '=', 'jadwals.shift_id')
+                ->join('cabangs', 'cabangs.id', '=', 'jadwals.cabang_id')
+                ->join('ruangans', 'ruangans.id', '=', 'jadwals.ruangan_id')
+                ->select([
+                    'jadwals.tanggal as tanggal',
+                    'shifts.kode as kode',
+                    'cabangs.nama as cabang',
+                    'ruangans.nama_ruangan as ruang',
+                ])
+                ->where('jadwals.user_id', $id)
+                ->whereYear('jadwals.tanggal', $year)
+                ->whereMonth('jadwals.tanggal', $month)
+                ->get();
+            $a = 1;
+            $i = 0;
+            foreach ($user as $data) {
+                $collection->push((object)[
+                    'id' => $i++,
+                    'no' => $a++,
+                    'tanggal' => $this->tanggal($data->tanggal),
+                    'kode' => $this->kode($child, $data->tanggal),
+                    'cabang' => $this->cabang($child, $data->tanggal),
+                    'ruang' => $this->ruang($child, $data->tanggal)
+                ]);
+            }
+            $datatable =  datatables()->of($collection);
+
+            $bulan = Carbon::now()->format('m');
+            $tanggal_akhir = Carbon::now()->endOfMonth()->format('d');
+            $holiday = Holidays::whereMonth('holiday_date', $bulan)->pluck('holiday_date');
+
+            foreach ($shift as $row) {
+                for ($i = 0; $i < $tanggal_akhir; $i++) {
+                    if (in_array(Carbon::now()->startOfMonth()->addDays($i)->format('Y-m-d'), $holiday->toArray())) {
+                        $datatable->editColumn($row, function ($data) use ($row, $id) {
+                            return '<input type="checkbox" name="' . $row . '[]" value="' . $data->tanggal . '">';
+                        });
+                    } else {
+                        $datatable->editColumn($row, function ($data) use ($row, $id) {
+                            return '<input type="checkbox" name="' . $row . '[]" value="' . $data->tanggal . '">';
+                        });
+                    }
+                }
+            }
+
+            $option = Shift::pluck('kode')->toArray();
+            return $datatable
+                ->addIndexColumn()
+                ->rawColumns(array_values($option))
+                ->make();
+        } catch (Exception $err) {
+            return response()->json($err->getMessage());
+        }
+    }
 
     /**
      * Update the specified resource in storage.
@@ -487,13 +536,18 @@ class AttendanceController extends Controller
         $pegawai = $request->pegawai;
         $month = $request->month;
         $year = $request->year;
+
+        $datetimeparse = Carbon::parse($year.'-'.$month);
+        $datetimenow = Carbon::now();
+
         if (!$request->month) {
-            $month = Carbon::now()->format('m');
+            $month = $datetimenow->format('m');
         }
         if (!$request->year) {
-            $year = Carbon::now()->format('Y');
+            $year = $datetimenow->format('Y');
         }
-        $last_date = Carbon::parse($year . '-' . $month)->endOfMonth()->format('d');
+        $day = $datetimeparse->endOfMonth()->format('d');
+
         if ($year == null && $month == null) {
             $user = User::where('name', 'like', '%' . $pegawai . '%')->get();
         } elseif ($year == '') {
@@ -513,12 +567,12 @@ class AttendanceController extends Controller
             'date' => $request->all(),
             'user' => $user,
             'holiday' => Holidays::whereMonth('holiday_date', $month)->get(),
-            'last_date' => $last_date,
             'cabangs' => Cabang::get(),
             'ruangans' => Ruangan::get(),
             'shift' => Shift::pluck('kode'),
-            'bulan' => $month,
-            'tahun' => $year
+            'month' => $month,
+            'year' => $year,
+            'day' => $day
         ]);
     }
 }
