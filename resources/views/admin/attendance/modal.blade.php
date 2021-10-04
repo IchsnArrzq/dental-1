@@ -1,12 +1,14 @@
 <div class="modal fade bd-example-modal-lg" id="show-data" aria-hidden="true" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
-            <form action="{{ route('admin.attendance.store') }}" id="form-store" method="post">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="modal-judul"></h5>
-                    <button type="button" class="close" data-dismiss="modal">&times;</button>
-                </div>
-                <div class="modal-body">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modal-judul"></h5>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form action="{{ route('admin.attendance.store') }}" id="form-store" method="post">
+                    <input type="hidden" name="year" value="{{ $year }}">
+                    <input type="hidden" name="month" value="{{ $month }}">
                     <div class="row">
                         @csrf
                         <div class="col-md-6">
@@ -52,23 +54,29 @@
                             </div>
                         </div>
                     </div>
-                </div>
-                <div class="modal-footer">
-                    <div class="row">
-                        <div class="col-md-6 col-md-6">
-                            <button class="btn btn-primary" @if(Carbon\Carbon::parse($tahun.'-'.$bulan)->format('Y-m') != Carbon\Carbon::now()->format('Y-m')) disabled @endif id="tombol-simpan" value="create">Simpan
-                            </button>
-                        </div>
-            </form>
-            <div class="col-sm-6 col-md-6">
-                <form action="" id="form-delete" method="post">
-                    @csrf
-                    @method('delete')
-                    <button class="btn btn-danger text-light" @if(Carbon\Carbon::parse($tahun.'-'.$bulan)->format('Y-m') != Carbon\Carbon::now()->format('Y-m')) disabled @endif id="tombol-hapus" value="delete">Reset</button>
                 </form>
+            </div>
+            <div class="modal-footer">
+                <div class="row">
+                    <div class="col-md-6 col-md-6">
+                        <button class="btn btn-primary" onclick="ClickMeAndSeeTheMagic()" id="tombol-simpan" value="create">Simpan
+                        </button>
+                    </div>
+                    <div class="col-sm-6 col-md-6">
+                        <form action="" id="form-delete" method="post">
+                            @csrf
+                            @method('delete')
+
+                            <button class="btn btn-danger text-light" id="tombol-hapus" value="delete">Reset</button>
+                        </form>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 </div>
-</div>
-</div>
+<script>
+    function ClickMeAndSeeTheMagic() {
+        $('#form-store').submit()
+    }
+</script>
