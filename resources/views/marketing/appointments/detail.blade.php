@@ -69,10 +69,10 @@
                                     </li>
                                     <li>Dokter: <span>{{ $dokter->name }}</span></li>
                                     <input type="hidden" name="dokter_id" value="{{ $dokter->id }}">
-                                    <li>Perawat: <span>{nama_perawat}</span></li>
-                                    <li>Office boy: <span>{ob}</span></li>
-                                    <li>Resepsionis: <span>{nama_resepsionis}</span></li>
-                                    <li>Address: <span>3 Goodman Street</span></li>
+                                    <li>Perawat: <span>{{ $booking->perawat->name  ?? '-' }}</span></li>
+                                    <li>Office boy: <span>{{ $booking->ob->name  ?? '-' }}</span></li>
+                                    <li>Resepsionis: <span>{{ $booking->resepsionis->name  ?? '-' }}</span></li>
+                                    <li>Address: <span>{{ auth()->user()->cabang->alamat }}</span></li>
                                     <li>IBAN: <span>KFH37784028476740</span></li>
                                     <li>SWIFT code: <span>BPT4E</span></li>
                                 </ul>
@@ -182,6 +182,7 @@
         return ("" + formatted + ((parts) ? "." + parts[1].substr(0, 2) : ""));
     };
     document.getElementById('submit').disabled = true
+
     function form_dinamic() {
         let index = $('#dynamic_field tr').length + 1
         document.getElementById('counter').innerHTML = index

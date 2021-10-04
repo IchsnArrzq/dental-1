@@ -196,7 +196,7 @@ Route::middleware('auth')->group(function () {
             Route::resource('pasien', 'PasienController');
 
             // Report Resepsionis
-            Route::get('report/payment', 'AppointmentController@report');
+            Route::get('report/payment', 'AppointmentController@report')->name('report.payment');
         });
 
         // Route Supervisor

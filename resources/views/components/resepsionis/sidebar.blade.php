@@ -19,8 +19,8 @@
     </li>
     @endcan
     @can('appointment-access')
-    <li class="{{ request()->is('resepsionis/appointments*') ? 'active' : '' }}">
-        <a href="{{ route('resepsionis.appointments.index') }}"><i class="fa fa-files-o"></i> <span>Report Payment</span></a>
+    <li class="{{ request()->is('resepsionis/report*') ? 'active' : '' }}">
+        <a href="{{ route('resepsionis.report.payment') }}"><i class="fa fa-files-o"></i> <span>Report Payment</span></a>
     </li>
     @endcan
 </ul>

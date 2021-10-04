@@ -277,4 +277,14 @@ class AppointmentController extends Controller
 
         return view('resepsionis.appointments.print', compact('appointment'));
     }
+
+    public function report()
+    {
+        $now = Carbon::now()->format('Y-m-d');
+        $payments = RincianPembayaran::with('payment', 'kasir', 'booking')->where('tanggal_pembayaran', 'LIKE', '%' . $now . '%')->whereHas('booking', function ($booking) {
+            return $booking->where('cabang_id', auth()->user()->cabang_id);
+        })->where('kasir_id', auth()->user()->id)->get();
+
+        return view('resepsionis.appointments.report', compact('payments', 'now'));
+    }
 }
