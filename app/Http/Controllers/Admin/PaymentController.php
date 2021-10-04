@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Cabang;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StorePaymentRequest;
 use App\Http\Requests\UpdatePaymentRequest;
@@ -23,7 +24,8 @@ class PaymentController extends Controller
         abort_unless(\Gate::allows('payment-create'), 403);
 
         $payment = new Payment();
-        return view('admin.payment.create', compact('payment'));
+        $cabangs = Cabang::get();
+        return view('admin.payment.create', compact('payment', 'cabangs'));
     }
 
 
@@ -46,8 +48,9 @@ class PaymentController extends Controller
     public function edit(Payment $payment)
     {
         abort_unless(\Gate::allows('payment-edit'), 403);
+        $cabangs = Cabang::get();
 
-        return view('admin.payment.edit', compact('payment'));
+        return view('admin.payment.edit', compact('payment', 'cabangs'));
     }
 
     public function update(UpdatePaymentRequest $request, Payment $payment)

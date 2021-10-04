@@ -71,7 +71,7 @@ class AppointmentsController extends Controller
                             if ($data->item->type) {
                                 if ($data->booking->dokter->name != User::find($form['dokter_id'])->name) {
                                     DB::rollBack();
-                                    return redirect('/dashboard')->with('error','Tidak bisa booking karena service bertype lanjutan, harus dokter yang sama!');
+                                    return redirect('/dashboard')->with('error', 'Tidak bisa booking karena service bertype lanjutan, harus dokter yang sama!');
                                 }
                             }
                         }

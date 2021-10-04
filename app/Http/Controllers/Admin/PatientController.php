@@ -137,7 +137,7 @@ class PatientController extends Controller
     {
         $histories = RincianPembayaran::with('booking')->whereHas('booking', function ($booking) use ($customer) {
             return $booking->where('customer_id', $customer->id);
-        })->get();
+        })->where('is_active', 1)->get();
 
         return view('admin.patient.history', compact('histories', 'customer'));
     }

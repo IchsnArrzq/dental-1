@@ -15,6 +15,7 @@
                     <tr>
                         <th style="text-align: center;">No</th>
                         <th>Tanggal</th>
+                        <th>No App</th>
                         <th>Cabang</th>
                         <th>Metode Pembayaran</th>
                         <th>Change</th>
@@ -26,12 +27,17 @@
                 </thead>
                 @php
                 $total = 0;
+                $kembali = 0;
+                $dibayar = 0;
+                $biaya = 0;
+                $nominal = 0;
                 @endphp
                 <tbody>
                     @foreach($histories as $history)
                     <tr>
                         <td style="text-align: center;">{{ $loop->iteration }}</td>
                         <td>{{ Carbon\Carbon::parse($history->payment->created_at)->format('d/m/Y') }}</td>
+                        <td>{{ $history->booking->no_booking }}</td>
                         <td>{{ $history->booking->cabang->nama }}</td>
                         <td>{{ $history->payment->nama_metode }}</td>
                         <td>@currency($history->change)</td>
@@ -40,6 +46,12 @@
                         <td>{{ $history->kasir->name }}</td>
                         <td>@currency($history->nominal)</td>
                     </tr>
+                    @php
+                    $kembali += $history->change;
+                    $dibayar += $history->dibayar;
+                    $biaya += $history->biaya_kartu;
+                    $nominal += $history->nominal;
+                    @endphp
                     @endforeach
                 </tbody>
                 <tfoot>
@@ -48,11 +60,12 @@
                         <td></td>
                         <td></td>
                         <td></td>
-                        <td>@currency($history->sum('kembali'))</td>
-                        <td>@currency($history->sum('dibayar'))</td>
-                        <td>@currency($history->sum('biaya_kartu'))</td>
                         <td></td>
-                        <td>@currency($history->sum('nominal'))</td>
+                        <td>@currency($kembali)</td>
+                        <td>@currency($dibayar)</td>
+                        <td>@currency($biaya)</td>
+                        <td></td>
+                        <td>@currency($nominal)</td>
                     </tr>
                 </tfoot>
             </table>

@@ -12,4 +12,9 @@ class Payment extends Model
     {
         return $this->hasMany(RincianPembayaran::class);
     }
+
+    public function cabang()
+    {
+        return $this->belongsTo(Cabang::class);
+    }
 }

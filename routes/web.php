@@ -163,7 +163,7 @@ Route::middleware('auth')->group(function () {
             Route::prefix('/service')->name('service.')->group(function () {
                 Route::get('/appointments/filter', 'ServiceController@AppointmentsFilter')->name('appointments.filter');
                 Route::post('/appointments/books', 'ServiceController@AppointmentsBook')->name('appointments.book');
-            });
+            }); 
             Route::get('/jadwal/{id}/{dokter}', 'AjaxController@GetBook');
             Route::get('/jadwal/now/{id}/{dokter}', 'AjaxController@GetBookNow');
             Route::get('/resource/{id}', 'AjaxController@GetProduct');

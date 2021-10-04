@@ -24,10 +24,8 @@ class AppointmentController extends Controller
 
     public function show(Booking $appointment)
     {
-        $appointment = Booking::with('pasien', 'dokter', 'cabang', 'perawat', 'resepsionis', 'rincian', 'tindakan')->where('id', $appointment->id)->whereHas('rincian', function ($rincian) {
-            return $rincian->where('is_active', 1);
-        })->first();
-        $payments = Payment::where('id', '!=', 4)->get();
+        $appointment = Booking::with('pasien', 'dokter', 'cabang', 'perawat', 'resepsionis', 'rincian', 'tindakan')->where('id', $appointment->id)->first();
+        $payments = Payment::where('cabang_id', auth()->user()->cabang_id)->get();
         $perawat = User::role('perawat')->get();
         $office = User::role('office-boy')->get();
         $rincians = RincianPembayaran::where('booking_id', $appointment->id)->where('is_active', 1)->get();

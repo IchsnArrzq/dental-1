@@ -32,4 +32,9 @@ class Cabang extends Model
     {
         return $this->hasMany(Booking::class, 'cabang_id');
     }
+
+    public function payment()
+    {
+        return $this->hasMany(Payment::class);
+    }
 }
