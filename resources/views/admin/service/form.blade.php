@@ -26,10 +26,10 @@
 </div>
 
 <div class="form-group">
-    <label for="type">type</label>
+    <label for="type">Type</label>
     <select name="type" id="type" class="form-control">
-        <option value="1">Lanjutan</option>
-        <option value="0">Biasa</option>
+        <option @if($service->type == 1) selected @endif value="1">Lanjutan</option>
+        <option @if($service->type == 0) selected @endif value="0">Umum</option>
     </select>
 
     @error('type')
