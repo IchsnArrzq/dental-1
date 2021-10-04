@@ -118,12 +118,14 @@ Route::middleware('auth')->group(function () {
             Route::resource('holidays', 'HolidaysController');
             Route::get('holidays/datatables', 'HolidaysController@datatables')->name('holidays.datatables');
             //Route Master Attendance
+            Route::get('/attendance/edit/{id}/{year}/{month}','AttendanceController@AttendanceEditYearMonth')->name('attendance.edit.year.month');
             Route::get('/attendance/update_user/{bulan}/{tahun}', 'AttendanceController@update_user')->name('attendance.update_user');
             Route::get('/attendance/search', 'AttendanceController@search')->name('attendance.search');
             Route::resource('attendance', 'AttendanceController');
 
             Route::resource('jadwal', 'JadwalController');
-
+            Route::get('/jadwal/refresh/{year}/{month}', 'JadwalController@refresh')->name('jadwal.refresh');
+            Route::post('/jadwal/filter', 'JadwalController@filter')->name('jadwal.filter');
             Route::resource('/setting', 'SettingController');
         });
 
