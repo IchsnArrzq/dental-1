@@ -21,10 +21,28 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="no_telp">No Telp.</label>
+                    <label for="no_telp">No Telp. Utama</label>
                     <input type="number" name="no_telp" id="no_telp" class="form-control" value="{{ $patient->no_telp ?? '' }}">
 
                     @error('no_telp')
+                    <small class="text-danger">{{ $message }}</small>
+                    @enderror
+                </div>
+
+                <div class="form-group">
+                    <label for="st">No Telp. Satu</label>
+                    <input type="number" name="telp_st" id="no_telp" class="form-control" value="{{ $patient->telp_st ?? '' }}">
+
+                    @error('telp_st')
+                    <small class="text-danger">{{ $message }}</small>
+                    @enderror
+                </div>
+
+                <div class="form-group">
+                    <label for="telp_nd">No Telp. Dua</label>
+                    <input type="number" name="telp_nd" id="telp_nd" class="form-control" value="{{ $patient->telp_nd ?? '' }}">
+
+                    @error('telp_nd')
                     <small class="text-danger">{{ $message }}</small>
                     @enderror
                 </div>

@@ -46,14 +46,12 @@
                                 <h5><strong>{{ $appointment->pasien->nama }}</strong></h5>
                             </li>
                             <li><span>{{ $appointment->pasien->alamat }}</span></li>
-                            <li>{{ $appointment->pasien->no_telp }}</li>
                             @php
                             $age = explode(",", $appointment->pasien->ttl)
                             @endphp
                             <li>{{ \Carbon\Carbon::now()->format('Y') - \Carbon\Carbon::parse($appointment->pasien->tgl_lahir)->format('Y') }} Tahun</li>
                             <li>{{ $appointment->pasien->jk }}</li>
                             <li>{{ $appointment->pasien->nik_ktp }}</li>
-                            <li><a href="#">{{ $appointment->pasien->email }}</a></li>
                         </ul>
 
                     </div>

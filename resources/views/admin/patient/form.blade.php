@@ -30,6 +30,24 @@
                 </div>
 
                 <div class="form-group">
+                    <label for="st">No Telp. Satu</label>
+                    <input type="number" name="telp_st" id="no_telp" class="form-control" value="{{ $patient->telp_st ?? '' }}">
+
+                    @error('telp_st')
+                    <small class="text-danger">{{ $message }}</small>
+                    @enderror
+                </div>
+
+                <div class="form-group">
+                    <label for="telp_nd">No Telp. Dua</label>
+                    <input type="number" name="telp_nd" id="telp_nd" class="form-control" value="{{ $patient->telp_nd ?? '' }}">
+
+                    @error('telp_nd')
+                    <small class="text-danger">{{ $message }}</small>
+                    @enderror
+                </div>
+
+                <div class="form-group">
                     <label for="tempat_lahir">Tempat, Tangal Lahir</label>
                     <div class="row">
                         <div class="col-sm-6">

@@ -18,10 +18,8 @@
                                 <th>No</th>
                                 <th>Nik</th>
                                 <th>Nama</th>
-                                <th>Email</th>
                                 <th>Usia</th>
                                 <th>Alamat</th>
-                                <th>Telp</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -61,20 +59,12 @@
                     name: 'nama'
                 },
                 {
-                    data: 'email',
-                    name: 'email'
-                },
-                {
                     data: 'umur',
                     name: 'umur'
                 },
                 {
                     data: 'alamat',
                     name: 'alamat'
-                },
-                {
-                    data: 'no_telp',
-                    name: 'no_telp'
                 },
             ]
         })

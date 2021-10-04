@@ -79,24 +79,12 @@
                 </tr>
                 <tr>
                     <td>6.</td>
-                    <td>Email</td>
-                    <td>:</td>
-                    <td>{{ $customer->email }}</td>
-                </tr>
-                <tr>
-                    <td>7.</td>
                     <td>Alamat</td>
                     <td>:</td>
                     <td>{{ $customer->alamat }}</td>
                 </tr>
                 <tr>
-                    <td>8.</td>
-                    <td>Telp.</td>
-                    <td>:</td>
-                    <td>{{ $customer->no_telp }}</td>
-                </tr>
-                <tr>
-                    <td>9.</td>
+                    <td>7.</td>
                     <td>Pekerjaan</td>
                     <td>:</td>
                     <td>{{ $customer->pekerjaan }}</td>

@@ -43,7 +43,7 @@
                                 @php
                                 $age = explode(",", $jdw->pasien->ttl)
                                 @endphp
-                                <h2><a href="">{{ $jdw->pasien->nama }}<span>{{ $jdw->pasien->jk }}, {{ \Carbon\Carbon::parse($age[1])->diff(\Carbon\Carbon::now())->format('%y') }}</span></a></h2>
+                                <h2><a href="">{{ $jdw->pasien->nama }}<span>{{ $jdw->pasien->jk }}, {{ \Carbon\Carbon::parse($jdw->pasien->tgl_lahir)->diff(\Carbon\Carbon::now())->format('%y') }}</span></a></h2>
                             </td>
                             <td>
                                 <h5 class="time-title p-0">{{ $jdw->dokter->name }}</h5>

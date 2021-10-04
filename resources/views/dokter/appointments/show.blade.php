@@ -46,11 +46,9 @@
                                 <h5><strong>{{$customer->nama}}</strong></h5>
                             </li>
                             <li><span>{{$customer->alamat}}</span></li>
-                            <li>{{$customer->no_telp}}</li>
                             <li> {{ (int)Carbon\Carbon::now()->format('Y') - (int)Carbon\Carbon::parse($customer->tgl_lahir)->format('Y') }} Tahun</li>
                             <li>{{$customer->jk}}</li>
                             <li>{{$customer->nik_ktp}}</li>
-                            <li><a href="#">{{$customer->email}}</a></li>
                         </ul>
                     </div>
                     <div class="col-sm-6 col-lg-6 m-b-20">
