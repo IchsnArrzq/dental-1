@@ -39,7 +39,7 @@ class AttendanceController extends Controller
         return view('admin.attendance.index', [
             'user' => $user,
             'user_mode' => User::latest()->get(),
-            'holiday' => Holidays::whereMonth('holiday_date', Carbon::now()->format('m'))->get(),
+            'holiday' => Holidays::whereMonth('holiday_date', $datetime->format('m'))->whereYear('holiday_date', $datetime->format('Y'))->get(),
             'cabangs' => Cabang::get(),
             'ruangans' => Ruangan::get(),
             'shift' => Shift::pluck('kode'),
@@ -490,7 +490,41 @@ class AttendanceController extends Controller
     {
         //
     }
-
+    public function AttendanceResetYearMonth($id, $year, $month)
+    {
+        try {
+            $datetime = Carbon::parse($year.'-'.$month);
+            $bulan = $datetime->format('m');
+            $tahun = $datetime->format('Y');
+            $tanggal_akhir = $datetime->endOfMonth()->format('d');
+            $holiday = Holidays::whereMonth('holiday_date', $bulan)->whereYear('holiday_date', $tahun)->pluck('holiday_date');
+            $user = User::findOrFail($id);
+            Jadwal::where('user_id', $id)->whereMonth('tanggal', $datetime->format('m'))->whereYear('tanggal', $datetime->format('Y'))->delete();
+            // dd(Jadwal::where('user_id', $id)->get());
+            for ($i = 0; $i < $tanggal_akhir; $i++) {
+                if (in_array($datetime->startOfMonth()->addDays($i)->format('Y-m-d'), $holiday->toArray())) {
+                    Jadwal::create([
+                        'user_id' => $id,
+                        'tanggal' => $datetime->startOfMonth()->addDays($i)->format('Y-m-d'),
+                        'cabang_id' => $user->cabang_id,
+                        'ruangan_id' => $user->cabang->ruangan->first()->id,
+                        'shift_id' => 3
+                    ]);
+                } else {
+                    Jadwal::create([
+                        'user_id' => $id,
+                        'tanggal' => $datetime->startOfMonth()->addDays($i)->format('Y-m-d'),
+                        'cabang_id' => $user->cabang_id,
+                        'ruangan_id' => $user->cabang->ruangan->first()->id,
+                        'shift_id' => 1
+                    ]);
+                }
+            }
+            return back()->with('success', 'Berhasil Mereset Data Jadwal ' . $datetime->format('Y - M') . ', pada user ' . $user->name);
+        } catch (Exception $err) {
+            return back()->with('error', $err->getMessage());
+        }
+    }
     /**
      * Remove the specified resource from storage.
      *
@@ -566,7 +600,7 @@ class AttendanceController extends Controller
         return view('admin.attendance.index',    [
             'date' => $request->all(),
             'user' => $user,
-            'holiday' => Holidays::whereMonth('holiday_date', $month)->get(),
+            'holiday' => Holidays::whereMonth('holiday_date', $month)->whereYear('holiday_date', $year)->get(),
             'cabangs' => Cabang::get(),
             'ruangans' => Ruangan::get(),
             'shift' => Shift::pluck('kode'),

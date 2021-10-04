@@ -63,13 +63,8 @@
                         </button>
                     </div>
                     <div class="col-sm-6 col-md-6">
-                        <form action="" id="form-delete" method="post">
-                            @csrf
-                            @method('delete')
-
-                            <button class="btn btn-danger text-light" id="tombol-hapus" value="delete">Reset</button>
-                        </form>
-                    </div>
+                        <a class="btn btn-danger text-light" id="tombol-hapus-attendance" value="delete">Reset</a>
+                    </div>  
                 </div>
             </div>
         </div>

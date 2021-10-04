@@ -134,7 +134,7 @@
                                 @endforeach
                                 @foreach($holiday as $list)
                                 @if(Carbon\Carbon::parse($list->holiday_date)->format('d') == $i)
-                                <i class="fa fa-close text-danger">{{ $list ->title }}</i>
+                                <i class="fa fa-close text-danger">{{ $list->title }}</i>
                                 @endif
                                 @endforeach
                                 </td>
@@ -157,6 +157,14 @@
 @include('admin.attendance.modal')
 <script src="https://code.jquery.com/jquery-3.3.1.js"></script>
 <script>
+    const Year = function()
+    {
+        let start = new Date().getFullYear();
+        for (let i = start; i > start - 10; i--){
+            console.log(i)
+        }
+    }
+    Year()
     function TheSubmitFormForFilterAttendance(){
         $('#TheSubmitFormForFilterAttendance').submit()
     }
@@ -166,6 +174,10 @@
         let year = $(this).attr('year')
         let month = $(this).attr('month')
         
+        $('#tombol-hapus').attr('year', year);
+        $('#tombol-hapus').attr('month', month);
+        $('#tombol-hapus').attr('dataID', id);
+
         $.ajax({
             url: `/admin/attendance/${id}`,
             success: function(result) {
@@ -179,7 +191,7 @@
             }
         });
 
-        $('#form-delete').attr('action', `/admin/attendance/${id}`)
+        console.log($('#tombol-hapus-attendance').attr('href', `/admin/attendance/reset/${id}/${year}/${month}`))
         $('#id').val(id)
         $('#show-data').modal('show')
         $('#table-jadwal').DataTable({
