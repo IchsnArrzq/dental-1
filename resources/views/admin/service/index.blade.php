@@ -26,6 +26,7 @@
                         <th>Kode Service</th>
                         <th>Nama</th>
                         <th>Durasi</th>
+                        <th>Type</th>
                         <th>Action</th>
                     </tr>
                 </thead>
@@ -37,6 +38,7 @@
                         <td>{{ $service->kode_barang }}</td>
                         <td>{{ $service->nama_barang }}</td>
                         <td>{{ $service->durasi }}</td>
+                        <td>{{ $service->type }}</td>
                         <td>
                             @can('service-edit')
                             <a href="{{ route('admin.service.edit', $service->id) }}" class="btn btn-sm btn-info"><i class="fa fa-edit"></i></a>

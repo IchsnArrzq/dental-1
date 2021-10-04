@@ -16,19 +16,24 @@
 
 <div class="row">
     <div class="col-md-12">
-        <div class="table-responsive">
-            <table id="table-holidays" class="table table-striped table-bordered custom-table mb-0" width="100%">
-                <thead>
-                    <tr>
-                        <th>#</th>
-                        <th>Title</th>
-                        <th>Holiday Date</th>
-                        <th>Day</th>
-                        <th>Action</th>
-                    </tr>
-                </thead>
-                <tbody></tbody>
-            </table>
+        <div class="card shadow">
+            <div class="card-body">
+
+                <div class="table-responsive">
+                    <table id="table-holidays" class="table table-striped table-bordered custom-table mb-0" width="100%">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Title</th>
+                                <th>Holiday Date</th>
+                                <th>Day</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </div>
         </div>
     </div>
 </div>
@@ -98,7 +103,6 @@
         </div>
     </div>
 </div>
-<!-- AKHIR MODAL -->
 <script src="https://code.jquery.com/jquery-3.3.1.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.1/jquery.validate.min.js" integrity="sha256-sPB0F50YUDK0otDnsfNHawYmA5M0pjjUf4TvRJkGFrI=" crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/izitoast/1.4.0/js/iziToast.js" integrity="sha256-siqh9650JHbYFKyZeTEAhq+3jvkFCG8Iz+MHdr9eKrw=" crossorigin="anonymous"></script>
@@ -175,22 +179,22 @@
                 $('#tombol-simpan').html('Sending..');
                 $.ajax({
                     data: $('#form-tambah-edit')
-                        .serialize(), //function yang dipakai agar value pada form-control seperti input, textarea, select dll dapat digunakan pada URL query string ketika melakukan ajax request
-                    url: "{{ route('admin.holidays.store') }}", //url simpan data
+                        .serialize(),
+                    url: "{{ route('admin.holidays.store') }}",
                     type: "POST",
                     dataType: 'json',
                     success: function(data) {
-                        $('#form-tambah-edit').trigger("reset"); //form reset
-                        $('#tambah-edit-modal').modal('hide'); //modal hide
-                        $('#tombol-simpan').html('Simpan'); //tombol simpan
-                        $('#table-holidays').dataTable().fnDraw(false); //reset datatable
-                        iziToast.success({ //tampilkan iziToast dengan notif data berhasil disimpan pada posisi kanan bawah
+                        $('#form-tambah-edit').trigger("reset");
+                        $('#tambah-edit-modal').modal('hide');
+                        $('#tombol-simpan').html('Simpan');
+                        $('#table-holidays').dataTable().fnDraw(false);
+                        iziToast.success({
                             title: 'Data Berhasil Disimpan',
                             message: `{{ Session('success')}}`,
                             position: 'bottomRight'
                         });
                     },
-                    error: function(data) { //jika error tampilkan error pada console
+                    error: function(data) {
                         console.log('Error:', data);
                         $('#tombol-simpan').html('Simpan');
                     }
@@ -198,20 +202,19 @@
             }
         })
     }
-    //jika tombol hapus pada modal konfirmasi di klik maka
     $('#tombol-hapus').click(function() {
         $.ajax({
-            url: "/admin/holidays/" + dataId, //eksekusi ajax ke url ini
+            url: "/admin/holidays/" + dataId,
             type: 'delete',
             beforeSend: function() {
-                $('#tombol-hapus').text('Hapus Data'); //set text untuk tombol hapus
+                $('#tombol-hapus').text('Hapus Data');
             },
-            success: function(data) { //jika sukses
+            success: function(data) {
                 setTimeout(function() {
-                    $('#konfirmasi-modal').modal('hide'); //sembunyikan konfirmasi modal
-                    $('#table-holidays').dataTable().fnDraw(false); //reset datatable
+                    $('#konfirmasi-modal').modal('hide');
+                    $('#table-holidays').dataTable().fnDraw(false);
                 });
-                iziToast.warning({ //tampilkan izitoast warning
+                iziToast.warning({
                     title: 'Data Berhasil Dihapus',
                     message: `{{ Session('delete')}}`,
                     position: 'bottomRight'

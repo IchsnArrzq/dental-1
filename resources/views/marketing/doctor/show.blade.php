@@ -91,7 +91,7 @@
                                             <td>{{ $data->tanggal_status }}</td>
                                             <td>{{ $data->jam_status }} - {{ $data->jam_selesai }}</td>
                                             <td>
-                                                <span class="custom-badge status-blue">
+                                                <span class="custom-badge status-{{ $data->kedatangan->warna }}">
                                                     {{ $data->kedatangan->status }}
                                                 </span>
                                             </td>
