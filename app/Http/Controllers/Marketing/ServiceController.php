@@ -12,17 +12,19 @@ class ServiceController extends Controller
 {
     public function AppointmentsFilter(Request $request)
     {
-
         $this->validate($request, [
             'startdate' => 'required',
             'enddate' => 'required'
         ]);
-        $startdate = request('startdate');
-        $enddate = request('enddate');
-
+        $startdate = $request->startdate;
+        $enddate = $request->enddate;
         $from = Carbon::createFromFormat('d/m/Y', $startdate);
         $to = Carbon::createFromFormat('d/m/Y', $enddate);
-
+        $start = Carbon::parse($from)->format('Y-m');
+        $end = Carbon::parse($to)->format('Y-m');
+        if($start != $end){
+            return back()->with('error', 'Mulai dan Selesai Harus Di Bulan dan Tahun yang sama');
+        }
         $current = Carbon::now()->format('Y-m-d');
         $a = $from->diffInDays($current);
 

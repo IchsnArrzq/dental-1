@@ -63,23 +63,35 @@ class AppointmentsController extends Controller
                 'is_active' => 1
             ]);
             for ($i = 1; $i <= count($form['barang_id']); $i++) {
-                $barang = Barang::findOrFail($form['barang_id'][$i]['barang_id']);
+                $barang = Barang::findOrFail($form['barang_id'][$i]);
+                if ($barang->type) {
+                    $wtf = Booking::where('customer_id', $form['customer_id'])->get();
+                    foreach ($wtf as $row) {
+                        foreach ($row->tindakan as $data) {
+                            if($data->item->type){
+                                if($data->booking->dokter->name != User::find($form['dokter_id'])->name){
+                                    DB::rollBack();
+                                    return redirect('/dashboard')->with('error', $data->booking->dokter->name.' != '. User::find($form['dokter_id'])->name .' Tidak bisa booking karena service berupa lanjutan '.$data->item->type);
+                                }
+                            }
+                        }
+                    }
+                }
                 Tindakan::create([
                     'booking_id' => $booking->id,
                     'tindakan_id' => $barang->id,
-                    'durasi' => $form['time'][$i]['time'],
-                    'qty' => $form['quantity'][$i]['quantity'],
+                    'durasi' => $form['time'][$i],
+                    'qty' => $form['quantity'][$i],
                     'dokter_id' => $form['dokter_id'],
-                    'nominal' => $form['total'][$i]['total'],
+                    'nominal' => $form['total'][$i],
                     'status' => 0
                 ]);
             }
             DB::commit();
-            return redirect()->route('marketing.dashboard')->with('success', 'Berhasil Booking');
+            return redirect('/dashboard')->with('success', 'Berhasil Booking');
         } catch (Exception $err) {
             DB::rollBack();
-            dd($err->getMessage());
-            return redirect()->route('marketing.dashboard')->with('error', 'Booking Gagal : ' . $err->getMessage());
+            return redirect('/dashboard')->with('error', 'Booking Gagal : ' . $err->getMessage());
         }
     }
 
