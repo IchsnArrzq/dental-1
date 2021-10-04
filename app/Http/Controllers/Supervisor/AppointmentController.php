@@ -48,17 +48,25 @@ class AppointmentController extends Controller
     public function show(Booking $appointment)
     {
         $appointment = Booking::with('pasien', 'dokter', 'cabang', 'perawat', 'resepsionis', 'rincian', 'tindakan')->where('id', $appointment->id)->first();
-        $payments = Payment::where('id', '!=', 4)->get();
-        $perawat = User::role('perawat')->get();
-        $office = User::role('office-boy')->get();
+        $rincians = RincianPembayaran::where('booking_id', $appointment->id)->where('is_active', 1)->get();
 
-        return view('supervisor.appointments.show', compact('appointment', 'payments', 'perawat', 'office'));
+        return view('supervisor.appointments.show', compact('appointment', 'rincians'));
     }
 
     public function deleterincian()
     {
+
         $rincian = RincianPembayaran::find(request('id'));
-        $rincian->delete();
+        $rincian->update(['is_active' => 0]);
+
+        $booking = Booking::with('kedatangan', 'tindakan', 'cabang')->find($rincian->booking_id);
+        $pajak = $booking->tindakan->sum('nominal') * $booking->cabang->ppn / 100;
+        $tagihan = $booking->tindakan->sum('nominal') + $pajak;
+        $totalRincian = $rincian->sum('nominal') + $rincian->sum('disc_vouc');
+
+        // if ($totalRincian == $tagihan) {
+        $booking->update(['status_pembayaran' => 0]);
+        // }
 
         return back()->with('success', 'Riwayat Pembayaran berhasil dihapus');
     }
