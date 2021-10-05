@@ -11,6 +11,7 @@ use App\Tindakan;
 use App\Voucher;
 use Carbon\Carbon;
 use App\Http\Controllers\Controller;
+use App\Images;
 use App\User;
 use Illuminate\Http\Request;
 
@@ -287,5 +288,41 @@ class AppointmentController extends Controller
         })->where('kasir_id', auth()->user()->id)->get();
 
         return view('resepsionis.appointments.report', compact('payments', 'now'));
+    }
+
+    public function upload()
+    {
+        $booking = Booking::findOrFail(request('id'));
+        $images = request()->file('images');
+        $req = request()->validate(
+            [
+                'images' => 'required'
+            ],
+            [
+                'images.required' => 'Choose image.',
+            ]
+        );
+
+        if (request()->file('images')) {
+            foreach ($images as $image) {
+                $name = date('dmYHis')  . '-' . $image->getClientOriginalName();
+
+                $imageUrl =  $image->storeAs('pasien/images', $name);
+
+                Images::create([
+                    'booking_id' => request('id'),
+                    'image' => $imageUrl
+                ]);
+            }
+
+            $booking->update([
+                'resepsionis_id' => auth()->user()->id,
+                'status_kedatangan_id' => request('status'),
+                'is_image' => 1,
+            ]);
+        }
+
+
+        return back()->with('success', 'Status kedatangan pasien berhasil diubah');
     }
 }

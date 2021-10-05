@@ -158,7 +158,7 @@
                     </div>
 
                     <div class="invoice-info">
-                        @if($appointment->status_pembayaran == 0)
+                        @if($appointment->status_pembayaran == 0 && $appointment->is_image == 1)
                         <h5>Pembayaran</h5>
                         <p class="text-muted"></p>
                         <table width="519" border="0" class="table">
