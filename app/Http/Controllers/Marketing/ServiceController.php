@@ -16,33 +16,24 @@ class ServiceController extends Controller
             'startdate' => 'required',
             'enddate' => 'required'
         ]);
-        $startdate = $request->startdate;
-        $enddate = $request->enddate;
-        $from = Carbon::createFromFormat('d/m/Y', $startdate);
-        $to = Carbon::createFromFormat('d/m/Y', $enddate);
-        $start = Carbon::parse($from)->format('Y-m');
-        $end = Carbon::parse($to)->format('Y-m');
-        if($start != $end){
-            return back()->with('error', 'Mulai dan Selesai Harus Di Bulan dan Tahun yang sama');
-        }
-        $current = Carbon::now()->format('Y-m-d');
-        $a = $from->diffInDays($current);
 
-        $now = $from->format('d');
         $dokter = User::whereHas('roles', function ($role) {
             return $role->where('name', 'dokter');
-        })
-            ->where('cabang_id', auth()->user()->cabang_id)
-            ->get();
-        $holiday = Holidays::whereMonth('holiday_date', Carbon::now()->format('m'))->whereYear('holiday_date', Carbon::now()->format('Y'))->pluck('holiday_date')->toArray();
+        })->where('cabang_id', auth()->user()->cabang_id)->get();
+
+        $startdate = Carbon::parse(Carbon::createFromFormat('d/m/Y', $request->startdate));
+        $enddate = Carbon::parse(Carbon::createFromFormat('d/m/Y', $request->enddate));
+        $current = Carbon::now();
+        $holiday = Holidays::pluck('holiday_date')->toArray();
+        $from = $startdate;
+        $count = $startdate->diffInDays() + $enddate->diffInDays().'<br>';
+        
         return view('dashboard.index', [
             'booking' => Booking::where('is_active', 1)->get(),
             'dokter' => $dokter,
             'holiday' => $holiday,
-            'from' => $from->format('d'),
-            'to' => $to->format('d'),
-            'now' => $now,
-            'a' => $a
+            'count' => $count,
+            'startdate' => $from->subDays(1)
         ]);
     }
 

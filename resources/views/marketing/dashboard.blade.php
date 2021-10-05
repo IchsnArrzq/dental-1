@@ -68,15 +68,12 @@
     </div>
 </div>
 @endif
-@php
-$a = $a;
-@endphp
 <div class="row">
-    @for($i = $from; $i <= $to;$i++) <div class="col-sm-12 col-md-6">
+    @for($i = 0; $i <= $count;$i++)
+    <div class="col-sm-12 col-md-6">
         <div class="blog grid-blog shadow">
             <div class="blog-image">
-                <h3>{{ Carbon\Carbon::now()->addDays($a++)->format('d m Y') }}</h3>
-
+                <h3>{{ $startdate->addDay(1)->format('d m Y') }} </h3>
             </div>
             <div class="blog-content">
                 <div class="table-responsive">
@@ -86,69 +83,69 @@ $a = $a;
                             <th>Status</th>
                             <th>Booking</th>
                         </tr>
-                        @foreach($dokter as $row)
-                        @foreach($row->jadwal as $data)
-                        @if($data->tanggal == Carbon\Carbon::now()->addDays($a - 1)->format('Y-m-d'))
-                        <tr>
-                            <td>
-                                <p>
-                                    <a href="{{ route('marketing.doctor.show',$row->id) }}"><span class="custom-badge status-blue">{{ $data->user->name }}</span></a>
-                                </p>
-                                <p>
-                                    <span class="custom-badge status-orange">{{ $data->user->cabang->nama }}</span>
-                                </p>
-                                <p>
-                                    @if($data->shift->kode == 'L')
-                                    <span class="custom-badge status-red">{{ $data->shift->kode }}</span>
-                                    @else
-                                    <span class="custom-badge status-green">{{ $data->shift->kode }}</span>
-                                    @endif
-                                </p>
-                                <p>
-                                    @if($data->shift->kode == 'L')
-                                    <span class="custom-badge status-red">Libur</span>
-                                    @else
-                                <h6 class="text-secondary">{{$data->shift->waktu_mulai}} - {{ $data->shift->waktu_selesai }}</h6>
+                        @foreach($dokter as $data)
+                            @foreach($data->jadwal as $row)
+                                @if($row->tanggal == $startdate->format('Y-m-d'))
+                                <tr>
+                                    <td>
+                                        <p>
+                                            <a href="{{ route('marketing.doctor.show',$row->id) }}"><span class="custom-badge status-blue">{{ $row->user->name }}</span></a>
+                                        </p>
+                                        <p>
+                                            <span class="custom-badge status-orange">{{ $row->user->cabang->nama }}</span>
+                                        </p>
+                                        <p>
+                                            @if( $row->shift->kode == 'L')
+                                            <span class="custom-badge status-red">{{ $row->shift->kode }}</span>
+                                            @else
+                                            <span class="custom-badge status-green">{{ $row->shift->kode }}</span>
+                                            @endif
+                                        </p>
+                                        <p>
+                                            @if( $row->shift->kode == 'L')
+                                            <span class="custom-badge status-red">Libur</span>
+                                            @else
+                                        <h6 class="text-secondary">{{ $row->shift->waktu_mulai}} - {{ $row->shift->waktu_selesai }}</h6>
+                                        @endif
+                                        </p>
+                                    </td>
+                                    <td class="text-center">
+                                        <ul class="list-group">
+                                            @foreach($booking as $book)
+                                                @if( $row->tanggal == $book->tanggal_status)
+                                                    @if($book->jam_status >= $row->shift->waktu_mulai && $book->jam_selesai <= $row->shift->waktu_selesai)
+                                                        @if( $row->user->id == $book->dokter->id)
+                                                        <li class="list-group-item"><a href="{{ route('marketing.appointments.show', $book->id) }}" class="btn btn-sm btn-outline-primary">{{ $book->jam_status }} - {{ $book->jam_selesai }}</a></li>
+                                                        @endif
+                                                    @endif
+                                                @endif
+                                            @endforeach
+                                        </ul>
+                                    </td>
+                                    <td>
+                                        @if( $row->shift->kode == 'L')
+                                        <button disabled class="btn btn-outline-secondary take-btn">Holiday</button>
+                                        @else
+                                        @if( $row->tanggal == Carbon\Carbon::now()->format('Y-m-d'))
+                                            @if(Carbon\Carbon::parse( $row->shift->waktu_selesai)->format('H:i:s') < Carbon\Carbon::now()->format('H:i:s'))
+                                                <button id="{{  $row->id }}" title="{{  $row->user->id }}" disabled class="btn btn-outline-secondary take-btn button-show" data-toggle="modal" data-target=".bd-example-modal-lg">BOOK</button>
+                                                @else
+                                                <button id="{{  $row->id }}" title="{{  $row->user->id }}" message="now" class="btn btn-outline-success take-btn button-show-now" data-toggle="modal" data-target=".bd-example-modal-lg">BOOK NOW</button>
+                                                @endif
+                                                @else
+                                                <button id="{{  $row->id }}" title="{{  $row->user->id }}" class="btn btn-outline-primary take-btn button-show" data-toggle="modal" data-target=".bd-example-modal-lg">BOOK</button>
+                                            @endif
+                                        @endif
+                                    </td>
+                                </tr>
                                 @endif
-                                </p>
-                            </td>
-                            <td class="text-center">
-                                <ul class="list-group">
-                                    @foreach($booking as $book)
-                                    @if($data->tanggal == $book->tanggal_status)
-                                    @if($book->jam_status >= $data->shift->waktu_mulai && $book->jam_selesai <= $data->shift->waktu_selesai)
-                                        @if($data->user->id == $book->dokter->id)
-                                        <li class="list-group-item"><a href="{{ route('marketing.appointments.show', $book->id) }}" class="btn btn-sm btn-outline-primary">{{ $book->jam_status }} - {{ $book->jam_selesai }}</a></li>
-                                        @endif
-                                        @endif
-                                        @endif
-                                        @endforeach
-                                </ul>
-                            </td>
-                            <td>
-                                @if($data->shift->kode == 'L')
-                                <button disabled class="btn btn-outline-secondary take-btn">Holiday</button>
-                                @else
-                                @if($data->tanggal == Carbon\Carbon::now()->format('Y-m-d'))
-                                @if(Carbon\Carbon::parse($data->shift->waktu_selesai)->format('H:i:s') < Carbon\Carbon::now()->format('H:i:s'))
-                                    <button id="{{ $data->id }}" title="{{ $data->user->id }}" disabled class="btn btn-outline-secondary take-btn button-show" data-toggle="modal" data-target=".bd-example-modal-lg">BOOK</button>
-                                    @else
-                                    <button id="{{ $data->id }}" title="{{ $data->user->id }}" message="now" class="btn btn-outline-success take-btn button-show-now" data-toggle="modal" data-target=".bd-example-modal-lg">BOOK NOW</button>
-                                    @endif
-                                    @else
-                                    <button id="{{ $data->id }}" title="{{ $data->user->id }}" class="btn btn-outline-primary take-btn button-show" data-toggle="modal" data-target=".bd-example-modal-lg">BOOK</button>
-                                    @endif
-                                    @endif
-                            </td>
-                        </tr>
-                        @endif
-                        @endforeach
+                            @endforeach
                         @endforeach
                     </table>
                 </div>
             </div>
         </div>
-</div>
+    </div>
 @endfor
 </div>
 @include('marketing.modal')
