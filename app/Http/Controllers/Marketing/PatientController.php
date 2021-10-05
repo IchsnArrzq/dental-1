@@ -125,7 +125,7 @@ class PatientController extends Controller
 
                 $attr = $request->except(['_token', '_method']);
                 $pasien->update($attr);
-                return redirect()->route('marketing.patient.index');
+                return redirect()->route('marketing.patient.index')->with('success', 'Pasien has been updated');
             }
         } catch (Exception $err) {
             dd($err->getMessage());

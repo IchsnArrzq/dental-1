@@ -46,14 +46,12 @@
                                 <h5><strong>{{ $appointment->pasien->nama }}</strong></h5>
                             </li>
                             <li><span>{{ $appointment->pasien->alamat }}</span></li>
-                            <li>{{ $appointment->pasien->no_telp }}</li>
                             @php
                             $age = explode(",", $appointment->pasien->ttl)
                             @endphp
                             <li>{{ \Carbon\Carbon::now()->format('Y') - \Carbon\Carbon::parse($appointment->pasien->tgl_lahir)->format('Y') }} Tahun</li>
                             <li>{{ $appointment->pasien->jk }}</li>
                             <li>{{ $appointment->pasien->nik_ktp }}</li>
-                            <li><a href="#">{{ $appointment->pasien->email }}</a></li>
                         </ul>
 
                     </div>
@@ -144,12 +142,12 @@
                                             </tr>
                                             <tr>
                                                 <th>Dibayar:</th>
-                                                <td class="text-right">@currency($appointment->rincian->sum('dibayar') + $appointment->rincian->sum('disc_vouc'))</td>
+                                                <td class="text-right">@currency($rincians->sum('dibayar') + $rincians->sum('disc_vouc'))</td>
                                             </tr>
                                             <tr>
                                                 <th>Sisa Pembayaran:</th>
-                                                <td class="text-right text-primary sisa" id="@currency($total - $appointment->rincian->sum('dibayar') + $pajak)">
-                                                    <h5 class="tsisa">@currency($total - $appointment->rincian->sum('dibayar') + $pajak - $appointment->rincian->sum('disc_vouc'))</h5>
+                                                <td class="text-right text-primary sisa" id="@currency($total - $rincians->sum('dibayar') + $pajak)">
+                                                    <h5 class="tsisa">@currency($total - $rincians->sum('dibayar') + $pajak - $rincians->sum('disc_vouc'))</h5>
                                                 </td>
                                             </tr>
                                         </tbody>
@@ -173,10 +171,11 @@
                                     <td width="188">Waktu Pembayaran</td>
                                 </tr>
                                 <tr>
+
                                     <form action="{{ route('resepsionis.appointments.bayar') }}" method="post">
                                         @csrf
                                         <input type="hidden" name="booking_id" value="{{ $appointment->id }}" id="booking_id">
-                                        <input type="hidden" name="nominal" value="{{ $total - $appointment->rincian->sum('dibayar') + $pajak }}" id="nml">
+                                        <input type="hidden" name="nominal" value="{{ $total - $rincians->sum('dibayar') + $pajak }}" id="nml">
                                         <input type="hidden" name="bayar" value="" id="bayar">
                                         <input type="hidden" name="kembali" value="0" id="kembali">
                                         <input type="hidden" name="voucher_id" value="0" id="voucher_id">
@@ -193,7 +192,7 @@
                                             <small class="text-danger">{{ $message }}</small>
                                             @enderror
                                         </td>
-                                        <td><input type="text" value="@rp($total - $appointment->rincian->sum('dibayar') + $pajak - $appointment->rincian->sum('disc_vouc'))" class="form-control" id="nominal"></td>
+                                        <td><input type="text" value="@rp($total - $rincians->sum('dibayar') + $pajak - $rincians->sum('disc_vouc'))" class="form-control" id="nominal"></td>
                                         <td><input type="text" value="0" class="form-control" id="dibayar"></td>
                                         <td><input type="text" value="0" class="form-control" id="change" readonly></td>
                                         <td><input type="datetime" value="{{ \Carbon\Carbon::now()->format('Y-m-d H:i') }}" class="form-control" name="tanggal_pembayaran" id="tanggal_pembayaran" readonly></td>
@@ -241,7 +240,7 @@
                                     <td>Diskon</td>
                                     <td>Dibayar</td>
                                 </tr>
-                                @foreach($appointment->rincian as $rincian)
+                                @foreach($rincians as $rincian)
                                 <tr>
                                     <td>{{ $loop->iteration }}</td>
                                     <td>{{ $rincian->payment->nama_metode }}</td>

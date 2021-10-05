@@ -50,8 +50,8 @@ class AppointmentsController extends Controller
                 'marketing_id' => auth()->user()->id,
                 'dokter_id' => $form['dokter_id'],
                 'resepsionis_id' => 0,
-                'ob_id' => $form['dokter_id'],
-                'perawat_id' => $form['dokter_id'],
+                'ob_id' => 0,
+                'perawat_id' => 0,
                 'cabang_id' => auth()->user()->cabang->id,
                 'customer_id' => $form['customer_id'],
                 'jadwal_id' => $form['jadwal_id'],
@@ -68,10 +68,10 @@ class AppointmentsController extends Controller
                     $wtf = Booking::where('customer_id', $form['customer_id'])->get();
                     foreach ($wtf as $row) {
                         foreach ($row->tindakan as $data) {
-                            if($data->item->type){
-                                if($data->booking->dokter->name != User::find($form['dokter_id'])->name){
+                            if ($data->item->type) {
+                                if ($data->booking->dokter->name != User::find($form['dokter_id'])->name) {
                                     DB::rollBack();
-                                    return redirect('/dashboard')->with('error','Tidak bisa booking karena service bertype lanjutan, harus dokter yang sama!');
+                                    return redirect('/dashboard')->with('error', 'Tidak bisa booking karena service bertype lanjutan, harus dokter yang sama!');
                                 }
                             }
                         }

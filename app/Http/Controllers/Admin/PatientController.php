@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\{Customer, Fisik, GigiPasien, KetOdontogram, Odontogram, RekamMedis, User, SimbolOdontogram};
+use App\{Customer, Fisik, GigiPasien, KetOdontogram, Odontogram, RekamMedis, RincianPembayaran, User, SimbolOdontogram};
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StorePatientRequest;
 use Carbon\Carbon;
@@ -80,7 +80,7 @@ class PatientController extends Controller
 
                 $attr = $request->except(['_token', '_method']);
                 $pasien->update($attr);
-                return redirect()->route('admin.pasien.index');
+                return redirect()->route('admin.pasien.index')->with('success', 'Pasien has been added');
             }
         } catch (Exception $err) {
             dd($err->getMessage());
@@ -131,5 +131,14 @@ class PatientController extends Controller
             'nama' => $simbol->nama_simbol,
             'singkatan' => $simbol->singkatan,
         ], 200);
+    }
+
+    public function history(Customer $customer)
+    {
+        $histories = RincianPembayaran::with('booking')->whereHas('booking', function ($booking) use ($customer) {
+            return $booking->where('customer_id', $customer->id);
+        })->where('is_active', 1)->get();
+
+        return view('admin.patient.history', compact('histories', 'customer'));
     }
 }

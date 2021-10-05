@@ -50,17 +50,18 @@
                         <td>{{ $patient->user->name }}</td>
                         <td>{{ $patient->cabang->nama }}</td>
                         <td>
-                            <a href="{{ route('admin.pasien.odontogram', $patient->id) }}" class="btn btn-sm btn-success"><i class="fa fa-plus-square"></i></a>
+                            <a href="{{ route('admin.pasien.odontogram', $patient->id) }}" class="btn btn-sm btn-success mt-1"><i class="fa fa-plus-square"></i></a>
                             @can('patient-edit')
-                            <a href="{{ route('admin.pasien.edit', $patient->id) }}" class="btn btn-sm btn-info"><i class="fa fa-edit"></i></a>
+                            <a href="{{ route('admin.pasien.edit', $patient->id) }}" class="btn btn-sm mt-1 btn-info"><i class="fa fa-edit"></i></a>
                             @endcan
                             @can('patient-delete')
                             <form action="{{ route('admin.pasien.destroy', $patient->id) }}" method="post" style="display: inline;" class="delete-form">
                                 @method('DELETE')
                                 @csrf
-                                <button type="submit" class="btn btn-sm btn-danger"><i class="fa fa-trash"></i></button>
+                                <button type="submit" class="btn mt-1 btn-sm btn-danger"><i class="fa fa-trash"></i></button>
                             </form>
                             @endcan
+                            <a href="{{ route('admin.pasien.history', $patient->id) }}" class="btn btn-sm btn-secondary mt-1"><i class="fa fa-history"></i></a>
                         </td>
                     </tr>
                     @endforeach

@@ -27,6 +27,7 @@ class UpdatePaymentRequest extends FormRequest
             'nama_metode' => 'required',
             'potongan' => 'required',
             'rekening' => 'required',
+            'cabang_id' => 'required',
         ];
     }
 
@@ -36,6 +37,7 @@ class UpdatePaymentRequest extends FormRequest
             'nama_metode.required' => 'The nama field is required.',
             'potongan.required' => 'The potongan field is required.',
             'rekening.required' => 'The rekening field is required.',
+            'cabang_id.required' => 'Please select cabang',
         ];
     }
 }

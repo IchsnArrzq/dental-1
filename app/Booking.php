@@ -10,7 +10,7 @@ class Booking extends Model
 
     public function cabang()
     {
-        return $this->belongsTo(Cabang::class);
+        return $this->belongsTo(Cabang::class, 'cabang_id');
     }
 
     public function dokter()

@@ -67,6 +67,7 @@ Route::middleware('auth')->group(function () {
             Route::get('pasien/{customer:id}/cekfisik', 'PatientController@cekfisik')->name('pasien.cekfisik');
             Route::get('pasien/cetakodontogram/{customer:id}', 'PatientController@cetakodontogram')->name('pasien.cetakodonto');
             Route::get('pasien/cetakriwayat/{customer:id}', 'PatientController@cetakriwayat')->name('pasien.cetakriwayat');
+            Route::get('pasien/{customer:id}/history', 'PatientController@history')->name('pasien.history');
             Route::post('pasien/{customer:id}/storefisik', 'PatientController@storefisik')->name('pasien.storefisik');
             Route::resource('pasien', 'PatientController');
 
@@ -162,7 +163,7 @@ Route::middleware('auth')->group(function () {
             Route::prefix('/service')->name('service.')->group(function () {
                 Route::get('/appointments/filter', 'ServiceController@AppointmentsFilter')->name('appointments.filter');
                 Route::post('/appointments/books', 'ServiceController@AppointmentsBook')->name('appointments.book');
-            });
+            }); 
             Route::get('/jadwal/{id}/{dokter}', 'AjaxController@GetBook');
             Route::get('/jadwal/now/{id}/{dokter}', 'AjaxController@GetBookNow');
             Route::get('/resource/{id}', 'AjaxController@GetProduct');
@@ -193,6 +194,9 @@ Route::middleware('auth')->group(function () {
             // Route Pasien
             Route::get('/ajax/pasien', 'PasienController@ajaxPasien');
             Route::resource('pasien', 'PasienController');
+
+            // Report Resepsionis
+            Route::get('report/payment', 'AppointmentController@report')->name('report.payment');
         });
 
         // Route Supervisor

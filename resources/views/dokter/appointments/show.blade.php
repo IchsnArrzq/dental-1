@@ -46,11 +46,9 @@
                                 <h5><strong>{{$customer->nama}}</strong></h5>
                             </li>
                             <li><span>{{$customer->alamat}}</span></li>
-                            <li>{{$customer->no_telp}}</li>
                             <li> {{ (int)Carbon\Carbon::now()->format('Y') - (int)Carbon\Carbon::parse($customer->tgl_lahir)->format('Y') }} Tahun</li>
                             <li>{{$customer->jk}}</li>
                             <li>{{$customer->nik_ktp}}</li>
-                            <li><a href="#">{{$customer->email}}</a></li>
                         </ul>
                     </div>
                     <div class="col-sm-6 col-lg-6 m-b-20">
@@ -65,9 +63,9 @@
                                 </li>
                                 <li>Dokter: <span>{{ $booking->dokter->name }}</span></li>
                                 <input type="hidden" name="dokter_id" value="{{ $customer->id }}">
-                                <li>Perawat: <span>{{ $booking->perawat->name  ?? 'perawat' }}</span></li>
-                                <li>Office boy: <span>{{ $booking->ob->name ?? 'office boy' }}</span></li>
-                                <li>Resepsionis: <span>{{ $booking->resepsionis->name ?? 'resepsionis' }}</span></li>
+                                <li>Perawat: <span>{{ $booking->perawat->name  ?? '-' }}</span></li>
+                                <li>Office boy: <span>{{ $booking->ob->name ?? '-' }}</span></li>
+                                <li>Resepsionis: <span>{{ $booking->resepsionis->name ?? '-' }}</span></li>
                                 <li>Address: <span>{{ auth()->user()->cabang->alamat }}</span></li>
                                 <li>IBAN: <span>KFH37784028476740</span></li>
                                 <li>SWIFT code: <span>BPT4E</span></li>

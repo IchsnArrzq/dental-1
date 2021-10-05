@@ -46,14 +46,12 @@
                                 <h5><strong>{{ $appointment->pasien->nama }}</strong></h5>
                             </li>
                             <li><span>{{ $appointment->pasien->alamat }}</span></li>
-                            <li>{{ $appointment->pasien->no_telp }}</li>
                             @php
                             $age = explode(",", $appointment->pasien->ttl)
                             @endphp
                             <li>{{ \Carbon\Carbon::now()->format('Y') - \Carbon\Carbon::parse($appointment->pasien->tgl_lahir)->format('Y') }} Tahun</li>
                             <li>{{ $appointment->pasien->jk }}</li>
                             <li>{{ $appointment->pasien->nik_ktp }}</li>
-                            <li><a href="#">{{ $appointment->pasien->email }}</a></li>
                         </ul>
 
                     </div>
@@ -67,10 +65,10 @@
                                 <li>
                                     <h5>Total Due: <span class="text-right">@currency($appointment->tindakan->sum('nominal') + $pajak)</span></h5>
                                 </li>
-                                <li>Perawat: <span data-toggle="modal" data-target="#perawatModal" id="perawat">{{ $appointment->perawat->name }}
+                                <li>Perawat: <span data-toggle="modal" data-target="#perawatModal" id="perawat">{{ $appointment->perawat->name ?? '-' }}
                                     </span></li>
-                                <li>Office boy: <span data-toggle="modal" data-target="#obModal" id="ob">{{ $appointment->ob->name }}</span></li>
-                                <li>Resepsionis: <span>{{ $appointment->resepsionis->name }}</span></li>
+                                <li>Office boy: <span data-toggle="modal" data-target="#obModal" id="ob">{{ $appointment->ob->name ?? '-' }}</span></li>
+                                <li>Resepsionis: <span>{{ $appointment->resepsionis->name ?? '-'}}</span></li>
                                 <li>Address: <span>{{ $appointment->cabang->alamat }}</span></li>
                             </ul>
                         </div>

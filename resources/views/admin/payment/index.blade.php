@@ -23,6 +23,7 @@
                     <tr>
                         <th>No</th>
                         <th>Nama</th>
+                        <th>Cabang</th>
                         <th>Potongan</th>
                         <th>Rekening</th>
                         <th>Action</th>
@@ -34,6 +35,7 @@
                     <tr>
                         <td>{{ $loop->iteration }}</td>
                         <td>{{ $payment->nama_metode }}</td>
+                        <td>{{ $payment->cabang->nama }}</td>
                         <td>{{ $payment->potongan }}</td>
                         <td>{{ $payment->rekening }}</td>
                         <td>

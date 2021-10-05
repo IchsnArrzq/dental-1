@@ -154,8 +154,8 @@ class ReportController extends Controller
                 $komisi = RincianKomisi::with('booking', 'user')->whereHas('booking', function ($query) {
 
                     return $query->whereHas('rincian', function ($rincian) {
-                        $from = Carbon::createFromFormat('d/m/Y', request('from'))->format('Y-m-d H:i:s');
-                        $to = Carbon::createFromFormat('d/m/Y', request('to'))->format('Y-m-d H:i:s');
+                        $from = Carbon::parse(request('from'))->format('Y-m-d H:i:s');
+                        $to = Carbon::parse(request('to'))->format('Y-m-d H:i:s');
                         return $rincian->whereBetween('tanggal_pembayaran', [$from, $to]);
                     });
                 })->get();

@@ -25,11 +25,12 @@ class AppointmentController extends Controller
     public function show(Booking $appointment)
     {
         $appointment = Booking::with('pasien', 'dokter', 'cabang', 'perawat', 'resepsionis', 'rincian', 'tindakan')->where('id', $appointment->id)->first();
-        $payments = Payment::where('id', '!=', 4)->get();
+        $payments = Payment::where('cabang_id', auth()->user()->cabang_id)->get();
         $perawat = User::role('perawat')->get();
         $office = User::role('office-boy')->get();
+        $rincians = RincianPembayaran::where('booking_id', $appointment->id)->where('is_active', 1)->get();
 
-        return view('resepsionis.appointments.show', compact('appointment', 'payments', 'perawat', 'office'));
+        return view('resepsionis.appointments.show', compact('appointment', 'payments', 'perawat', 'office', 'rincians'));
     }
 
 
@@ -147,7 +148,7 @@ class AppointmentController extends Controller
             'is_active' => 1
         ]);
 
-        $rincian = RincianPembayaran::where('booking_id', $booking->id)->get();
+        $rincian = RincianPembayaran::where('booking_id', $booking->id)->where('is_active', 1)->get();
 
         $pajak = $booking->tindakan->sum('nominal') * $booking->cabang->ppn / 100;
         $tagihan = $booking->tindakan->sum('nominal') + $pajak;
@@ -276,5 +277,15 @@ class AppointmentController extends Controller
         $appointment = Booking::with('pasien', 'dokter', 'cabang', 'perawat', 'resepsionis', 'rincian', 'tindakan')->where('id', $id)->first();
 
         return view('resepsionis.appointments.print', compact('appointment'));
+    }
+
+    public function report()
+    {
+        $now = Carbon::now()->format('Y-m-d');
+        $payments = RincianPembayaran::with('payment', 'kasir', 'booking')->where('tanggal_pembayaran', 'LIKE', '%' . $now . '%')->whereHas('booking', function ($booking) {
+            return $booking->where('cabang_id', auth()->user()->cabang_id);
+        })->where('kasir_id', auth()->user()->id)->get();
+
+        return view('resepsionis.appointments.report', compact('payments', 'now'));
     }
 }
