@@ -97,17 +97,19 @@ class DashboardController extends Controller
         if (auth()->user()->roles()->first()->name == 'marketing') {
             $dokter = User::whereHas('roles', function ($role) {
                 return $role->where('name', 'dokter');
-            })
-                ->where('cabang_id', auth()->user()->cabang_id)
-                ->get();
-            $holiday = Holidays::whereMonth('holiday_date', Carbon::now()->format('m'))->whereYear('holiday_date', Carbon::now()->format('Y'))->pluck('holiday_date')->toArray();
+            })->where('cabang_id', auth()->user()->cabang_id)->get();
+            $startdate = Carbon::parse(Carbon::now()->format('Y-m-d'));
+            $enddate = Carbon::parse(Carbon::now()->endOfMonth()->format('Y-m-d'));
+            $current = Carbon::now();
+            $holiday = Holidays::pluck('holiday_date')->toArray();
+            $from = $startdate;
+            $count = $startdate->diffInDays() + $enddate->diffInDays();
             return view('dashboard.index', [
+                'booking' => Booking::get(),
                 'dokter' => $dokter,
                 'holiday' => $holiday,
-                'a' => 0,
-                'from' => Carbon::now()->format('d'),
-                'to' => Carbon::now()->endOfMonth()->format('d'),
-                'booking' => Booking::get(),
+                'count' => $count,
+                'startdate' => $from->subDays(1)
             ]);
         }
 
