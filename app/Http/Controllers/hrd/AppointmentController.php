@@ -1,12 +1,14 @@
 <?php
 
-namespace App\Http\Controllers\Dokter;
+namespace App\Http\Controllers\hrd;
 
 use App\Booking;
 use App\Http\Controllers\Controller;
+use App\Images;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
-class AppointmentsController extends Controller
+class AppointmentController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -15,11 +17,8 @@ class AppointmentsController extends Controller
      */
     public function index()
     {
-        // $appointments = Booking::where('cabang_id', auth()->user()->cabang_id)->where('dokter_id', auth()->user()->id)->orderBy('tanggal_status', 'desc')->get();
-        $appointments = Booking::where('cabang_id', auth()->user()->cabang_id)->orderBy('tanggal_status', 'desc')->get();
-        
-        return view('dokter.appointments.index', [
-            'appointments' => $appointments
+        return view('hrd.appointments.index',[
+            'booking' => Booking::get()
         ]);
     }
 
@@ -53,10 +52,9 @@ class AppointmentsController extends Controller
     public function show($id)
     {
         $booking = Booking::findOrFail($id);
-        $customer = $booking->pasien;
-        return view('dokter.appointments.show', [
-            'customer' => $customer,
-            'booking' => $booking
+        
+        return view('hrd.appointments.show',[
+            'booking' => $booking->images
         ]);
     }
 
@@ -92,5 +90,10 @@ class AppointmentsController extends Controller
     public function destroy($id)
     {
         //
+    }
+    public function download($id)
+    {
+        $images = Images::findOrFail($id);
+        return Storage::download($images->image);
     }
 }

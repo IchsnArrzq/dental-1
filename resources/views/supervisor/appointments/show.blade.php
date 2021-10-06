@@ -197,6 +197,48 @@
                             </tbody>
                         </table>
                     </div>
+                    <hr>
+                    <div class="invoice-info">
+                        <h5 class="text-danger">Riwayat Pembayaran Yang Sudah Terhapus</h5>
+
+                        <p></p>
+                        <table width="520" border="0" class="table">
+                            <tbody>
+                                <tr>
+                                    <td>No</td>
+                                    <td>Metode </td>
+                                    <td>Waktu </td>
+                                    <td>Cashier</td>
+                                    <td>Potongan</td>
+                                    <td>Nominal</td>
+                                    <td>Biaya Kartu</td>
+                                    <td>Diskon</td>
+                                    <td>Dibayar</td>
+                                    <td>Action</td>
+                                </tr>
+                                @foreach($rincians_hapus as $rincian)
+                                <tr>
+                                    <td>{{ $loop->iteration }}</td>
+                                    <td>{{ $rincian->payment->nama_metode }}</td>
+                                    <td>{{ \Carbon\Carbon::parse($rincian->tanggal_pembayaran)->format('d/m/Y H:i') }}</td>
+                                    <td>{{ $rincian->kasir->name }}</td>
+                                    <td>{{ $rincian->payment->potongan }}%</td>
+                                    <td>@currency($rincian->nominal)</td>
+                                    <td>@currency($rincian->biaya_kartu)</td>
+                                    <td>@currency($rincian->disc_vouc)</td>
+                                    <td>@currency($rincian->dibayar)</td>
+                                    <td>
+                                        <form action="{{ route('supervisor.appointments.deleterincian') }}" method="post" class="d-inline delete-form">
+                                            @csrf
+                                            <input type="hidden" name="id" value="{{ $rincian->id }}">
+                                            <button type="submit" class="btn btn-sm btn-danger delete-form">Delete</button>
+                                        </form>
+                                    </td>
+                                </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
         </div>

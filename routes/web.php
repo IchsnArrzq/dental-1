@@ -209,6 +209,12 @@ Route::middleware('auth')->group(function () {
             Route::resource('appointments', 'AppointmentController');
         });
 
+        // Route HRD
+        Route::prefix('hrd')->namespace('hrd')->as('hrd.')->group(function () {
+            // Route Appointment
+            Route::resource('appointments', 'AppointmentController');
+            Route::get('appointments/download/{id}', 'AppointmentController@download')->name('appointments.download');
+        });
 
 
         // Route Rekam Medis

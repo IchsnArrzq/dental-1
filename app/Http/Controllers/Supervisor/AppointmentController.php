@@ -49,8 +49,9 @@ class AppointmentController extends Controller
     {
         $appointment = Booking::with('pasien', 'dokter', 'cabang', 'perawat', 'resepsionis', 'rincian', 'tindakan')->where('id', $appointment->id)->first();
         $rincians = RincianPembayaran::where('booking_id', $appointment->id)->where('is_active', 1)->get();
+        $rincians_hapus = RincianPembayaran::where('booking_id', $appointment->id)->where('is_active', 0)->get();
 
-        return view('supervisor.appointments.show', compact('appointment', 'rincians'));
+        return view('supervisor.appointments.show', compact('appointment', 'rincians', 'rincians_hapus'));
     }
 
     public function deleterincian()
