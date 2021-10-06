@@ -213,6 +213,7 @@ Route::middleware('auth')->group(function () {
         Route::prefix('hrd')->namespace('hrd')->as('hrd.')->group(function () {
             // Route Appointment
             Route::resource('appointments', 'AppointmentController');
+            Route::get('appointments/download/{id}', 'AppointmentController@download')->name('appointments.download');
         });
 
 

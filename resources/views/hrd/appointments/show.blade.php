@@ -16,8 +16,8 @@
                         <tbody>
                             @foreach($booking as $book)
                             <tr>
-                                <td><span>{{ $book->no_booking }}</span></td>
-                                <td><a href="{{ route('hrd.appointments.show', $book->id) }}" class="btn btn-primary">Image</a></td>
+                                <td><span>{{ $book->image }}</span></td>
+                                <td><a href="{{ route('hrd.appointments.download', $book->id) }}" class="btn btn-primary">Download</a></td>
                             </tr>
                             @endforeach
                         </tbody>

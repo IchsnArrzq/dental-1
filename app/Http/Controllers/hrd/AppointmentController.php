@@ -4,6 +4,7 @@ namespace App\Http\Controllers\hrd;
 
 use App\Booking;
 use App\Http\Controllers\Controller;
+use App\Images;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
@@ -51,7 +52,10 @@ class AppointmentController extends Controller
     public function show($id)
     {
         $booking = Booking::findOrFail($id);
-        return Storage::download($booking->pasien->pict);
+        
+        return view('hrd.appointments.show',[
+            'booking' => $booking->images
+        ]);
     }
 
     /**
@@ -86,5 +90,10 @@ class AppointmentController extends Controller
     public function destroy($id)
     {
         //
+    }
+    public function download($id)
+    {
+        $images = Images::findOrFail($id);
+        return Storage::download($images->image);
     }
 }
