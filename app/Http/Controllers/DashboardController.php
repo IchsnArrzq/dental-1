@@ -113,6 +113,12 @@ class DashboardController extends Controller
             ]);
         }
 
+        if(auth()->user()->hasRole('hrd')){
+            return view('dashboard.index',[
+
+            ]);
+        }
+
         return view('dashboard.index');
     }
 

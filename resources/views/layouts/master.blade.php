@@ -102,6 +102,9 @@
                     @role('supervisor')
                     <x-supervisor.sidebar></x-supervisor.sidebar>
                     @endrole
+                    @role('hrd')
+                    <x-hrd.sidebar></x-hrd.sidebar>
+                    @endrole
                 </div>
             </div>
         </div>

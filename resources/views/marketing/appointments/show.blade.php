@@ -70,7 +70,7 @@
 
             </div>
             <div class="card-footer">
-                <a href="{{ route('marketing.appointments.index') }}" class="btn btn-info">Kembali</a>
+                <a href="{{ url()->previous() }}" class="btn btn-info">Kembali</a>
             </div>
         </div>
     </div>
