@@ -28,6 +28,7 @@
     @endforeach
 </div>
 
+
 @stop
 
 @section('footer')
