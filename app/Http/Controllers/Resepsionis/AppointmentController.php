@@ -130,6 +130,7 @@ class AppointmentController extends Controller
         $booking = Booking::with('kedatangan', 'tindakan', 'cabang')->find($request->input('booking_id'));
 
         $rincian = RincianPembayaran::where('booking_id', $booking->id)->get();
+
         if (request('voucher_id') != 0) {
             $voucher = Voucher::find(request('voucher_id'));
             $voucher->update(['is_active' => 0]);
@@ -160,37 +161,39 @@ class AppointmentController extends Controller
         }
 
 
+        $tindakan = Tindakan::where('booking_id', $booking->id)->where('status', 1)->get();
 
         if ($booking->kedatangan->id == 4) {
 
-            $this->dokter($rincian, $booking);
+            $this->dokter($rincian, $booking, $tindakan);
             $this->resepsionis($rincian, $booking);
             $this->marketing($rincian, $booking);
             $this->ob($rincian, $booking);
             $this->perawat($rincian, $booking);
         } else {
-            $this->dokter($rincian, $booking);
+            $this->dokter($rincian, $booking, $tindakan);
         }
 
 
         return back();
     }
 
-    public function dokter($dokter, $booking)
+    public function dokter($dokter, $booking, $tindakan)
     {
         $komisi = Komisi::where('role_id', 2)->first();
 
-        RincianKomisi::create([
-            'booking_id' => $booking->id,
-            'user_id' => $booking->dokter_id,
-            'nominal_komisi' => ($dokter->sum('dibayar') * $komisi->persentase) / 100,
-            'is_active' => 1
-        ]);
+        foreach ($tindakan as $tndkn) {
+            RincianKomisi::create([
+                'booking_id' => $booking->id,
+                'user_id' => $tndkn->dokter_id,
+                'nominal_komisi' => ($tndkn->nominal * $komisi->persentase) / 100,
+                'is_active' => 1
+            ]);
+        }
     }
 
     public function resepsionis($resepsionis, $booking)
     {
-        return $resepsionis;
         $komisi = Komisi::where('role_id', 3)->first();
 
         if ($resepsionis->sum('dibayar') >= $komisi->min_transaksi) {
