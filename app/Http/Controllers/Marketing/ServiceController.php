@@ -5,8 +5,9 @@ namespace App\Http\Controllers\Marketing;
 use App\{Barang, Booking, Customer, Holidays, Jadwal, Tindakan, User};
 use App\Http\Controllers\Controller;
 use Carbon\Carbon;
+use Exception;
 use Illuminate\Http\Request;
-
+use Illuminate\Support\Facades\Validator;
 
 class ServiceController extends Controller
 {
@@ -39,24 +40,38 @@ class ServiceController extends Controller
 
     public function AppointmentsBook(Request $request)
     {
-        $this->validate($request, [
+        $validator = Validator::make($request->all(),[
+            'jadwal_id' => 'required',
+            'dokter_id' => 'required',
+            'marketing_id' => 'required',
+            'waktu_mulai' => 'date_format:H:i:s',
             'pasien_id' => 'required'
         ]);
-        $dokter = User::findOrFail($request->dokter_id);
-        $customer = Customer::findOrFail($request->pasien_id);
-        $ttl = substr($customer->ttl, -10);
-        $umur = (int)Carbon::now()->format('Y') - (int)Carbon::parse($ttl)->format('Y');
-        $jadwal = Jadwal::findOrFail($request->jadwal_id);
-        $no_booking = $customer->cabang->nama . '/' . Carbon::now()->format('Ymd') . rand(9999, 99999);
-        $date_booking = Carbon::now()->format('Y-m-d h:i:s');
-        return view('marketing.appointments.detail', [
-            'no_booking' => $no_booking,
-            'date_booking' => $date_booking,
-            'customer' => $customer,
-            'jadwal' => $jadwal,
-            'umur' => $umur,
-            'dokter' => $dokter,
-            'waktu_mulai' => $request->waktu_mulai
-        ]);
+        if($validator->fails()){
+            return back()->with('error', $validator->getMessageBag());
+        }
+        try {
+            // FIND OR FAIL
+            $dokter = User::findOrFail($request->dokter_id);
+            $customer = Customer::findOrFail($request->pasien_id);
+            $jadwal = Jadwal::findOrFail($request->jadwal_id);
+
+            $ttl = substr($customer->ttl, -10);
+            $umur = (int)Carbon::now()->format('Y') - (int)Carbon::parse($ttl)->format('Y');
+            $no_booking = $customer->cabang->nama . '/' . Carbon::now()->format('Ymd') . rand(9999, 99999);
+            $date_booking = Carbon::now()->format('Y-m-d h:i:s');
+
+            return view('marketing.appointments.detail', [
+                'no_booking' => $no_booking,
+                'date_booking' => $date_booking,
+                'customer' => $customer,
+                'jadwal' => $jadwal,
+                'umur' => $umur,
+                'dokter' => $dokter,
+                'waktu_mulai' => $request->waktu_mulai
+            ]);
+        } catch (Exception $err) {
+            return back()->with('error',$err->getMessage());
+        }
     }
 }
