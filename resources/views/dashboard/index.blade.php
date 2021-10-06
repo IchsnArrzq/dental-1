@@ -21,6 +21,9 @@
 @role('supervisor')
 
 @endrole
+@role('hrd')
+@include('hrd.dashboard')
+@endrole
 
 @stop
 

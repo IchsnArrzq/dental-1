@@ -209,6 +209,11 @@ Route::middleware('auth')->group(function () {
             Route::resource('appointments', 'AppointmentController');
         });
 
+        // Route HRD
+        Route::prefix('hrd')->namespace('hrd')->as('hrd.')->group(function () {
+            // Route Appointment
+            Route::resource('appointments', 'AppointmentController');
+        });
 
 
         // Route Rekam Medis
