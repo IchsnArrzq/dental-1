@@ -118,12 +118,12 @@
                             </div>
                         </div>
                         <div class="form">
-                            <form action="{{ route('resepsionis.appointments.status') }}" method="post" class="d-inline stts">
+                            <!-- <form action="{{ route('resepsionis.appointments.status') }}" method="post" class="d-inline stts">
                                 @csrf
                                 <input type="hidden" name="id" value="{{ $prk->id }}">
                                 <input type="hidden" name="status" value="4">
-                                <button type="submit" class="btn btn-sm btn-outline-warning">Selesai</button>
-                            </form>
+                            </form> -->
+                            <button type="button" class="btn btn-sm btn-outline-warning" data-toggle="modal" data-target="#modalUpload{{ $prk->id }}">Selesai</button>
                         </div>
                     </li>
                     @endforeach
@@ -135,3 +135,37 @@
         </div>
     </div>
 </div>
+
+@foreach($periksa as $prk)
+<div class="modal fade" id="modalUpload{{ $prk->id }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Upload Foto Pemeriksaan</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form action="{{ route('resepsionis.appointments.upload') }}" method="post" enctype="multipart/form-data">
+                @csrf
+                <div class="modal-body">
+                    <input type="hidden" name="id" value="{{ $prk->id }}">
+                    <input type="hidden" name="status" value="4">
+                    <div class="form-group">
+                        <label for="image">Foto</label>
+                        <input type="file" name="images[]" id="image" class="form-control-file" multiple>
+
+                        @error('images')
+                        <small class="text-danger">{{ $message }}</small>
+                        @enderror
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Save changes</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+@endforeach

@@ -68,6 +68,7 @@ Route::middleware('auth')->group(function () {
             Route::get('pasien/cetakodontogram/{customer:id}', 'PatientController@cetakodontogram')->name('pasien.cetakodonto');
             Route::get('pasien/cetakriwayat/{customer:id}', 'PatientController@cetakriwayat')->name('pasien.cetakriwayat');
             Route::get('pasien/{customer:id}/history', 'PatientController@history')->name('pasien.history');
+            Route::get('pasien/{customer:id}/image', 'PatientController@image')->name('pasien.image');
             Route::post('pasien/{customer:id}/storefisik', 'PatientController@storefisik')->name('pasien.storefisik');
             Route::resource('pasien', 'PatientController');
 
@@ -119,7 +120,7 @@ Route::middleware('auth')->group(function () {
             Route::resource('holidays', 'HolidaysController');
             Route::get('holidays/datatables', 'HolidaysController@datatables')->name('holidays.datatables');
             //Route Master Attendance
-            Route::get('/attendance/edit/{id}/{year}/{month}','AttendanceController@AttendanceEditYearMonth')->name('attendance.edit.year.month');
+            Route::get('/attendance/edit/{id}/{year}/{month}', 'AttendanceController@AttendanceEditYearMonth')->name('attendance.edit.year.month');
             Route::get('/attendance/reset/{id}/{year}/{month}', 'AttendanceController@AttendanceResetYearMonth')->name('attendance.reset.year.month');
             Route::get('/attendance/update_user/{bulan}/{tahun}', 'AttendanceController@update_user')->name('attendance.update_user');
             Route::get('/attendance/search', 'AttendanceController@search')->name('attendance.search');
@@ -163,7 +164,7 @@ Route::middleware('auth')->group(function () {
             Route::prefix('/service')->name('service.')->group(function () {
                 Route::get('/appointments/filter', 'ServiceController@AppointmentsFilter')->name('appointments.filter');
                 Route::post('/appointments/books', 'ServiceController@AppointmentsBook')->name('appointments.book');
-            }); 
+            });
             Route::get('/jadwal/{id}/{dokter}', 'AjaxController@GetBook');
             Route::get('/jadwal/now/{id}/{dokter}', 'AjaxController@GetBookNow');
             Route::get('/resource/{id}', 'AjaxController@GetProduct');
@@ -183,6 +184,7 @@ Route::middleware('auth')->group(function () {
             Route::post('appointments/update/perawat', 'AppointmentController@updateperawat')->name('appointments.updateperawat');
             Route::post('appointments/update/ob', 'AppointmentController@updateob')->name('appointments.updateob');
             Route::post('appointments/status', 'AppointmentController@status')->name('appointments.status');
+            Route::post('appointments/upload', 'AppointmentController@upload')->name('appointments.upload');
             Route::post('appointments/voucher', 'AppointmentController@voucher')->name('appointments.voucher');
             Route::post('appointments/bayar', 'AppointmentController@bayar')->name('appointments.bayar');
             Route::get('appointments/print/{id}', 'AppointmentController@print')->name('appointments.print');

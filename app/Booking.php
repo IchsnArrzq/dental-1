@@ -72,4 +72,9 @@ class Booking extends Model
     {
         return $this->belongsTo(StatusPasien::class, 'status_kedatangan_id');
     }
+
+    public function images()
+    {
+        return $this->hasMany(Images::class);
+    }
 }

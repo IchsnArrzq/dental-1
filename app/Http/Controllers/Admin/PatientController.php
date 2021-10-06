@@ -141,4 +141,9 @@ class PatientController extends Controller
 
         return view('admin.patient.history', compact('histories', 'customer'));
     }
+
+    public function image(Customer $customer)
+    {
+        return view('admin.patient.image', compact('customer'));
+    }
 }

@@ -25,7 +25,7 @@
                                 <h3 class="user-name m-t-0 mb-0">{{ $dokter->name }}</h3>
                                 <small class="text-muted">{{ $dokter->cabang->nama }}</small>
                                 <div class="staff-id">Employee ID : DR-{{ $dokter->id }}</div>
-                                <div class="staff-msg"><a href="chat.html" class="btn btn-primary">Send Message</a></div>
+                                <div class="staff-msg"><a href="#" class="btn btn-primary">Send Message</a></div>
                             </div>
                         </div>
                         <div class="col-md-7">
