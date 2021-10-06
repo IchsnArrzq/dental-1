@@ -8,6 +8,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use Exception;
+use Illuminate\Support\Facades\Validator;
 use Session;
 
 class AppointmentsController extends Controller
@@ -42,7 +43,38 @@ class AppointmentsController extends Controller
      */
     public function store(Request $request)
     {
+        $validator = Validator::make($request->all(), [
+            "no_booking" => "required",
+            "date_booking" => "required",
+            "customer_id" => "required",
+            "tanggal_status" => "required",
+            "jadwal_id" => "required",
+            "_token" => "required",
+            "_method" => "required",
+            "dokter_id" => "required",
+            "barang_id.*" => 'required',
+            "item.*" => 'required',
+            "price.*" => 'required',
+            "time.*" => 'required',
+            "type.*" => 'required',
+            "quantity.*" => 'required',
+            "total.*" => 'required',
+            "waktu_mulai" => "required",
+            "waktu_selesai" => "required"
+        ]);
+
+        if($validator->fails()){
+            return redirect('/dashboard')->with('error', $validator->getMessageBag());
+        }
         $form = $request->except(['_token', '_method', 'table-show_length']);
+        $form['barang_id'] = array_values($request->barang_id);
+        $form['item'] = array_values($request->item);
+        $form['price'] = array_values($request->price);
+        $form['time'] = array_values($request->time);
+        $form['duration'] = array_values($request->duration);
+        $form['type'] = array_values($request->type);
+        $form['quantity'] = array_values($request->quantity);
+        $form['total'] = array_values($request->total);
         DB::beginTransaction();
         try {
             $booking = Booking::create([
@@ -62,7 +94,7 @@ class AppointmentsController extends Controller
                 'status_kedatangan_id' => 1,
                 'is_active' => 1
             ]);
-            for ($i = 1; $i <= count($form['barang_id']); $i++) {
+            for ($i = 0; $i < count($form['barang_id']); $i++) {
                 $barang = Barang::findOrFail($form['barang_id'][$i]);
                 if ($barang->type) {
                     $wtf = Booking::where('customer_id', $form['customer_id'])->get();
