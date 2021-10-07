@@ -115,6 +115,8 @@ Route::middleware('auth')->group(function () {
             Route::get('report/komisi', 'ReportController@komisi')->name('report.komisi');
             Route::post('report/komisi', 'ReportController@komisi')->name('report.komisi');
             // Route::get('report/komisi/export/{role:id}', 'ReportController@komisireport')->name('komisi.export');
+            Route::get('report/perpindahan/pasien' ,'ReportController@perpindahan')->name('report.perpindahan.pasien');
+            Route::post('report/perpindahan/pasien' ,'ReportController@perpindahan')->name('report.perpindahan.pasien');
 
             //Route Master Holidays
             Route::resource('holidays', 'HolidaysController');
@@ -214,6 +216,10 @@ Route::middleware('auth')->group(function () {
             // Route Appointment
             Route::resource('appointments', 'AppointmentController');
             Route::get('appointments/download/{id}', 'AppointmentController@download')->name('appointments.download');
+            
+
+            Route::get('report', 'ReportController@index')->name('report.index');
+
         });
 
 

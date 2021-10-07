@@ -164,4 +164,16 @@ class ReportController extends Controller
 
         return view('admin.report.komisi.index', compact('users', 'komisi', 'rl', 'from', 'to'));
     }
+    public function perpindahan()
+    {
+        $cabang = Cabang::get();
+        $cb = '';
+        $from = '';
+        $to = '';
+        if(request()->method() == 'POST'){
+            return back()->with('error', 'tidak ada code yang di eksekusi');
+        }
+        $perpindahan = Booking::where('dokter_pengganti_id','!=', null)->get();
+        return view('admin.report.perpindahan.index', compact('perpindahan','cabang', 'cb', 'from', 'to'));
+    }
 }
