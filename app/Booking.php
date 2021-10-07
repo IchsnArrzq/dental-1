@@ -77,4 +77,8 @@ class Booking extends Model
     {
         return $this->hasMany(Images::class);
     }
+    public function dokter_pengganti()
+    {
+        return $this->belongsTo(User::class, 'dokter_pengganti_id');
+    }
 }

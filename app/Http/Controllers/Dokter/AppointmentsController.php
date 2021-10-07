@@ -15,11 +15,13 @@ class AppointmentsController extends Controller
      */
     public function index()
     {
-        // $appointments = Booking::where('cabang_id', auth()->user()->cabang_id)->where('dokter_id', auth()->user()->id)->orderBy('tanggal_status', 'desc')->get();
-        $appointments = Booking::where('cabang_id', auth()->user()->cabang_id)->orderBy('tanggal_status', 'desc')->get();
-        
+        $appointments = Booking::where('cabang_id', auth()->user()->cabang_id)->where('dokter_id', auth()->user()->id)->orderBy('tanggal_status', 'desc')->get();
+        // $appointments = Booking::where('cabang_id', auth()->user()->cabang_id)->orderBy('tanggal_status', 'desc')->get();
+        $count = Booking::where('cabang_id', auth()->user()->cabang_id)->where('dokter_pengganti_id', auth()->user()->id)->get()->count();
+
         return view('dokter.appointments.index', [
-            'appointments' => $appointments
+            'appointments' => $appointments,
+            'count' => $count
         ]);
     }
 
@@ -68,7 +70,12 @@ class AppointmentsController extends Controller
      */
     public function edit($id)
     {
-        //
+        $appointments = Booking::where('cabang_id', auth()->user()->cabang_id)->where('dokter_pengganti_id', $id)->orderBy('tanggal_status', 'desc')->get();
+        // $appointments = Booking::where('cabang_id', auth()->user()->cabang_id)->orderBy('tanggal_status', 'desc')->get();
+
+        return view('dokter.appointments.edit', [
+            'appointments' => $appointments
+        ]);
     }
 
     /**
