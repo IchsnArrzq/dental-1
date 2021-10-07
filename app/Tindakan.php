@@ -17,4 +17,8 @@ class Tindakan extends Model
     {
         return $this->belongsTo(Barang::class, 'tindakan_id');
     }
+    public function dokter()
+    {
+        return $this->belongsTo(User::class, 'dokter_id');
+    }
 }
