@@ -11,7 +11,7 @@
     <div class="col-md-12">
         <div class="card shadow">
             <div class="card-header">
-                <a href="{{ route('dokter.appointments.edit', auth()->user()->id) }}" class="btn btn-success">Appointments Pindahan : {{ $count }}</a>
+                <a href="{{ url()->previous() }}" class="btn btn-success">Back</a>
             </div>
             <div class="card-body">
 

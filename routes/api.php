@@ -19,3 +19,4 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 });
 
 Route::get('/attendance/{id}', 'Api\AttendanceController@GetDetailOfAttendance');
+Route::get('/hrd/appointments/update/{booking_id}/{dokter_pengganti_id}', 'Api\AppointmentsController@UpdateAppointmentsFromHRD');

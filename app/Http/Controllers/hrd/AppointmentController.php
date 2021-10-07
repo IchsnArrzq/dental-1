@@ -5,6 +5,7 @@ namespace App\Http\Controllers\hrd;
 use App\Booking;
 use App\Http\Controllers\Controller;
 use App\Images;
+use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
@@ -66,7 +67,14 @@ class AppointmentController extends Controller
      */
     public function edit($id)
     {
-        //
+        $booking = Booking::findOrFail($id);
+        $dokter = User::whereHas('roles', function($data){
+            $data->where('name', 'dokter');
+        })->get();
+        return view('hrd.appointments.edit',[
+            'booking' => $booking,
+            'dokter' => $dokter
+        ]);
     }
 
     /**
