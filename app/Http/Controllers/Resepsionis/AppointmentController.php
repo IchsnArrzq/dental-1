@@ -141,7 +141,7 @@ class AppointmentController extends Controller
             'kasir_id' => auth()->user()->id,
             'payment_id' => $request->input('payment'),
             'tanggal_pembayaran' => $request->input('tanggal_pembayaran'),
-            'nominal' => $request->input('bayar'),
+            'nominal' => $request->input('nominal'),
             'dibayar' => $request->input('bayar'),
             'kembali' => $request->input('kembali'),
             'voucher_id' => $request->input('voucher_id'),
@@ -154,17 +154,15 @@ class AppointmentController extends Controller
 
         $pajak = $booking->tindakan->sum('nominal') * $booking->cabang->ppn / 100;
         $tagihan = $booking->tindakan->sum('nominal') + $pajak;
-        $totalRincian = $rincian->sum('nominal') + $rincian->sum('disc_vouc');
+        $totalRincian = $rincian->sum('dibayar') + $rincian->sum('disc_vouc');
 
-        if ($totalRincian == $tagihan) {
+        if ($totalRincian >= $tagihan) {
             $booking->update(['status_pembayaran' => 1]);
         }
 
-
         $tindakan = Tindakan::where('booking_id', $booking->id)->where('status', 1)->get();
 
-        if ($booking->kedatangan->id == 4) {
-
+        if ($booking->kedatangan->id == 4 && $booking->status_pembayaran == 1) {
             $this->dokter($rincian, $booking, $tindakan);
             $this->resepsionis($rincian, $booking);
             $this->marketing($rincian, $booking);
@@ -174,33 +172,32 @@ class AppointmentController extends Controller
             $this->dokter($rincian, $booking, $tindakan);
         }
 
-
         return back();
     }
 
     public function dokter($dokter, $booking, $tindakan)
     {
         $komisi = Komisi::where('role_id', 2)->first();
-
-        foreach ($tindakan as $tndkn) {
-            RincianKomisi::create([
-                'booking_id' => $booking->id,
-                'user_id' => $tndkn->dokter_id,
-                'nominal_komisi' => ($tndkn->nominal * $komisi->persentase) / 100,
-                'is_active' => 1
-            ]);
-        }
+        // dd($dokter->sum('nominal'));
+        RincianKomisi::create([
+            'booking_id' => $booking->id,
+            'user_id' => $booking->dokter_id,
+            'nominal_komisi' => ($dokter->sum('nominal') * $komisi->persentase) / 100,
+            'is_active' => 1
+        ]);
+        // foreach ($tindakan as $tndkn) {
+        // }
     }
 
     public function resepsionis($resepsionis, $booking)
     {
         $komisi = Komisi::where('role_id', 3)->first();
 
-        if ($resepsionis->sum('dibayar') >= $komisi->min_transaksi) {
+        if ($resepsionis->sum('nominal') >= $komisi->min_transaksi) {
             RincianKomisi::create([
                 'booking_id' => $booking->id,
                 'user_id' => $booking->resepsionis_id,
-                'nominal_komisi' => ($resepsionis->sum('dibayar') * $komisi->persentase) / 100,
+                'nominal_komisi' => ($resepsionis->sum('nominal') * $komisi->persentase) / 100,
                 'is_active' => 1
             ]);
         }
@@ -209,11 +206,11 @@ class AppointmentController extends Controller
     public function marketing($marketing, $booking)
     {
         $komisi = Komisi::where('role_id', 4)->first();
-        if ($marketing->sum('dibayar') >= $komisi->min_transaksi) {
+        if ($marketing->sum('nominal') >= $komisi->min_transaksi) {
             RincianKomisi::create([
                 'booking_id' => $booking->id,
                 'user_id' => $booking->marketing_id,
-                'nominal_komisi' => ($marketing->sum('dibayar') * $komisi->persentase) / 100,
+                'nominal_komisi' => ($marketing->sum('nominal') * $komisi->persentase) / 100,
                 'is_active' => 1
             ]);
         }
@@ -222,11 +219,11 @@ class AppointmentController extends Controller
     public function ob($ob, $booking)
     {
         $komisi = Komisi::where('role_id', 5)->first();
-        if ($ob->sum('dibayar') >= $komisi->min_transaksi) {
+        if ($ob->sum('nominal') >= $komisi->min_transaksi) {
             RincianKomisi::create([
                 'booking_id' => $booking->id,
                 'user_id' => $booking->ob_id,
-                'nominal_komisi' => ($ob->sum('dibayar') * $komisi->persentase) / 100,
+                'nominal_komisi' => ($ob->sum('nominal') * $komisi->persentase) / 100,
                 'is_active' => 1
             ]);
         }
@@ -235,11 +232,11 @@ class AppointmentController extends Controller
     public function perawat($perawat, $booking)
     {
         $komisi = Komisi::where('role_id', 6)->first();
-        if ($perawat->sum('dibayar') >= $komisi->min_transaksi) {
+        if ($perawat->sum('nominal') >= $komisi->min_transaksi) {
             RincianKomisi::create([
                 'booking_id' => $booking->id,
                 'user_id' => $booking->perawat_id,
-                'nominal_komisi' => ($perawat->sum('dibayar') * $komisi->persentase) / 100,
+                'nominal_komisi' => ($perawat->sum('nominal') * $komisi->persentase) / 100,
                 'is_active' => 1
             ]);
         }
@@ -324,7 +321,6 @@ class AppointmentController extends Controller
                 'is_image' => 1,
             ]);
         }
-
 
         return back()->with('success', 'Status kedatangan pasien berhasil diubah');
     }
