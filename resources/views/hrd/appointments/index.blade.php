@@ -19,6 +19,7 @@
                                 <th>No Booking</th>
                                 <th>Dokter</th>
                                 <th>Dokter Pengganti</th>
+                                <th>Tanggal Pengganti</th>
                                 <th>Pasien</th>
                                 <th>Tindakan</th>
                                 <th>Action</th>
@@ -31,6 +32,7 @@
                                 <td><span>{{ $book->no_booking }}</span></td>
                                 <td>{{ $book->dokter->name }}</td>
                                 <td>{{ $book->dokter_pengganti->name ?? 'Kosong' }}</td>
+                                <td>{{ $book->tanggal_pengganti ?? 'Kosong' }}</td>
                                 <td>{{ $book->pasien->nama }}</td>
                                 <td>
                                     @foreach($book->tindakan as $row)

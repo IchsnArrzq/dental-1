@@ -74,7 +74,7 @@
             <li><a href="{{ route('admin.report.payment') }}"> Laporan Metode Pembayaran </a></li>
             <li><a href="{{ route('admin.report.komisi') }}"> Laporan Komisi </a></li>
             <li><a href="{{ route('admin.report.pasien') }}"> Laporan Pasien </a></li>
-            <li><a href="invoice-reports.html"> Laporan Perpindahan Pasien </a></li>
+            <li><a href="{{ route('admin.report.perpindahan.pasien')  }}"> Laporan Perpindahan Pasien </a></li>
         </ul>
     </li>
     @endcan
