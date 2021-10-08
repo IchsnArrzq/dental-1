@@ -64,17 +64,17 @@
                             <div class="invoices-view">
                                 <span class="text-muted">Payment Details:</span>
                                 <ul class="list-unstyled invoice-payment-details">
-                                    <li>
+                                    <!-- <li>
                                         <h5>Total Due: <span class="text-right">$288.2</span></h5>
-                                    </li>
+                                    </li> -->
                                     <li>Dokter: <span>{{ $dokter->name }}</span></li>
                                     <input type="hidden" name="dokter_id" value="{{ $dokter->id }}">
                                     <li>Perawat: <span>{{ $booking->perawat->name  ?? '-' }}</span></li>
                                     <li>Office boy: <span>{{ $booking->ob->name  ?? '-' }}</span></li>
                                     <li>Resepsionis: <span>{{ $booking->resepsionis->name  ?? '-' }}</span></li>
                                     <li>Address: <span>{{ auth()->user()->cabang->alamat }}</span></li>
-                                    <li>IBAN: <span>KFH37784028476740</span></li>
-                                    <li>SWIFT code: <span>BPT4E</span></li>
+                                    <!-- <li>IBAN: <span>KFH37784028476740</span></li>
+                                    <li>SWIFT code: <span>BPT4E</span></li> -->
                                 </ul>
                             </div>
                         </div>
@@ -143,10 +143,10 @@
                         </div>
                     </div>
                     <br>
-                    <div class="invoice-info">
+                    <!-- <div class="invoice-info">
                         <h5>Other information</h5>
                         <p class="text-muted">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus sed dictum ligula, cursus blandit risus. Maecenas eget metus non tellus dignissim aliquam ut a ex. Maecenas sed vehicula dui, ac suscipit lacus. Sed finibus leo vitae lorem interdum, eu scelerisque tellus fermentum. Curabitur sit amet lacinia lorem. Nullam finibus pellentesque libero, eu finibus sapien interdum vel</p>
-                    </div>
+                    </div> -->
                 </div>
             </div>
         </div>

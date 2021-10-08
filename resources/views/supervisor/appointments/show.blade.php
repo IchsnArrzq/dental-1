@@ -95,7 +95,7 @@
                             <tr>
                                 <td>{{ $loop->iteration }}</td>
                                 <td>{{ $tindakan->item->nama_barang }}</td>
-                                <td>Lorem ipsum dolor sit amet, consectetur adipiscing elit</td>
+                                <td>{{ $tindakan->item->description }}</td>
                                 @php
                                 $harga = \App\HargaProdukCabang::where('barang_id', $tindakan->item->id)->where('cabang_id', auth()->user()->cabang_id)->first();
                                 @endphp
