@@ -172,7 +172,21 @@ class ReportController extends Controller
         $from = '';
         $to = '';
         if (request()->method() == 'POST') {
-            return back()->with('error', 'tidak ada code yang di eksekusi');
+            $this->validate(request(),[
+                'cabang' => 'required',
+                'from' => 'required',
+                'to' => 'required'
+            ]);
+            $form = request()->all();
+            $from = Carbon::createFromFormat('d/m/Y', $form['from']);
+            $to = Carbon::createFromFormat('d/m/Y', $form['to']);
+            $from = $from->format('Y-m-d');
+            $to = $to->format('Y-m-d');
+            $perpindahan = Booking::where('cabang_id', $form['cabang'])->where('dokter_pengganti_id', '!=', null)->where('tanggal_pengganti', '!=', null)->whereBetween('tanggal_pengganti', [$from, $to])->get();
+            if ($form['cabang'] == 'all') {
+                $perpindahan = Booking::where('dokter_pengganti_id', '!=', null)->where('tanggal_pengganti', '!=', null)->whereBetween('tanggal_pengganti', [$from, $to])->get();
+            }
+            return view('admin.report.perpindahan.index', compact('perpindahan', 'cabang', 'cb', 'from', 'to'));
         }
         $perpindahan = Booking::where('dokter_pengganti_id', '!=', null)->get();
         return view('admin.report.perpindahan.index', compact('perpindahan', 'cabang', 'cb', 'from', 'to'));
