@@ -115,8 +115,8 @@ Route::middleware('auth')->group(function () {
             Route::get('report/komisi', 'ReportController@komisi')->name('report.komisi');
             Route::post('report/komisi', 'ReportController@komisi')->name('report.komisi');
             // Route::get('report/komisi/export/{role:id}', 'ReportController@komisireport')->name('komisi.export');
-            Route::get('report/perpindahan/pasien' ,'ReportController@perpindahan')->name('report.perpindahan.pasien');
-            Route::post('report/perpindahan/pasien' ,'ReportController@perpindahan')->name('report.perpindahan.pasien');
+            Route::get('report/perpindahan/pasien', 'ReportController@perpindahan')->name('report.perpindahan.pasien');
+            Route::post('report/perpindahan/pasien', 'ReportController@perpindahan')->name('report.perpindahan.pasien');
 
             //Route Master Holidays
             Route::resource('holidays', 'HolidaysController');
@@ -209,6 +209,11 @@ Route::middleware('auth')->group(function () {
             Route::get('appointments/ajax', 'AppointmentController@ajaxAppointment');
             Route::post('appointments/deleterincian', 'AppointmentController@deleterincian')->name('appointments.deleterincian');
             Route::resource('appointments', 'AppointmentController');
+
+            Route::get('komisi/ajax', 'KomisiController@ajaxKomisi');
+            Route::get('komisi/{komisi:id}/change', 'KomisiController@change')->name('komisi.change');
+            Route::patch('komisi/{komisi:id}/updatechange', 'KomisiController@updatechange')->name('komisi.updatechange');
+            Route::resource('komisi', 'KomisiController');
         });
 
         // Route HRD
@@ -216,10 +221,9 @@ Route::middleware('auth')->group(function () {
             // Route Appointment
             Route::resource('appointments', 'AppointmentController');
             Route::get('appointments/download/{id}', 'AppointmentController@download')->name('appointments.download');
-            
+
 
             Route::get('report', 'ReportController@index')->name('report.index');
-
         });
 
 

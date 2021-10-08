@@ -27,8 +27,8 @@ class ServiceController extends Controller
         $current = Carbon::now();
         $holiday = Holidays::pluck('holiday_date')->toArray();
         $from = $startdate;
-        $count = $startdate->diffInDays() + $enddate->diffInDays().'<br>';
-        
+        $count = $startdate->diffInDays() + $enddate->diffInDays() . '<br>';
+
         return view('dashboard.index', [
             'booking' => Booking::where('is_active', 1)->get(),
             'dokter' => $dokter,
@@ -40,14 +40,14 @@ class ServiceController extends Controller
 
     public function AppointmentsBook(Request $request)
     {
-        $validator = Validator::make($request->all(),[
+        $validator = Validator::make($request->all(), [
             'jadwal_id' => 'required',
             'dokter_id' => 'required',
             'marketing_id' => 'required',
             'waktu_mulai' => 'date_format:H:i:s',
             'pasien_id' => 'required'
         ]);
-        if($validator->fails()){
+        if ($validator->fails()) {
             return back()->with('error', $validator->getMessageBag());
         }
         try {
@@ -58,7 +58,7 @@ class ServiceController extends Controller
 
             $ttl = substr($customer->ttl, -10);
             $umur = (int)Carbon::now()->format('Y') - (int)Carbon::parse($ttl)->format('Y');
-            $no_booking = $customer->cabang->nama . '/' . Carbon::now()->format('Ymd') . rand(9999, 99999);
+            $no_booking = $customer->cabang->nama . '/' . Carbon::now()->format('Ymd') . '/' . rand(9999, 99999);
             $date_booking = Carbon::now()->format('Y-m-d h:i:s');
 
             return view('marketing.appointments.detail', [
@@ -71,7 +71,7 @@ class ServiceController extends Controller
                 'waktu_mulai' => $request->waktu_mulai
             ]);
         } catch (Exception $err) {
-            return back()->with('error',$err->getMessage());
+            return back()->with('error', $err->getMessage());
         }
     }
 }
