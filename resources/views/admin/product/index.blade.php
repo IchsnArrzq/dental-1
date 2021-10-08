@@ -23,6 +23,7 @@
                         <th>No</th>
                         <th>Kode Produk</th>
                         <th>Nama</th>
+                        <th>Description</th>
                         <th>Action</th>
                     </tr>
                 </thead>
@@ -33,6 +34,7 @@
                         <td>{{ $loop->iteration }}</td>
                         <td>{{ $product->kode_barang }}</td>
                         <td>{{ $product->nama_barang }}</td>
+                        <td>{{ $product->description }}</td>
                         <td>
                             @can('product-edit')
                             <a href="{{ route('admin.product.edit', $product->id) }}" class="btn btn-sm btn-info"><i class="fa fa-edit"></i></a>
