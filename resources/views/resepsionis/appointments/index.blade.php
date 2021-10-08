@@ -22,7 +22,8 @@
                         <th>Cabang</th>
                         <th>Tanggal Booking</th>
                         <th>Waktu Booking</th>
-                        <th>Status</th>
+                        <th>Status Kedatangan</th>
+                        <th>Tindakan</th>
                     </tr>
                 </thead>
 
@@ -37,6 +38,18 @@
                         <td>{{ \Carbon\Carbon::parse($appointment->tanggal_status)->format('d/m/Y') }}</td>
                         <td>{{ \Carbon\Carbon::parse($appointment->jam_status)->format('H.i')  }} - {{ \Carbon\Carbon::parse($appointment->jam_selesai)->format('H.i')  }}</td>
                         <td><span class="custom-badge status-{{ $appointment->kedatangan->warna}}">{{ $appointment->kedatangan->status}}</span></td>
+                        <td>
+                            @if($appointment->tindakan->where('status', 0)->count() > 0)
+                            <button class="custom-badge status-red d-flex justify-content-between">
+                                Belum
+                                <span>{{ $appointment->tindakan->where('status', 0)->count() }}</span>
+                            </button>
+                            @else
+                            <button class="custom-badge status-green">
+                                Selesai
+                            </button>
+                            @endif
+                        </td>
                     </tr>
                     @endforeach
                 </tbody>

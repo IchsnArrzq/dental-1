@@ -22,7 +22,7 @@
                         <th>Cabang</th>
                         <th>Tanggal Booking</th>
                         <th>Waktu Booking</th>
-                        <th>Status</th>
+                        <th>Status Kedatangan</th>
                     </tr>
                 </thead>
 
