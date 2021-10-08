@@ -97,7 +97,7 @@ class DashboardController extends Controller
         if (auth()->user()->roles()->first()->name == 'marketing') {
             $dokter = User::whereHas('roles', function ($role) {
                 return $role->where('name', 'dokter');
-            })->where('cabang_id', auth()->user()->cabang_id)->get();
+            })->where('cabang_id', auth()->user()->cabang_id)->where('is_active',1)->get();
             $startdate = Carbon::parse(Carbon::now()->format('Y-m-d'));
             $enddate = Carbon::parse(Carbon::now()->endOfMonth()->format('Y-m-d'));
             $current = Carbon::now();

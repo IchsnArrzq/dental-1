@@ -219,8 +219,11 @@ Route::middleware('auth')->group(function () {
         // Route HRD
         Route::prefix('hrd')->namespace('hrd')->as('hrd.')->group(function () {
             // Route Appointment
-            Route::resource('appointments', 'AppointmentController');
+            Route::get('/appointments/resign', 'AppointmentController@resign')->name('appointments.resign');
             Route::get('appointments/download/{id}', 'AppointmentController@download')->name('appointments.download');
+            Route::resource('appointments', 'AppointmentController');
+
+            
 
 
             Route::get('report', 'ReportController@index')->name('report.index');
