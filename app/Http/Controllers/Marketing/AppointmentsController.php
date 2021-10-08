@@ -63,7 +63,7 @@ class AppointmentsController extends Controller
             "waktu_selesai" => "required"
         ]);
 
-        if($validator->fails()){
+        if ($validator->fails()) {
             return redirect('/dashboard')->with('error', $validator->getMessageBag());
         }
         $form = $request->except(['_token', '_method', 'table-show_length']);
@@ -101,9 +101,11 @@ class AppointmentsController extends Controller
                     foreach ($wtf as $row) {
                         foreach ($row->tindakan as $data) {
                             if ($data->item->type) {
-                                if ($data->booking->dokter->name != User::find($form['dokter_id'])->name) {
-                                    DB::rollBack();
-                                    return redirect('/dashboard')->with('error', 'Tidak bisa booking karena service bertype lanjutan, harus dokter yang sama!');
+                                if ($data->booking->dokter->is_active) {
+                                    if ($data->booking->dokter->name != User::find($form['dokter_id'])->name) {
+                                        DB::rollBack();
+                                        return redirect('/dashboard')->with('error', 'Tidak bisa booking karena service bertype lanjutan, harus dokter yang sama!');
+                                    }
                                 }
                             }
                         }
