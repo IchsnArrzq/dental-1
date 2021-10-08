@@ -96,9 +96,9 @@
                                     <td>Rp. {{ number_format($data->item->produkharga->where('cabang_id',auth()->user()->cabang_id)->first()->harga) }}</td>
                                     <td>{{ $data->qty }}</td>
                                     <td>Rp. {{ number_format($data->nominal) }}</td>
-                                    <td>{{ $booking->dokter->name }}</td>
+                                    <td>{{ $data->dokter->name }}</td>
                                     <td>{{ $data->updated_at }}</td>
-                                    <td><input type="checkbox" name="" onchange="update(this)" @if($data->status) checked @endif id="{{ $data->id }}"></td>
+                                    <td><input type="checkbox" name="" @if($data->status) @if($data->dokter_id != auth()->user()->id) disabled @endif @endif onchange="update(this)" @if($data->status) checked @endif id="{{ $data->id }}"></td>
                                 </tr>
                                 @endforeach
                             </table>

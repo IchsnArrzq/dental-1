@@ -21,6 +21,7 @@
                                 <th>Dokter Pengganti</th>
                                 <th>Tanggal Pengganti</th>
                                 <th>Pasien</th>
+                                <th>Status</th>
                                 <th>Tindakan</th>
                                 <th>Action</th>
                             </tr>
@@ -34,6 +35,7 @@
                                 <td>{{ $book->dokter_pengganti->name ?? 'Kosong' }}</td>
                                 <td>{{ $book->tanggal_pengganti ?? 'Kosong' }}</td>
                                 <td>{{ $book->pasien->nama }}</td>
+                                <td><span class="custom-badge status-{{ $book->status->warna }}">{{ $book->status->status }}</span></td>
                                 <td>
                                     @foreach($book->tindakan as $row)
                                     <ul class="list-unstyled">
