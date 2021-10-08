@@ -9,22 +9,25 @@
                 <div class="modal-body">
                     <div class="row">
                         @csrf
+                        <!-- <div class="col-md-3"> -->
+                            <!-- <div class="form-group"> -->
+                                <!-- <label for="jadwal_id">Jadwal ID</label> -->
+                                <input type="hidden" class="form-control" name="jadwal_id" id="jadwal_id" readonly>
+                            <!-- </div> -->
+                        <!-- </div> -->
                         <div class="col-md-3">
                             <div class="form-group">
-                                <label for="jadwal_id">Jadwal ID</label>
-                                <input type="text" class="form-control" name="jadwal_id" id="jadwal_id" readonly>
+                                <label for="dokter_id">Dokter</label>
+                                <input type="hidden" class="form-control" name="dokter_id" id="dokter_id" readonly>
+                                <input type="text" class="form-control" id="dokter_name" readonly>
                             </div>
                         </div>
                         <div class="col-md-3">
                             <div class="form-group">
-                                <label for="dokter_id">Dokter ID</label>
-                                <input type="text" class="form-control" name="dokter_id" id="dokter_id" readonly>
-                            </div>
-                        </div>
-                        <div class="col-md-3">
-                            <div class="form-group">
-                                <label for="marketing_id">Marketing ID</label>
-                                <input type="text" class="form-control" name="marketing_id" id="marketing_id" readonly value="{{ auth()->user()->id }}">
+                                <label for="marketing_id">Marketing</label>
+                                <input type="hidden" class="form-control" name="marketing_id" id="marketing_id" readonly value="{{ auth()->user()->id }}">
+                                <input type="text" class="form-control" readonly value="{{ auth()->user()->name }}">
+
                             </div>
                         </div>
                         <div class="col-md-3">
@@ -36,7 +39,7 @@
 
                         <div class="col-md-3">
                             <div class="form-group">
-                                <label for="pasien_id">Pasien ID</label>
+                                <label for="pasien_id">Pasien</label>
                                 <select class="pasienList" name="pasien_id" id="pasien_id">
                                 </select>
                             </div>

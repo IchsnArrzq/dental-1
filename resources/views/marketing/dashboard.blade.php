@@ -91,9 +91,6 @@
                                     <a href="{{ route('marketing.doctor.show',$row->id) }}"><span class="custom-badge status-blue">{{ $row->user->name }}</span></a>
                                 </p>
                                 <p>
-                                    <span class="custom-badge status-orange">{{ $row->user->cabang->nama }}</span>
-                                </p>
-                                <p>
                                     @if( $row->shift->kode == 'L')
                                     <span class="custom-badge status-red">{{ $row->shift->kode }}</span>
                                     @else
@@ -189,6 +186,7 @@
                 $('#jadwal_id').val(button)
                 $('#dokter_id').val(`${data.dokter.id}`)
                 $('#waktu_mulai').val(data.booking)
+                $('#dokter_name').val(data.dokter.name)
 
             }
         })
@@ -207,6 +205,8 @@
 
                 $('#dokter_id').val(`${data.dokter.id}`)
                 $('#waktu_mulai').val(data.booking)
+                $('#dokter_name').val(data.dokter.name)
+
             }
         })
     })
