@@ -19,6 +19,7 @@ class CreateBarangsTable extends Migration
             $table->string('nama_barang');
             $table->enum('jenis', ['barang', 'service']);
             $table->integer('is_active')->default(1);
+            $table->text('description');
             $table->integer('type')->nullable();
             $table->timestamps();
         });
