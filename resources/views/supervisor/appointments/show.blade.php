@@ -142,12 +142,12 @@
                                             </tr>
                                             <tr>
                                                 <th>Dibayar:</th>
-                                                <td class="text-right">@currency($appointment->rincian->sum('dibayar') + $appointment->rincian->sum('disc_vouc'))</td>
+                                                <td class="text-right">@currency($rincians->sum('dibayar') + $appointment->rincian->sum('disc_vouc'))</td>
                                             </tr>
                                             <tr>
                                                 <th>Sisa Pembayaran:</th>
                                                 <td class="text-right text-primary sisa" id="@currency($total - $appointment->rincian->sum('dibayar') + $pajak)">
-                                                    <h5 class="tsisa">@currency($total - $appointment->rincian->sum('dibayar') + $pajak - $appointment->rincian->sum('disc_vouc'))</h5>
+                                                    <h5 class="tsisa">@currency($total - $rincians->sum('dibayar') + $pajak - $appointment->rincian->sum('disc_vouc'))</h5>
                                                 </td>
                                             </tr>
                                         </tbody>
@@ -214,7 +214,6 @@
                                     <td>Biaya Kartu</td>
                                     <td>Diskon</td>
                                     <td>Dibayar</td>
-                                    <td>Action</td>
                                 </tr>
                                 @foreach($rincians_hapus as $rincian)
                                 <tr>
@@ -227,13 +226,6 @@
                                     <td>@currency($rincian->biaya_kartu)</td>
                                     <td>@currency($rincian->disc_vouc)</td>
                                     <td>@currency($rincian->dibayar)</td>
-                                    <td>
-                                        <form action="{{ route('supervisor.appointments.deleterincian') }}" method="post" class="d-inline delete-form">
-                                            @csrf
-                                            <input type="hidden" name="id" value="{{ $rincian->id }}">
-                                            <button type="submit" class="btn btn-sm btn-danger delete-form">Delete</button>
-                                        </form>
-                                    </td>
                                 </tr>
                                 @endforeach
                             </tbody>

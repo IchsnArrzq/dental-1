@@ -28,7 +28,7 @@
                         <td>{{ $pay->payment->nama_metode }}</td>
                         <td>@currency($pay->change)</td>
                         <td>@currency($pay->dibayar)</td>
-                        <td>{{ $pay->payment->potongan }}%</td>
+                        <td>@currency($pay->biaya_kartu) ({{ $pay->payment->potongan }}%)</td>
                         <td>{{ $pay->kasir->name }}</td>
                         <td>@currency($pay->nominal)</td>
                     </tr>

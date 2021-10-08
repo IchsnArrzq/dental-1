@@ -141,7 +141,7 @@ class AppointmentController extends Controller
             'kasir_id' => auth()->user()->id,
             'payment_id' => $request->input('payment'),
             'tanggal_pembayaran' => $request->input('tanggal_pembayaran'),
-            'nominal' => $request->input('nominal'),
+            'nominal' => $request->input('bayar'),
             'dibayar' => $request->input('bayar'),
             'kembali' => $request->input('kembali'),
             'voucher_id' => $request->input('voucher_id'),

@@ -134,7 +134,9 @@ class ReportController extends Controller
 
     public function komisi()
     {
-        $users = User::get();
+        $users = User::whereHas('roles', function ($role) {
+            return $role->where('name', '!=', 'super-admin');
+        })->get();
         $komisi = null;
         $from = '';
         $to = '';
@@ -152,10 +154,9 @@ class ReportController extends Controller
                 })->get();
             } else {
                 $komisi = RincianKomisi::with('booking', 'user')->whereHas('booking', function ($query) {
-
-                    return $query->whereHas('rincian', function ($rincian) {
-                        $from = Carbon::parse(request('from'))->format('Y-m-d H:i:s');
-                        $to = Carbon::parse(request('to'))->format('Y-m-d H:i:s');
+                    return $query->with('rincian')->whereHas('rincian', function ($rincian) {
+                        $from = Carbon::createFromFormat('d/m/Y', request('from'))->format('Y-m-d H:i:s');
+                        $to = Carbon::createFromFormat('d/m/Y', request('to'))->format('Y-m-d H:i:s');
                         return $rincian->whereBetween('tanggal_pembayaran', [$from, $to]);
                     });
                 })->get();
@@ -170,10 +171,10 @@ class ReportController extends Controller
         $cb = '';
         $from = '';
         $to = '';
-        if(request()->method() == 'POST'){
+        if (request()->method() == 'POST') {
             return back()->with('error', 'tidak ada code yang di eksekusi');
         }
-        $perpindahan = Booking::where('dokter_pengganti_id','!=', null)->get();
-        return view('admin.report.perpindahan.index', compact('perpindahan','cabang', 'cb', 'from', 'to'));
+        $perpindahan = Booking::where('dokter_pengganti_id', '!=', null)->get();
+        return view('admin.report.perpindahan.index', compact('perpindahan', 'cabang', 'cb', 'from', 'to'));
     }
 }

@@ -56,7 +56,6 @@ class AppointmentController extends Controller
 
     public function deleterincian()
     {
-
         $rincian = RincianPembayaran::find(request('id'));
         $rincian->update(['is_active' => 0]);
 
@@ -67,6 +66,7 @@ class AppointmentController extends Controller
 
         // if ($totalRincian == $tagihan) {
         $booking->update(['status_pembayaran' => 0]);
+        $booking->komisi()->delete();
         // }
 
         return back()->with('success', 'Riwayat Pembayaran berhasil dihapus');

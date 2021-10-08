@@ -25,7 +25,8 @@
                         <td>{{ $kms->booking->created_at }}</td>
                         <td>{{ $kms->booking->no_booking }}</td>
                         <td>{{ $kms->user->name }}</td>
-                        <td>@foreach($kms->user->roles as $rl)
+                        <td>
+                            @foreach($kms->user->roles as $rl)
                             @php
                             $persentase = \App\Komisi::where('role_id',$rl->id)->first();
                             @endphp

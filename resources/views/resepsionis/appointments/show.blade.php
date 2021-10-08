@@ -65,9 +65,9 @@
                                 <li>
                                     <h5>Total Due: <span class="text-right">@currency($appointment->tindakan->sum('nominal') + $pajak)</span></h5>
                                 </li>
-                                <li>Perawat: <span data-toggle="modal" data-target="#perawatModal" id="perawat">{{ $appointment->perawat->name }}
+                                <li>Perawat: <span data-toggle="modal" data-target="#perawatModal" id="perawat">{{ $appointment->perawat->name ?? '-' }}
                                     </span></li>
-                                <li>Office boy: <span data-toggle="modal" data-target="#obModal" id="ob">{{ $appointment->ob->name }}</span></li>
+                                <li>Office boy: <span data-toggle="modal" data-target="#obModal" id="ob">{{ $appointment->ob->name ?? '-' }}</span></li>
                                 <li>Resepsionis: <span>{{ $appointment->resepsionis->name }}</span></li>
                                 <li>Address: <span>{{ $appointment->cabang->alamat }}</span></li>
                             </ul>
@@ -295,7 +295,7 @@
                         <select name="perawat_id" id="perawat" class="form-control">
                             <option disabled selected>-- Pilih Perawat --</option>
                             @foreach($perawat as $prwt)
-                            <option {{ $appointment->perawat->id == $prwt->id ? 'selected' : '' }} value="{{ $prwt->id }}">{{ $prwt->name }}</option>
+                            <option {{ $appointment->perawat->id ?? 1 == $prwt->id ? 'selected' : '' }} value="{{ $prwt->id }}">{{ $prwt->name }}</option>
                             @endforeach
                         </select>
                     </div>
@@ -327,7 +327,7 @@
                         <select name="ob_id" id="ob" class="form-control">
                             <option disabled selected>-- Pilih Office Boy --</option>
                             @foreach($office as $ob)
-                            <option {{ $appointment->ob->id == $ob->id ? 'selected' : '' }} value="{{ $ob->id }}">{{ $ob->name }}</option>
+                            <option {{ $appointment->ob->id ?? 1 == $ob->id ? 'selected' : '' }} value="{{ $ob->id }}">{{ $ob->name }}</option>
                             @endforeach
                         </select>
                     </div>
