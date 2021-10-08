@@ -15,6 +15,13 @@
     <small class="text-danger">{{ $message }}</small>
     @enderror
 </div>
+<div class="form-group">
+    <label for="description">Description</label>
+    <textarea name="description" id="description" class="form-control">{{ $product->description ?? '' }}</textarea>
+    @error('description')
+    <small class="text-danger">{{ $message }}</small>
+    @enderror
+</div>
 
 <div class="m-t-20 text-center">
     <button type="submit" class="btn btn-primary submit-btn"><i class="fa fa-save"></i> Save</button>

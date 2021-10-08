@@ -25,6 +25,7 @@
                         <th>No</th>
                         <th>Kode Service</th>
                         <th>Nama</th>
+                        <th>Description</th>
                         <th>Durasi</th>
                         <th>Type</th>
                         <th>Action</th>
@@ -37,6 +38,7 @@
                         <td>{{ $loop->iteration }}</td>
                         <td>{{ $service->kode_barang }}</td>
                         <td>{{ $service->nama_barang }}</td>
+                        <td>{{ $service->description }}</td>
                         <td>{{ $service->durasi }}</td>
                         <td>{{ $service->type }}</td>
                         <td>
