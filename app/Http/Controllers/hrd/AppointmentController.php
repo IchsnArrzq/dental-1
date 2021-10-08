@@ -5,6 +5,7 @@ namespace App\Http\Controllers\hrd;
 use App\Booking;
 use App\Http\Controllers\Controller;
 use App\Images;
+use App\Tindakan;
 use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -18,8 +19,16 @@ class AppointmentController extends Controller
      */
     public function index()
     {
+        $resign = User::whereHas('roles', function($data){
+            return $data->where('name','dokter');
+        })->where('is_active',0)->pluck('id');
+
+        // dd($resign);
+        $tindakan = Tindakan::whereIn('dokter_id', $resign)->where('status',0)->get()->count();
+
         return view('hrd.appointments.index',[
-            'booking' => Booking::get()
+            'booking' => Booking::get(),
+            'tindakan' => $tindakan
         ]);
     }
 
@@ -103,5 +112,17 @@ class AppointmentController extends Controller
     {
         $images = Images::findOrFail($id);
         return Storage::download($images->image);
+    }
+    public function resign()
+    {
+        $resign = User::whereHas('roles', function($data){
+            return $data->where('name','dokter');
+        })->where('is_active',0)->pluck('id');
+
+        $tindakan = Tindakan::whereIn('dokter_id', $resign)->where('status',0)->get();
+
+        return view('hrd.appointments.resign',[
+            'tindakan' => $tindakan,
+        ]);
     }
 }
