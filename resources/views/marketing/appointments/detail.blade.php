@@ -126,7 +126,7 @@
                                 </div>
                                 <div class="col-md-12">
                                     <div class="form-group">
-                                        <label>elTax <span class="text-regular">(10%)</span></label>
+                                        <label>elTax <span class="text-regular" id="the_ppn">{{ auth()->user()->cabang->ppn }}%</span></label>
                                         <input type="text" id="tax" readonly class="form-control">
                                     </div>
                                 </div>
@@ -153,7 +153,7 @@
     </div>
     </div>
 </form>
-
+<input type="hidden" id="ppn" value="{{ auth()->user()->cabang->ppn }}">
 
 <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.12.6/js/standalone/selectize.min.js" integrity="sha256-+C0A5Ilqmu4QcSPxrlGpaZxJ04VjsRjKu+G82kl5UJk=" crossorigin="anonymous"></script>
@@ -294,8 +294,10 @@
             let ele = coll[i]
             total += parseInt(ele.value)
         }
+        
+        let ppn = document.getElementById('ppn').value
         sub_total.value = total
-        tax.value = (10 / 100) * sub_total.value
+        tax.value = (ppn / 100) * sub_total.value
         total_all.value = parseInt(tax.value) + parseInt(sub_total.value)
         rupiah()
     }

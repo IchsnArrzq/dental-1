@@ -4,6 +4,9 @@
 <div class="row">
     <div class="col-md-12">
         <div class="card shadow">
+            <div class="card-header">
+                <a href="{{ url()->previous() }}" class="btn btn-info">Back</a>
+            </div>
             <div class="card-body">
                 <div class="table-responsive">
                     <table class="table table-bordered">

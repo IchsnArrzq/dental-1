@@ -21,14 +21,14 @@ class AppointmentController extends Controller
     {
         $resign = User::whereHas('roles', function($data){
             return $data->where('name','dokter');
-        })->where('is_active',0)->pluck('id');
+        })->where('is_active',2)->pluck('id');
 
-        // dd($resign);
-        $tindakan = Tindakan::whereIn('dokter_id', $resign)->where('status',0)->get()->count();
+        $count = Tindakan::whereIn('dokter_id', $resign)->where('status',0)->get()->count();
+        $tindakan = Tindakan::get();
 
         return view('hrd.appointments.index',[
-            'booking' => Booking::get(),
-            'tindakan' => $tindakan
+            'tindakan' => $tindakan,
+            'count' => $count
         ]);
     }
 
@@ -117,7 +117,7 @@ class AppointmentController extends Controller
     {
         $resign = User::whereHas('roles', function($data){
             return $data->where('name','dokter');
-        })->where('is_active',0)->pluck('id');
+        })->where('is_active',2)->pluck('id');
 
         $tindakan = Tindakan::whereIn('dokter_id', $resign)->where('status',0)->get();
 
