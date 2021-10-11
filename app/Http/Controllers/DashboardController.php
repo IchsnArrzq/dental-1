@@ -114,8 +114,17 @@ class DashboardController extends Controller
         }
 
         if(auth()->user()->hasRole('hrd')){
-            return view('dashboard.index',[
+            $doctor = User::whereHas('roles', function($data){
+                return $data->where('name', 'dokter');
+            })->where('is_active',1)->get()->count();
 
+            $appointment = Booking::where('status_kedatangan_id','!=',4)->get()->count();
+
+            $tindakan = Tindakan::where('status',0)->get()->count();
+            return view('dashboard.index',[
+                'doctor' => $doctor,
+                'appointment' => $appointment,
+                'tindakan' => $tindakan
             ]);
         }
 
