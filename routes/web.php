@@ -219,9 +219,8 @@ Route::middleware('auth')->group(function () {
             Route::resource('appointments', 'AppointmentController');
 
             
-
-            Route::get('report', 'ReportController@index')->name('report.index');
-
+            Route::get('report/perpindahan/pasien' ,'ReportController@perpindahan')->name('report.perpindahan.pasien');
+            Route::post('report/perpindahan/pasien' ,'ReportController@perpindahan')->name('report.perpindahan.pasien');
         });
 
 
