@@ -7,6 +7,6 @@
         <a href="{{ route('hrd.appointments.index') }}"><i class="fa fa-table"></i> <span>Appointment</span></a>
     </li>
     <li class="{{ (request()->is('hrd/report*')) ? 'active' : '' }}">
-        <a href="{{ route('hrd.report.index') }}"><i class="fa fa-book" aria-hidden="true"></i> <span>Report</span></a>
+        <a href="{{ route('hrd.report.perpindahan.pasien') }}"><i class="fa fa-book" aria-hidden="true"></i> <span>Report</span></a>
     </li>
 </ul>
