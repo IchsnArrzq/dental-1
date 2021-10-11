@@ -60,7 +60,7 @@
                                     <div class="d-flex justify-content-start">
                                         <h5>
                                             <a href="#" class="avatar"><img src="{{ asset('/storage/' . $data->pasien->pict) }}" alt=""></a>
-                                            {{ $data->pasien->nama }} - {{ (int)Carbon\Carbon::now()->format('Y') - (int)Carbon\Carbon::parse(substr($data->pasien->ttl, -10))->format('Y') }} Tahun
+                                            {{ $data->pasien->nama }} - {{ (int)Carbon\Carbon::now()->format('Y') - (int)Carbon\Carbon::parse($data->pasien->tgl_lahir)->format('Y') }} Tahun
                                             <h5>
                                     </div>
                                 </th>
