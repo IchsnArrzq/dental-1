@@ -45,6 +45,7 @@
                         <td>@currency($payments->sum('change'))</td>
                         <td>@currency($payments->sum('dibayar'))</td>
                         <td></td>
+                        <td>@currency($payments->sum('disc_vouc'))</td>
                         <td></td>
                         <td>@currency($payments->sum('nominal'))</td>
                     </tr>

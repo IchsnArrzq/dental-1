@@ -28,7 +28,7 @@
                         <th>Min Trx</th>
                         <th>Min or Per</th>
                         <th>Nominal</th>
-                        <th>Persentase</th>
+                        <th>Per (%)</th>
                         <th>Kuota</th>
                         <th>Action</th>
                     </tr>
@@ -44,8 +44,19 @@
                         <td>@currency($voucher->min_transaksi)</td>
                         <td>{{ $voucher->type }}</td>
                         <td>@currency($voucher->nominal)</td>
-                        <td>{{ $voucher->persentase }}</td>
-                        <td>{{ $voucher->kuota }}</td>
+                        <td>{{ $voucher->persentase }}%</td>
+                        <td>
+                            @if($voucher->is_active == 1)
+                            <span class="custom-badge status-green d-flex justify-content-between">
+                                Available
+                                <span>{{ $voucher->kuota }}</span>
+                            </span>
+                            @else
+                            <span class="custom-badge status-red d-flex justify-content-center text-center">
+                                Used
+                            </span>
+                            @endif
+                        </td>
                         <td>
                             @can('voucher-edit')
                             <a href="{{ route('admin.voucher.edit', $voucher->id) }}" class="btn btn-sm btn-info"><i class="fa fa-edit"></i></a>
