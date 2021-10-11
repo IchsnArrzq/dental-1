@@ -90,8 +90,8 @@ Route::middleware('auth')->group(function () {
             Route::resource('komisi', 'KomisiController');
 
             // Route Master Dokter
+            Route::get('dokter/resign/{id}','DokterController@resign')->name('dokter.resign');
             Route::resource('dokter', 'DokterController');
-
             // Route Master Ruangan
             Route::get('ruangan/{cabang:id}/create', 'RuanganController@create');
             Route::resource('ruangan', 'RuanganController');
