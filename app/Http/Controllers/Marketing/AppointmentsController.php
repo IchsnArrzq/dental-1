@@ -101,7 +101,7 @@ class AppointmentsController extends Controller
                     foreach ($wtf as $row) {
                         foreach ($row->tindakan as $data) {
                             if ($data->item->type) {
-                                if ($data->booking->dokter->is_active) {
+                                if ($data->booking->dokter->is_active == 1) {
                                     if ($data->booking->dokter->name != User::find($form['dokter_id'])->name) {
                                         DB::rollBack();
                                         return redirect('/dashboard')->with('error', 'Tidak bisa booking karena service bertype lanjutan, harus dokter yang sama!');
