@@ -29,6 +29,7 @@
                         <th>Min or Per</th>
                         <th>Nominal</th>
                         <th>Persentase</th>
+                        <th>Kuota</th>
                         <th>Action</th>
                     </tr>
                 </thead>
@@ -44,6 +45,7 @@
                         <td>{{ $voucher->type }}</td>
                         <td>@currency($voucher->nominal)</td>
                         <td>{{ $voucher->persentase }}</td>
+                        <td>{{ $voucher->kuota }}</td>
                         <td>
                             @can('voucher-edit')
                             <a href="{{ route('admin.voucher.edit', $voucher->id) }}" class="btn btn-sm btn-info"><i class="fa fa-edit"></i></a>

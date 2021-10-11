@@ -32,10 +32,7 @@ class VoucherController extends Controller
     {
         abort_unless(\Gate::allows('voucher-create'), 403);
 
-        for ($i = 0; $i <= request('jml_voc'); $i++) {
-            Voucher::create($request->all());
-        }
-
+        Voucher::create($request->all());
 
         return redirect()->route('admin.voucher.index')->with('success', 'Voucher has been added');
     }

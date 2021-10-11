@@ -182,7 +182,7 @@
                                     <form action="{{ route('resepsionis.appointments.bayar') }}" method="post">
                                         @csrf
                                         <input type="hidden" name="booking_id" value="{{ $appointment->id }}" id="booking_id">
-                                        <input type="hidden" name="nominal" value="{{ $rincians->sum('dibayar') >= $total ? 0 : $total - $rincians->sum('dibayar') + $pajak }}" id="nml">
+                                        <input type="hidden" name="nominal" value="{{ $rincians->sum('dibayar') >= $total ? 0 : $total - $rincians->sum('dibayar') + $pajak - $rincians->sum('disc_vouc') }}" id="nml">
                                         <input type="hidden" name="bayar" value="" id="bayar">
                                         <input type="hidden" name="kembali" value="0" id="kembali">
                                         <input type="hidden" name="voucher_id" value="0" id="voucher_id">
@@ -409,6 +409,7 @@
                         $("#voucher").append(`<span class="text-danger">*` + result.message + `</span>`)
                     } else {
                         if (result.status) {
+                            console.log(result.sisa)
                             $(".sisa").empty().append(`<h5><s class="text-muted">Rp. ` + $("#nominal").val() + `</s> Rp. ` + result.sisa + `</h5>`);
                             $("#nominal").val(result.sisa)
                             $("#voucher").append(`<span class="text-success">*` + result.message + `</span>`)

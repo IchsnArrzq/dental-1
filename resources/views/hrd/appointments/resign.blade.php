@@ -38,7 +38,7 @@
                                 <td>
                                     <ul class="list-unstyled">
                                         <li>
-                                            @if($book->booking->status)
+                                            @if($book->status)
                                             <span class="custom-badge status-green">{{ $book->item->nama_barang }} - {{ $book->dokter->name }}</span>
                                             @else
                                             <span class="custom-badge status-red">{{ $book->item->nama_barang }} - {{ $book->dokter->name }}</span>

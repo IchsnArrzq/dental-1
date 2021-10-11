@@ -30,7 +30,8 @@ class StoreVoucherRequest extends FormRequest
             'min_transaksi' => 'required',
             'nominal' => 'required',
             'type' => 'required',
-            'persentase' => 'required'
+            'persentase' => 'required',
+            'kuota' => 'required'
         ];
     }
     public function messages()
@@ -43,6 +44,7 @@ class StoreVoucherRequest extends FormRequest
             'nominal.required' => 'The nominal field is required.',
             'type.required' => 'Select the type.',
             'persentase.required' => 'The Percentage field is required.',
+            'kuota.required' => 'The Kuota field is required.',
             'kode_voucher.unique' => 'The kode voucher has already been taken.'
         ];
     }

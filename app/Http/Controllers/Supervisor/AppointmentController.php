@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Booking;
 use App\Payment;
 use App\RincianPembayaran;
+use App\Tindakan;
 use App\User;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
@@ -25,6 +26,7 @@ class AppointmentController extends Controller
             ->join('cabangs', 'bookings.cabang_id', '=', 'cabangs.id')
             ->join('status_pasiens', 'bookings.status_kedatangan_id', '=', 'status_pasiens.id')
             ->select('bookings.id', 'bookings.no_booking', 'bookings.created_at', 'bookings.jam_status', 'bookings.jam_selesai', 'status_pasiens.status', 'status_pasiens.warna', 'customers.nama as pasien', 'users.name as dokter', 'cabangs.nama as cabang')
+            ->latest()
             ->get();
 
         return datatables()
@@ -41,7 +43,20 @@ class AppointmentController extends Controller
             ->editColumn('waktu', function ($data) {
                 return Carbon::parse($data->jam_status)->format('H.i') . ' - ' . Carbon::parse($data->jam_selesai)->format('H.i');
             })
-            ->rawColumns(['status', 'booking'])
+            ->editColumn('tindakan', function ($data) {
+                $tindakan = Tindakan::where('booking_id', $data->id)->where('status', 0)->count();
+                if ($tindakan > 0) {
+                    return '<span class="custom-badge status-red d-flex justify-content-between">
+                    Belum
+                    <span>' . $tindakan . '</span>
+                </span>';
+                } else {
+                    return '<span class="custom-badge status-green">
+                    Selesai
+                </span>';
+                }
+            })
+            ->rawColumns(['status', 'booking', 'tindakan'])
             ->make(true);
     }
 

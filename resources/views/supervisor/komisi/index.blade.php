@@ -18,11 +18,11 @@
                         <th>No</th>
                         <th>No Appointment</th>
                         <th>Nama Pasien</th>
-                        <!-- <th>Dokter</th> -->
                         <th>Cabang</th>
                         <th>Tanggal Booking</th>
                         <th>Waktu Booking</th>
-                        <th>Status</th>
+                        <th>Status Kedatangan</th>
+                        <th>Status Tindakan</th>
                     </tr>
                 </thead>
 
@@ -61,10 +61,6 @@
                     data: 'pasien',
                     name: 'pasien'
                 },
-                // {
-                //     data: 'dokter',
-                //     name: 'dokter'
-                // },
                 {
                     data: 'cabang',
                     name: 'cabang'
@@ -80,6 +76,10 @@
                 {
                     data: 'status',
                     name: 'status'
+                },
+                {
+                    data: 'tindakan',
+                    name: 'tindakan'
                 },
             ]
         })

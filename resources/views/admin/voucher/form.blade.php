@@ -1,21 +1,20 @@
 <div class="form-group">
     <label for="kode_voucher">Kode Voucher</label>
-    <input type="text" name="kode_voucher" id="kode_voucher" class="form-control" value="{{ $voucher->kode_voucher }}">
+    <input type="text" name="kode_voucher" id="kode_voucher" class="form-control" value="{{ $voucher->kode_voucher }}" disabled>
 
     @error('kode_voucher')
     <small class="text-danger">{{ $message }}</small>
     @enderror
 </div>
-@if(!$voucher->id)
-<div class="form-group">
-    <label for="jml_voc">Total Generate</label>
-    <input type="number" name="jml_voc" id="jml_voc" class="form-control" value="1">
 
-    @error('jml_voc')
+<div class="form-group">
+    <label for="kuota">Kuota</label>
+    <input type="number" name="kuota" id="kuota" class="form-control" value="{{ $voucher->kuota ?? '1' }}">
+
+    @error('kuota')
     <small class="text-danger">{{ $message }}</small>
     @enderror
 </div>
-@endif
 
 <div class="row">
     <div class="col-md-6">

@@ -19,7 +19,7 @@ class AppointmentController extends Controller
 {
     public function index()
     {
-        $appointments = Booking::with('pasien', 'dokter', 'cabang', 'kedatangan')->where('cabang_id', auth()->user()->cabang_id)->get();
+        $appointments = Booking::with('pasien', 'dokter', 'cabang', 'kedatangan')->where('cabang_id', auth()->user()->cabang_id)->latest()->get();
         return view('resepsionis.appointments.index', compact('appointments'));
     }
 
@@ -133,7 +133,12 @@ class AppointmentController extends Controller
 
         if (request('voucher_id') != 0) {
             $voucher = Voucher::find(request('voucher_id'));
-            $voucher->update(['is_active' => 0]);
+            $kuota = $voucher->kuota - 1;
+            if ($kuota == 0) {
+                $voucher->update(['is_active' => 0]);
+            } else {
+                $voucher->update(['kuota' => $kuota]);
+            }
         }
 
         RincianPembayaran::create([
@@ -172,7 +177,7 @@ class AppointmentController extends Controller
             $this->dokter($rincian, $booking, $tindakan);
         }
 
-        return back();
+        return back()->with('success', 'Payment successfully');
     }
 
     public function dokter($dokter, $booking, $tindakan)

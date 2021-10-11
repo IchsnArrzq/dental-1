@@ -6,6 +6,7 @@ use App\Booking;
 use App\Http\Controllers\Controller;
 use App\RincianKomisi;
 use App\RincianPembayaran;
+use App\Tindakan;
 use App\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -26,6 +27,7 @@ class KomisiController extends Controller
             ->join('cabangs', 'bookings.cabang_id', '=', 'cabangs.id')
             ->join('status_pasiens', 'bookings.status_kedatangan_id', '=', 'status_pasiens.id')
             ->select('bookings.id', 'bookings.no_booking', 'bookings.created_at', 'bookings.jam_status', 'bookings.jam_selesai', 'status_pasiens.status', 'status_pasiens.warna', 'customers.nama as pasien', 'users.name as dokter', 'cabangs.nama as cabang')
+            ->latest()
             ->get();
 
         return datatables()
@@ -42,7 +44,20 @@ class KomisiController extends Controller
             ->editColumn('waktu', function ($data) {
                 return Carbon::parse($data->jam_status)->format('H.i') . ' - ' . Carbon::parse($data->jam_selesai)->format('H.i');
             })
-            ->rawColumns(['status', 'booking'])
+            ->editColumn('tindakan', function ($data) {
+                $tindakan = Tindakan::where('booking_id', $data->id)->where('status', 0)->count();
+                if ($tindakan > 0) {
+                    return '<span class="custom-badge status-red d-flex justify-content-between">
+                    Belum
+                    <span>' . $tindakan . '</span>
+                </span>';
+                } else {
+                    return '<span class="custom-badge status-green">
+                    Selesai
+                </span>';
+                }
+            })
+            ->rawColumns(['status', 'booking', 'tindakan'])
             ->make(true);
     }
 
@@ -63,7 +78,7 @@ class KomisiController extends Controller
     {
         $komisi->update(['nominal_komisi' => request('nominal_komisi')]);
 
-        return redirect()->route('supervisor.komisi.show', $komisi->booking->id);
+        return redirect()->route('supervisor.komisi.show', $komisi->booking->id)->with('success', 'Komisi berhasil diupdate');
     }
 
     public function change(RincianKomisi $komisi)
@@ -83,12 +98,12 @@ class KomisiController extends Controller
             'is_active' => 1,
         ]);
 
-        return redirect()->route('supervisor.komisi.show', $komisi->booking->id);
+        return redirect()->route('supervisor.komisi.show', $komisi->booking->id)->with('success', 'Komisi berhasil diubah');
     }
 
     public function destroy(RincianKomisi $komisi)
     {
         $komisi->delete();
-        return back();
+        return back()->with('success', 'Komisi berhasil didelete');
     }
 }

@@ -41,7 +41,7 @@
                     <div class="form-group row">
                         <div class="col-md-6">
                             <label for="nominal_komisi">Nominal Komisi</label>
-                            <input type="number" name="nominal_komisi" id="nominal_komisi" class="form-control" value="{{ $komisi->nominal_komisi }}" readonly>
+                            <input type="number" name="nominal_komisi" id="nominal_komisi" class="form-control" value="{{ $komisi->nominal_komisi }}" data-nominal="{{ $komisi->nominal_komisi }}">
 
                             @error('nominal_komisi')
                             <small class="text-danger">{{ $message }}</small>
@@ -50,7 +50,7 @@
 
                         <div class="col-md-6">
                             <label for="nominal_komisi">Nominal Komisi</label>
-                            <input type="number" name="nominal_komisi_baru" id="nominal_komisi_baru" class="form-control" value="0" readonly>
+                            <input type="number" name="nominal_komisi_baru" id="nominal_komisi_baru" class="form-control" value="0">
 
                             @error('nominal_komisi')
                             <small class="text-danger">{{ $message }}</small>
@@ -68,13 +68,20 @@
 
 @section('footer')
 <script>
-    $("#dokter_baru_id").on('change', function() {
-        let nominal = parseInt($("#nominal_komisi").val());
-        let nominal_baru = nominal * 70 / 100;
+    $("#nominal_komisi_baru").on('keyup', function() {
+        let nominal = parseInt($("#nominal_komisi").attr('data-nominal'));
+        let nominal_baru = parseInt($(this).val());
+        let total = nominal - nominal_baru;
 
-        $("#nominal_komisi_baru").val(nominal_baru)
-        $("#nominal_komisi").val(nominal - nominal_baru)
-
+        $("#nominal_komisi").val(total)
     });
+    // $("#dokter_baru_id").on('change', function() {
+    //     let nominal = parseInt($("#nominal_komisi").val());
+    //     let nominal_baru = nominal * 70 / 100;
+
+    //     $("#nominal_komisi_baru").val(nominal_baru)
+    //     $("#nominal_komisi").val(nominal - nominal_baru)
+
+    // });
 </script>
 @stop
