@@ -11,6 +11,7 @@
                         <th>Change</th>
                         <th>Dibayar</th>
                         <th>Potongan</th>
+                        <th>Diskon</th>
                         <th>Kasir</th>
                         <th>Nominal</th>
                     </tr>
@@ -29,6 +30,7 @@
                         <td>@currency($pay->change)</td>
                         <td>@currency($pay->dibayar)</td>
                         <td>@currency($pay->biaya_kartu) ({{ $pay->payment->potongan }}%)</td>
+                        <td>@currency($pay->disc_vouc)</td>
                         <td>{{ $pay->kasir->name }}</td>
                         <td>@currency($pay->nominal)</td>
                     </tr>

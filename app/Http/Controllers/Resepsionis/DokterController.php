@@ -18,7 +18,7 @@ class DokterController extends Controller
 {
     public function index()
     {
-        $dokter = User::with('cabang')->where('cabang_id', auth()->user()->cabang_id)->role('dokter')->get();
+        $dokter = User::with('cabang')->where('is_active', 1)->where('cabang_id', auth()->user()->cabang_id)->role('dokter')->get();
 
         return view('resepsionis.dokter.index', compact('dokter'));
     }

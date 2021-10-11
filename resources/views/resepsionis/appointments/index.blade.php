@@ -40,14 +40,14 @@
                         <td><span class="custom-badge status-{{ $appointment->kedatangan->warna}}">{{ $appointment->kedatangan->status}}</span></td>
                         <td>
                             @if($appointment->tindakan->where('status', 0)->count() > 0)
-                            <button class="custom-badge status-red d-flex justify-content-between">
+                            <span class="custom-badge status-red d-flex justify-content-between">
                                 Belum
                                 <span>{{ $appointment->tindakan->where('status', 0)->count() }}</span>
-                            </button>
+                            </span>
                             @else
-                            <button class="custom-badge status-green">
+                            <span class="custom-badge status-green">
                                 Selesai
-                            </button>
+                            </span>
                             @endif
                         </td>
                     </tr>

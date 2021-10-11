@@ -172,7 +172,7 @@ class ReportController extends Controller
         $from = '';
         $to = '';
         if (request()->method() == 'POST') {
-            $this->validate(request(),[
+            $this->validate(request(), [
                 'cabang' => 'required',
                 'from' => 'required',
                 'to' => 'required'
