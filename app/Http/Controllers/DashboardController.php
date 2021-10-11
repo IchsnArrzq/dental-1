@@ -78,7 +78,7 @@ class DashboardController extends Controller
             $total_pasien = Customer::where('cabang_id', auth()->user()->cabang_id)->get()->count();
 
             $finish = Booking::where('dokter_id', auth()->user()->id)->whereDate('tanggal_status', $now)->where('status_kedatangan_id', 4)->orderBy('jam_status', 'asc')->get();
-            $pending = Booking::where('dokter_id', auth()->user()->id)->whereDate('tanggal_status', $now)->where('status_kedatangan_id', '!=', 4)->orderBy('jam_status', 'asc')->get();
+            $pending = Booking::where('dokter_id', auth()->user()->id)->whereDate('tanggal_status', $now)->where('status_kedatangan_id',3)->orderBy('jam_status', 'asc')->get();
             $appointment_count = Booking::where('dokter_id', auth()->user()->id)->whereDate('tanggal_status', $now)->get()->count();
             // $appointment_pending = Booking::where('dokter_id', auth()->user()->id)->whereDate('tanggal_status', $now)->where('status_kedatangan_id','!=',3)->get()->count();
             $appointment_pending = Tindakan::whereHas('booking', function ($qr) use ($now) {
