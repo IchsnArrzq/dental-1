@@ -145,10 +145,13 @@
                                                 <td class="text-right">@currency($rincians->sum('dibayar') + $rincians->sum('disc_vouc'))</td>
                                             </tr>
                                             <tr>
-                                                @if($rincians->sum('dibayar') >= $total)
+                                                @php
+                                                $sisa = $rincians->sum('dibayar') + $rincians->sum('disc_vouc')
+                                                @endphp
+                                                @if($sisa >= $total)
                                                 <th>Kembali:</th>
                                                 <td class="text-right text-primary sisa" id="@currency($rincians->sum('kembali') - $total)">
-                                                    <h5 class="tsisa">@currency($rincians->sum('dibayar') - ($total+ $pajak))</h5>
+                                                    <h5 class="tsisa">@currency($rincians->sum('dibayar') + $rincians->sum('disc_vouc') - ($total+ $pajak))</h5>
                                                 </td>
                                                 @else
                                                 <th>Sisa Pembayaran:</th>

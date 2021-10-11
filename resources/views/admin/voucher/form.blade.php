@@ -1,6 +1,17 @@
+@if($voucher->id == null)
 <div class="form-group">
+    <label for="random">Generate Random</label><br>
+    <input type="checkbox" name="random" id="random" value="0">
+
+    @error('random')
+    <small class="text-danger">{{ $message }}</small>
+    @enderror
+</div>
+@endif
+
+<div class="form-group kode">
     <label for="kode_voucher">Kode Voucher</label>
-    <input type="text" name="kode_voucher" id="kode_voucher" class="form-control" value="{{ $voucher->kode_voucher }}" disabled>
+    <input type="text" name="kode_voucher" id="kode_voucher" class="form-control" value="{{ $voucher->kode_voucher }}" {{ $voucher->kode_voucher != null ? 'disabled' : ''}}>
 
     @error('kode_voucher')
     <small class="text-danger">{{ $message }}</small>
@@ -8,7 +19,7 @@
 </div>
 
 <div class="form-group">
-    <label for="kuota">Kuota</label>
+    <label for="kuota" class="kuota">Kuota</label>
     <input type="number" name="kuota" id="kuota" class="form-control" value="{{ $voucher->kuota ?? '1' }}">
 
     @error('kuota')

@@ -106,6 +106,15 @@
                 <td style="text-align: end;">@rp($rincian->nominal) </td>
             </tr>
             @endforeach
+            @if($appointment->rincian->sum('disc_vouc') > 0)
+            <tr>
+                <td>
+                    Voucher
+                </td>
+                <td> </td>
+                <td style="text-align: end;">@rp($appointment->rincian->sum('disc_vouc')) </td>
+            </tr>
+            @endif
             <tr>
                 <td>Sisa Pembayaran</td>
                 <td></td>
