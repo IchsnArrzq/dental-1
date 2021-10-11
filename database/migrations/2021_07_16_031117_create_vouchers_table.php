@@ -22,6 +22,7 @@ class CreateVouchersTable extends Migration
             $table->bigInteger('nominal');
             $table->enum('type', ['Per', 'Min']);
             $table->integer('persentase');
+            $table->integer('kuota');
             $table->integer('is_active')->default();
             $table->timestamps();
         });

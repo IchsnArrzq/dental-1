@@ -16,10 +16,13 @@ class CreateTindakansTable extends Migration
         Schema::create('tindakans', function (Blueprint $table) {
             $table->id();
             $table->foreignId('booking_id');
-            $table->integer('tindakan');
+            $table->foreignId('tindakan_id');
+            $table->foreignId('dokter_id');
             $table->integer('durasi');
-            $table->integer('dokter');
             $table->integer('nominal');
+            $table->integer('qty');
+            $table->integer('status');
+            $table->time('waktu_selesai');
             $table->timestamps();
         });
     }
