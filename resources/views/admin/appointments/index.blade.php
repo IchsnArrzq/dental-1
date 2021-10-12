@@ -42,7 +42,7 @@
                             <form action="{{ route('admin.appointments.destroy', $appointment->id) }}" method="post">
                                 @method('delete')
                                 @csrf
-                                <button type="submit" onclick="return confirm('anda yakin ingin menghapus data')" class="btn btn-outline-danger">Delete</button>
+                                <button type="submit" disabled onclick="return confirm('anda yakin ingin menghapus data')" class="btn btn-outline-danger">Delete</button>
                             </form>
                         </td>
                     </tr>

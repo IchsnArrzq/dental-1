@@ -22,7 +22,7 @@ class DoctorController extends Controller
         return view('marketing.doctor.index', [
             'doctors' => User::whereHas('roles', function ($qr) {
                 return $qr->where('name', 'dokter');
-            })->get()
+            })->where('cabang_id',auth()->user()->cabang_id)->get()
         ]);
     }
 

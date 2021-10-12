@@ -21,7 +21,7 @@ class AppointmentsController extends Controller
     public function index()
     {
         return view('marketing.appointments.index', [
-            'booking' => Booking::get()
+            'booking' => Booking::where('cabang_id',auth()->user()->cabang_id)->get()
         ]);
     }
 

@@ -25,7 +25,8 @@ class PatientController extends Controller
      */
     public function index()
     {
-        $patients = Customer::with('user', 'cabang')->get();
+        $cabang = auth()->user()->cabang_id;
+        $patients = Customer::with('user', 'cabang')->where('cabang_id',$cabang)->get();
         return view('marketing.patient.index', compact('patients'));
     }
 
@@ -49,9 +50,10 @@ class PatientController extends Controller
      */
     public function store(Request $request)
     {
+        
         $kode_cabang = auth()->user()->cabang->kode_cabang;
         
-        $resource = Customer::withTrashed()->get();
+        $resource = Customer::withTrashed()->where('cabang_id', auth()->user()->cabang_id)->get();
         $wallet = [];
         foreach ($resource as $data) {
             array_push($wallet, str_replace($kode_cabang, '', $data->rekam_medik));
