@@ -162,11 +162,7 @@ Route::middleware('auth')->group(function () {
             })->name('dashboard');
             Route::get('appointments/ajax', 'AppointmentsController@ajax');
             Route::resource('/appointments', 'AppointmentsController');
-<<<<<<< HEAD
-            Route::get('pasien/ajax', 'PatientController@ajaxPasien');
-=======
             Route::get('patient/restore', 'PatientController@restore')->name('patient.restore');
->>>>>>> 0ed4166f13bc20c8d95e32264ca57b9931681474
             Route::resource('/patient', 'PatientController');
             Route::resource('/doctor', 'DoctorController');
             Route::resource('/pricelist', 'PricelistController');
