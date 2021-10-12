@@ -15,7 +15,9 @@
     @endcan
     @can('appointment-access')
     <li class="{{ request()->is('resepsionis/appointments*') ? 'active' : '' }}">
-        <a href="{{ route('resepsionis.appointments.index') }}"><i class="fa fa-calendar"></i> <span>Appointments</span></a>
+        <a href="{{ route('resepsionis.appointments.index') }}"><i class="fa fa-calendar"></i> <span>Appointments</span>
+            <!-- <span class="badge badge-danger"></span> -->
+        </a>
     </li>
     @endcan
     @can('appointment-access')

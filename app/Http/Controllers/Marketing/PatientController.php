@@ -25,8 +25,33 @@ class PatientController extends Controller
      */
     public function index()
     {
+        return view('marketing.patient.index');
+    }
+
+    public function ajaxPasien()
+    {
         $patients = Customer::with('user', 'cabang')->get();
-        return view('marketing.patient.index', compact('patients'));
+
+        return datatables()
+            ->of($patients)
+            ->editColumn('nama', function ($pasien) {
+                return $pasien->nama;
+            })
+            ->editColumn('action', function ($pasien) {
+                return '<a href="' . route('admin.pasien.edit', $pasien->id) . '" class="btn btn-sm btn-info mr-1"><i class="fa fa-edit"></i></a>' . '<a href="javascript:void(0)" class="btn btn-sm btn-danger delete"><i class="fa fa-trash"></i></a>';
+            })
+            ->editColumn('ttl', function ($pasien) {
+                return $pasien->tempat_lahir . ', ' . $pasien->tgl_lahir;
+            })
+            ->editColumn('marketing', function ($pasien) {
+                return $pasien->user->name;
+            })
+            ->editColumn('cabang', function ($pasien) {
+                return $pasien->cabang->nama;
+            })
+            ->addIndexColumn()
+            ->rawColumns(['nama', 'action'])
+            ->make(true);
     }
 
     /**

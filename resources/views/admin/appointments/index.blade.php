@@ -12,7 +12,7 @@
 <div class="row">
     <div class="col-md-12">
         <div class="table-responsive">
-            <table class="table table-striped custom-table datatable">
+            <table class="table table-striped custom-table" width="100%" id="appointments">
                 <thead>
                     <tr>
                         <th>No</th>
@@ -22,30 +22,68 @@
                         <th>Cabang</th>
                         <th>Tanggal Booking</th>
                         <th>Waktu Booking</th>
-                        <th>Status</th>
-                        <th>Action</th>
+                        <th>Status Kedatangan</th>
+                        <!-- <th>Action</th> -->
                     </tr>
                 </thead>
 
                 <tbody>
-                    @foreach($appointments as $appointment)
-                    <tr>
-                        <td>{{ $loop->iteration }}</td>
-                        <td><a href="{{ route('admin.appointments.show', $appointment->id) }}">{{ $appointment->no_booking }}</a></td>
-                        <td>{{ $appointment->pasien->nama }}</td>
-                        <td>{{ $appointment->dokter->name }}</td>
-                        <td>{{ $appointment->cabang->nama }}</td>
-                        <td>{{ \Carbon\Carbon::parse($appointment->tanggal_status)->format('d M Y') }}</td>
-                        <td>{{ $appointment->jam_status }} - {{ $appointment->jam_selesai }}</td>
-                        <td><span class="custom-badge status-{{ $appointment->is_active == 1 ? 'green' : 'red'}}">{{ $appointment->is_active == 1 ? 'Active' : 'Inactive'}}</span></td>
-                        <td>
-                            <a href=""></a>
-                        </td>
-                    </tr>
-                    @endforeach
                 </tbody>
             </table>
         </div>
     </div>
 </div>
+@stop
+
+@section('footer')
+<script>
+    $(document).ready(function() {
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        });
+        $('#appointments').DataTable({
+            processing: true,
+            serverSide: true,
+            ajax: {
+                url: '/admin/appointments/ajax',
+                get: 'get'
+            },
+            columns: [{
+                    data: 'DT_RowIndex',
+                    name: 'DT_RowIndex'
+                },
+                {
+                    data: 'no_booking',
+                    name: 'no_booking'
+                },
+                {
+                    data: 'pasien',
+                    name: 'pasien'
+                },
+                {
+                    data: 'dokter',
+                    name: 'dokter'
+                },
+                {
+                    data: 'cabang',
+                    name: 'cabang'
+                },
+                {
+                    data: 'tgl_status',
+                    name: 'tgl_status'
+                },
+                {
+                    data: 'waktu',
+                    name: 'waktu'
+                },
+                {
+                    data: 'kedatangan',
+                    name: 'kedatangan'
+                },
+            ]
+        })
+    })
+</script>
 @stop

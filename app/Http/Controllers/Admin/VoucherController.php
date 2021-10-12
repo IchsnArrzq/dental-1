@@ -8,6 +8,7 @@ use App\Http\Requests\UpdateVoucherRequest;
 use App\RincianPembayaran;
 use App\Voucher;
 use Carbon\Carbon;
+use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 
 class VoucherController extends Controller
@@ -29,9 +30,18 @@ class VoucherController extends Controller
         return view('admin.voucher.create', compact('voucher'));
     }
 
-    public function store(StoreVoucherRequest $request)
+    public function store(Request $request)
     {
         abort_unless(\Gate::allows('voucher-create'), 403);
+        request()->validate([
+            'tgl_mulai' => 'required',
+            'tgl_akhir' => 'required',
+            'min_transaksi' => 'required',
+            'nominal' => 'required',
+            'type' => 'required',
+            'persentase' => 'required',
+        ]);
+
         $attr = request()->all();
 
         if (request('random') == 1) {

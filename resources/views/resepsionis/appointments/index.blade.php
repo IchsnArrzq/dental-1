@@ -12,7 +12,7 @@
 <div class="row">
     <div class="col-md-12">
         <div class="table-responsive">
-            <table class="table table-striped custom-table datatable">
+            <table class="table table-striped custom-table" width="100%" id="appointments">
                 <thead>
                     <tr>
                         <th>No</th>
@@ -28,33 +28,66 @@
                 </thead>
 
                 <tbody>
-                    @foreach($appointments as $appointment)
-                    <tr>
-                        <td>{{ $loop->iteration }}</td>
-                        <td><a href="{{ route('resepsionis.appointments.show', $appointment->id) }}">{{ $appointment->no_booking }}</a></td>
-                        <td>{{ $appointment->pasien->nama }}</td>
-                        <td>{{ $appointment->dokter->name }}</td>
-                        <td>{{ $appointment->cabang->nama }}</td>
-                        <td>{{ \Carbon\Carbon::parse($appointment->tanggal_status)->format('d/m/Y') }}</td>
-                        <td>{{ \Carbon\Carbon::parse($appointment->jam_status)->format('H.i')  }} - {{ \Carbon\Carbon::parse($appointment->jam_selesai)->format('H.i')  }}</td>
-                        <td><span class="custom-badge status-{{ $appointment->kedatangan->warna}}">{{ $appointment->kedatangan->status}}</span></td>
-                        <td>
-                            @if($appointment->tindakan->where('status', 0)->count() > 0)
-                            <span class="custom-badge status-red d-flex justify-content-between">
-                                Belum
-                                <span>{{ $appointment->tindakan->where('status', 0)->count() }}</span>
-                            </span>
-                            @else
-                            <span class="custom-badge status-green">
-                                Selesai
-                            </span>
-                            @endif
-                        </td>
-                    </tr>
-                    @endforeach
                 </tbody>
             </table>
         </div>
     </div>
 </div>
+@stop
+
+@section('footer')
+<script>
+    $(document).ready(function() {
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        });
+        $('#appointments').DataTable({
+            processing: true,
+            serverSide: true,
+            ajax: {
+                url: '/resepsionis/appointments/ajax',
+                get: 'get'
+            },
+            columns: [{
+                    data: 'DT_RowIndex',
+                    name: 'DT_RowIndex'
+                },
+                {
+                    data: 'no_booking',
+                    name: 'no_booking'
+                },
+                {
+                    data: 'pasien',
+                    name: 'pasien'
+                },
+                {
+                    data: 'dokter',
+                    name: 'dokter'
+                },
+                {
+                    data: 'cabang',
+                    name: 'cabang'
+                },
+                {
+                    data: 'tgl_status',
+                    name: 'tgl_status'
+                },
+                {
+                    data: 'waktu',
+                    name: 'waktu'
+                },
+                {
+                    data: 'kedatangan',
+                    name: 'kedatangan'
+                },
+                {
+                    data: 'tindakan',
+                    name: 'tindakan'
+                },
+            ]
+        })
+    })
+</script>
 @stop

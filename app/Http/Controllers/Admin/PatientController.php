@@ -13,8 +13,33 @@ class PatientController extends Controller
 {
     public function index()
     {
+        return view('admin.patient.index');
+    }
+
+    public function ajaxPasien()
+    {
         $patients = Customer::with('user', 'cabang')->get();
-        return view('admin.patient.index', compact('patients'));
+
+        return datatables()
+            ->of($patients)
+            ->editColumn('nama', function ($pasien) {
+                return '<a href="' . route('admin.pasien.image', $pasien->id) . '">' . $pasien->nama . '</a>';
+            })
+            ->editColumn('action', function ($pasien) {
+                return '<a href="' . route('admin.pasien.odontogram', $pasien->id) . '" class="btn btn-sm mt-1 btn-success mr-1"><i class="fa fa-plus-square"></i></a>' . '<a href="' . route('admin.pasien.edit', $pasien->id) . '" class="btn btn-sm mt-1 btn-info"><i class="fa fa-edit"></i></a>' .  ' <a href="' . route('admin.pasien.history', $pasien->id) . '" class="btn btn-sm mt-1 btn-secondary"><i class="fa fa-money"></i></a>';
+            })
+            ->editColumn('ttl', function ($pasien) {
+                return $pasien->tempat_lahir . ', ' . $pasien->tgl_lahir;
+            })
+            ->editColumn('marketing', function ($pasien) {
+                return $pasien->user->name;
+            })
+            ->editColumn('cabang', function ($pasien) {
+                return $pasien->cabang->nama;
+            })
+            ->addIndexColumn()
+            ->rawColumns(['nama', 'action'])
+            ->make(true);
     }
 
     public function create()

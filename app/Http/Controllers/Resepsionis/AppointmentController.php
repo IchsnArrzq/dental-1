@@ -13,14 +13,62 @@ use Carbon\Carbon;
 use App\Http\Controllers\Controller;
 use App\Images;
 use App\User;
+use Exception;
 use Illuminate\Http\Request;
 
 class AppointmentController extends Controller
 {
     public function index()
     {
+        return view('resepsionis.appointments.index');
+    }
+
+    public function ajax()
+    {
         $appointments = Booking::with('pasien', 'dokter', 'cabang', 'kedatangan')->where('cabang_id', auth()->user()->cabang_id)->latest()->get();
-        return view('resepsionis.appointments.index', compact('appointments'));
+
+        return datatables()
+            ->of($appointments)
+            ->editColumn('no_booking', function ($appointment) {
+                return '<a href="' . route('marketing.appointments.show', $appointment->id) . '">' . $appointment->no_booking . '</a>';
+            })
+            ->editColumn('pasien', function ($appointment) {
+                return $appointment->pasien->nama;
+            })
+            ->editColumn('dokter', function ($appointment) {
+                return $appointment->dokter->name;
+            })
+            ->editColumn('umur', function ($appointment) {
+                return Carbon::now()->format('Y') - Carbon::parse($appointment->pasien->tgl_lahir)->format('Y');
+            })
+            ->editColumn('cabang', function ($appointment) {
+                return $appointment->cabang->nama;
+            })
+            ->editColumn('tgl_status', function ($appointment) {
+                return Carbon::parse($appointment->tgl_status)->format('d/m/Y');
+            })
+            ->editColumn('waktu', function ($appointment) {
+                return Carbon::parse($appointment->jam_status)->format('H:i') . ' - ' . Carbon::parse($appointment->jam_selesai)->format('H:i');
+            })
+            ->editColumn('kedatangan', function ($appointment) {
+                return '<span class="custom-badge status-' . $appointment->kedatangan->warna . '">' . $appointment->kedatangan->status . '</span>';
+            })
+            ->editColumn('tindakan', function ($data) {
+                $tindakan = Tindakan::where('booking_id', $data->id)->where('status', 0)->count();
+                if ($tindakan > 0) {
+                    return '<span class="custom-badge status-red d-flex justify-content-between">
+                    Belum
+                    <span>' . $tindakan . '</span>
+                </span>';
+                } else {
+                    return '<span class="custom-badge status-green">
+                    Selesai
+                </span>';
+                }
+            })
+            ->addIndexColumn()
+            ->rawColumns(['no_booking', 'kedatangan', 'tindakan'])
+            ->make(true);
     }
 
     public function show(Booking $appointment)
@@ -155,6 +203,8 @@ class AppointmentController extends Controller
             'is_active' => 1
         ]);
 
+        $komisi = $request->input('bayar') + $request->input('disc_vouc');
+
         $rincian = RincianPembayaran::where('booking_id', $booking->id)->where('is_active', 1)->get();
 
         $pajak = $booking->tindakan->sum('nominal') * $booking->cabang->ppn / 100;
@@ -168,13 +218,13 @@ class AppointmentController extends Controller
         $tindakan = Tindakan::where('booking_id', $booking->id)->where('status', 1)->get();
 
         if ($booking->kedatangan->id == 4 && $booking->status_pembayaran == 1) {
-            $this->dokter($rincian, $booking, $tindakan);
+            $this->dokter($komisi, $booking, $tindakan);
             $this->resepsionis($rincian, $booking);
             $this->marketing($rincian, $booking);
             $this->ob($rincian, $booking);
             $this->perawat($rincian, $booking);
         } else {
-            $this->dokter($rincian, $booking, $tindakan);
+            $this->dokter($komisi, $booking, $tindakan);
         }
 
         return back()->with('success', 'Payment successfully');
@@ -187,7 +237,7 @@ class AppointmentController extends Controller
         RincianKomisi::create([
             'booking_id' => $booking->id,
             'user_id' => $booking->dokter_id,
-            'nominal_komisi' => ($dokter->sum('nominal') * $komisi->persentase) / 100,
+            'nominal_komisi' => ($dokter * $komisi->persentase) / 100,
             'is_active' => 1
         ]);
         // foreach ($tindakan as $tndkn) {
@@ -202,7 +252,7 @@ class AppointmentController extends Controller
             RincianKomisi::create([
                 'booking_id' => $booking->id,
                 'user_id' => $booking->resepsionis_id,
-                'nominal_komisi' => ($resepsionis->sum('nominal') * $komisi->persentase) / 100,
+                'nominal_komisi' => ($resepsionis->sum('nominal') + $resepsionis->sum('disc_vouc')) * $komisi->persentase / 100,
                 'is_active' => 1
             ]);
         }
@@ -215,7 +265,7 @@ class AppointmentController extends Controller
             RincianKomisi::create([
                 'booking_id' => $booking->id,
                 'user_id' => $booking->marketing_id,
-                'nominal_komisi' => ($marketing->sum('nominal') * $komisi->persentase) / 100,
+                'nominal_komisi' => ($marketing->sum('nominal') + $marketing->sum('disc_vouc')) * $komisi->persentase / 100,
                 'is_active' => 1
             ]);
         }
@@ -228,7 +278,7 @@ class AppointmentController extends Controller
             RincianKomisi::create([
                 'booking_id' => $booking->id,
                 'user_id' => $booking->ob_id,
-                'nominal_komisi' => ($ob->sum('nominal') * $komisi->persentase) / 100,
+                'nominal_komisi' => ($ob->sum('nominal') + $ob->sum('disc_vouc')) * $komisi->persentase / 100,
                 'is_active' => 1
             ]);
         }
@@ -241,7 +291,7 @@ class AppointmentController extends Controller
             RincianKomisi::create([
                 'booking_id' => $booking->id,
                 'user_id' => $booking->perawat_id,
-                'nominal_komisi' => ($perawat->sum('nominal') * $komisi->persentase) / 100,
+                'nominal_komisi' => ($perawat->sum('nominal') + $perawat->sum('disc_vouc')) * $komisi->persentase / 100,
                 'is_active' => 1
             ]);
         }
@@ -297,16 +347,19 @@ class AppointmentController extends Controller
 
     public function upload()
     {
-        $booking = Booking::findOrFail(request('id'));
-        $images = request()->file('images');
-        $req = request()->validate(
+        request()->validate(
             [
-                'images' => 'required'
+                'images' => 'required',
+                'images.*' => 'image|mimes:jpeg,png,jpg',
             ],
             [
-                'images.required' => 'Choose image.',
+                'images.required' => 'Please choose image.',
+                'images.mimes' => 'The type must be a jpg, jpeg, png, gif.',
             ]
         );
+
+        $booking = Booking::findOrFail(request('id'));
+        $images = request()->file('images');
 
         if (request()->file('images')) {
             foreach ($images as $image) {

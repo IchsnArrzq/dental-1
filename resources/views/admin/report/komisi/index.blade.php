@@ -31,7 +31,7 @@
                 </div>
             </div>
         </div>
-        {{ $from }}
+
         <div class="col-sm-6 col-md-3">
             <div class="form-group form-focus">
                 <label class="focus-label">To</label>

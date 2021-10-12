@@ -1,3 +1,12 @@
+@error('images')
+<div class="alert alert-danger alert-dismissible fade show" role="alert">
+    <b>Error, </b> {{ $message }}
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">×</span>
+    </button>
+</div>
+@enderror
+
 <div class="row">
     <div class="col-md-6 col-sm-6 col-lg-6 col-xl-4">
         <div class="dash-widget">
@@ -77,9 +86,9 @@
                             <div class="float-left user-img m-r-10">
                                 <a href="#" class="avatar"><img src="{{ asset('/storage/' . $dtng->pasien->pict) }}" alt="" class="w-40 rounded-circle"><span class="status online"></span></a>
                             </div>
+                            <span class="contact-name">{{ $dtng->pasien->nama }}</span>
                             <div class="contact-info">
-                                <span class="contact-name text-ellipsis">{{ $dtng->pasien->nama }}</span>
-                                <span class="contact-date">MBBS, MD</span>
+                                <!-- <span class="contact-date">MBBS, MD</span> -->
                             </div>
                         </div>
                         <div class="form">
@@ -112,10 +121,7 @@
                             <div class="float-left user-img m-r-10">
                                 <a href="#" class="avatar"><img src="{{asset('/storage/' . $prk->pasien->pict)}}" alt="" class="w-40 rounded-circle"><span class="status away"></span></a>
                             </div>
-                            <div class="contact-info">
-                                <span class="contact-name text-ellipsis">{{ $prk->pasien->nama }}</span>
-                                <span class="contact-date">MBBS, MD</span>
-                            </div>
+                            <span class="contact-name">{{ $prk->pasien->nama }}</span>
                         </div>
                         <div class="form">
                             <!-- <form action="{{ route('resepsionis.appointments.status') }}" method="post" class="d-inline stts">
@@ -154,10 +160,6 @@
                     <div class="form-group">
                         <label for="image">Foto</label>
                         <input type="file" name="images[]" id="image" class="form-control-file" multiple>
-
-                        @error('images')
-                        <small class="text-danger">{{ $message }}</small>
-                        @enderror
                     </div>
                 </div>
                 <div class="modal-footer">

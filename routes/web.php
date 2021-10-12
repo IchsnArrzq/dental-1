@@ -70,6 +70,7 @@ Route::middleware('auth')->group(function () {
             Route::get('pasien/{customer:id}/history', 'PatientController@history')->name('pasien.history');
             Route::get('pasien/{customer:id}/image', 'PatientController@image')->name('pasien.image');
             Route::post('pasien/{customer:id}/storefisik', 'PatientController@storefisik')->name('pasien.storefisik');
+            Route::get('pasien/ajax', 'PatientController@ajaxPasien');
             Route::resource('pasien', 'PatientController');
 
 
@@ -90,7 +91,7 @@ Route::middleware('auth')->group(function () {
             Route::resource('komisi', 'KomisiController');
 
             // Route Master Dokter
-            Route::get('dokter/resign/{id}','DokterController@resign')->name('dokter.resign');
+            Route::get('dokter/resign/{id}', 'DokterController@resign')->name('dokter.resign');
             Route::resource('dokter', 'DokterController');
             // Route Master Ruangan
             Route::get('ruangan/{cabang:id}/create', 'RuanganController@create');
@@ -100,6 +101,7 @@ Route::middleware('auth')->group(function () {
             Route::post('appointments/voucher', 'AppointmentController@voucher')->name('appointments.voucher');
             Route::post('appointments/bayar', 'AppointmentController@bayar')->name('appointments.bayar');
             Route::get('appointments/print/{id}', 'AppointmentController@print')->name('appointments.print');
+            Route::get('appointments/ajax', 'AppointmentController@ajax');
             Route::resource('appointments', 'AppointmentController');
 
             // Route Report
@@ -158,7 +160,9 @@ Route::middleware('auth')->group(function () {
             Route::get('/', function () {
                 return redirect()->route('dashboard');
             })->name('dashboard');
+            Route::get('appointments/ajax', 'AppointmentsController@ajax');
             Route::resource('/appointments', 'AppointmentsController');
+            Route::get('pasien/ajax', 'PatientController@ajaxPasien');
             Route::resource('/patient', 'PatientController');
             Route::resource('/doctor', 'DoctorController');
             Route::resource('/pricelist', 'PricelistController');
@@ -190,6 +194,7 @@ Route::middleware('auth')->group(function () {
             Route::post('appointments/voucher', 'AppointmentController@voucher')->name('appointments.voucher');
             Route::post('appointments/bayar', 'AppointmentController@bayar')->name('appointments.bayar');
             Route::get('appointments/print/{id}', 'AppointmentController@print')->name('appointments.print');
+            Route::get('appointments/ajax', 'AppointmentController@ajax');
             Route::resource('appointments', 'AppointmentController');
 
             // Route Dokter
@@ -223,9 +228,9 @@ Route::middleware('auth')->group(function () {
             Route::get('appointments/download/{id}', 'AppointmentController@download')->name('appointments.download');
             Route::resource('appointments', 'AppointmentController');
 
-            
-            Route::get('report/perpindahan/pasien' ,'ReportController@perpindahan')->name('report.perpindahan.pasien');
-            Route::post('report/perpindahan/pasien' ,'ReportController@perpindahan')->name('report.perpindahan.pasien');
+
+            Route::get('report/perpindahan/pasien', 'ReportController@perpindahan')->name('report.perpindahan.pasien');
+            Route::post('report/perpindahan/pasien', 'ReportController@perpindahan')->name('report.perpindahan.pasien');
         });
 
 
