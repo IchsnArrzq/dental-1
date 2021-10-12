@@ -16,6 +16,7 @@ class CreateStatusPasiensTable extends Migration
         Schema::create('status_pasiens', function (Blueprint $table) {
             $table->id();
             $table->string('status');
+            $table->string('warna');
             $table->integer('is_active')->default(1);
             $table->timestamps();
         });

@@ -2,23 +2,24 @@
 
 namespace App\Http\Controllers\Supervisor;
 
-use App\Http\Controllers\Controller;
 use App\Booking;
-use App\Payment;
+use App\Http\Controllers\Controller;
+use App\RincianKomisi;
 use App\RincianPembayaran;
 use App\Tindakan;
 use App\User;
 use Carbon\Carbon;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
-class AppointmentController extends Controller
+class KomisiController extends Controller
 {
     public function index()
     {
-        return view('supervisor.appointments.index');
+        return view('supervisor.komisi.index');
     }
 
-    public function ajaxAppointment()
+    public function ajaxKomisi()
     {
         $appointments = DB::table('bookings')
             ->join('customers', 'bookings.customer_id', '=', 'customers.id')
@@ -32,7 +33,7 @@ class AppointmentController extends Controller
         return datatables()
             ->of($appointments)
             ->editColumn('booking', function ($data) {
-                return '<a href="' . route("supervisor.appointments.show", $data->id) . '">' . $data->no_booking . '</a>';
+                return '<a href="' . route("supervisor.komisi.show", $data->id) . '">' . $data->no_booking . '</a>';
             })
             ->editColumn('status', function ($data) {
                 return '<span class="custom-badge status-' . $data->warna . '">' . $data->status . '</span>';
@@ -60,30 +61,49 @@ class AppointmentController extends Controller
             ->make(true);
     }
 
-    public function show(Booking $appointment)
+    public function show(Booking $komisi)
     {
-        $appointment = Booking::with('pasien', 'dokter', 'cabang', 'perawat', 'resepsionis', 'rincian', 'tindakan')->where('id', $appointment->id)->first();
-        $rincians = RincianPembayaran::where('booking_id', $appointment->id)->where('is_active', 1)->get();
-        $rincians_hapus = RincianPembayaran::where('booking_id', $appointment->id)->where('is_active', 0)->get();
+        $appointment = Booking::with('pasien', 'dokter', 'cabang', 'perawat', 'resepsionis', 'rincian', 'tindakan')->where('id', $komisi->id)->first();
+        $rincians = RincianKomisi::where('booking_id', $komisi->id)->get();
 
-        return view('supervisor.appointments.show', compact('appointment', 'rincians', 'rincians_hapus'));
+        return view('supervisor.komisi.show', compact('appointment', 'rincians',));
     }
 
-    public function deleterincian()
+    public function edit(RincianKomisi $komisi)
     {
-        $rincian = RincianPembayaran::find(request('id'));
-        $rincian->update(['is_active' => 0]);
+        return view('supervisor.komisi.edit', compact('komisi',));
+    }
 
-        $booking = Booking::with('kedatangan', 'tindakan', 'cabang')->find($rincian->booking_id);
-        $pajak = $booking->tindakan->sum('nominal') * $booking->cabang->ppn / 100;
-        $tagihan = $booking->tindakan->sum('nominal') + $pajak;
-        $totalRincian = $rincian->sum('nominal') + $rincian->sum('disc_vouc');
+    public function update(RincianKomisi $komisi)
+    {
+        $komisi->update(['nominal_komisi' => request('nominal_komisi')]);
 
-        // if ($totalRincian == $tagihan) {
-        $booking->update(['status_pembayaran' => 0]);
-        $booking->komisi()->delete();
-        // }
+        return redirect()->route('supervisor.komisi.show', $komisi->booking->id)->with('success', 'Komisi berhasil diupdate');
+    }
 
-        return back()->with('success', 'Riwayat Pembayaran berhasil dihapus');
+    public function change(RincianKomisi $komisi)
+    {
+        $dokter = User::role('dokter')->where('cabang_id', $komisi->booking->cabang_id)->get();
+
+        return view('supervisor.komisi.change', compact('komisi', 'dokter'));
+    }
+
+    public function updatechange(RincianKomisi $komisi)
+    {
+        $komisi->update(['nominal_komisi' => request('nominal_komisi')]);
+        RincianKomisi::create([
+            'booking_id' => $komisi->booking->id,
+            'user_id' => request('dokter_baru_id'),
+            'nominal_komisi' => request('nominal_komisi_baru'),
+            'is_active' => 1,
+        ]);
+
+        return redirect()->route('supervisor.komisi.show', $komisi->booking->id)->with('success', 'Komisi berhasil diubah');
+    }
+
+    public function destroy(RincianKomisi $komisi)
+    {
+        $komisi->delete();
+        return back()->with('success', 'Komisi berhasil didelete');
     }
 }

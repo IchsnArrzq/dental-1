@@ -18,8 +18,39 @@ class AppointmentController extends Controller
 {
     public function index()
     {
+        return view('admin.appointments.index');
+    }
+
+    public function ajax()
+    {
         $appointments = Booking::with('pasien', 'dokter', 'cabang')->get();
-        return view('admin.appointments.index', compact('appointments'));
+
+        return datatables()
+            ->of($appointments)
+            ->editColumn('no_booking', function ($appointment) {
+                return '<a href="' . route('admin.appointments.show', $appointment->id) . '">' . $appointment->no_booking . '</a>';
+            })
+            ->editColumn('pasien', function ($appointment) {
+                return $appointment->pasien->nama;
+            })
+            ->editColumn('dokter', function ($appointment) {
+                return $appointment->dokter->name;
+            })
+            ->editColumn('cabang', function ($appointment) {
+                return $appointment->cabang->nama;
+            })
+            ->editColumn('tgl_status', function ($appointment) {
+                return Carbon::parse($appointment->tgl_status)->format('d/m/Y');
+            })
+            ->editColumn('waktu', function ($appointment) {
+                return Carbon::parse($appointment->jam_status)->format('H:i') . ' - ' . Carbon::parse($appointment->jam_selesai)->format('H:i');
+            })
+            ->editColumn('kedatangan', function ($appointment) {
+                return '<span class="custom-badge status-' . $appointment->kedatangan->warna . '">' . $appointment->kedatangan->status . '</span>';
+            })
+            ->addIndexColumn()
+            ->rawColumns(['no_booking', 'kedatangan'])
+            ->make(true);
     }
 
     public function create()

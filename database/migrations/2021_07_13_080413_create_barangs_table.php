@@ -17,7 +17,9 @@ class CreateBarangsTable extends Migration
             $table->id();
             $table->string('kode_barang');
             $table->string('nama_barang');
+            $table->text('description');
             $table->enum('jenis', ['barang', 'service']);
+            $table->integer('durasi');
             $table->integer('is_active')->default(1);
             $table->text('description');
             $table->integer('type')->nullable();

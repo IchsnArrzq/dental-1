@@ -17,10 +17,11 @@
                         <th style="text-align: center;">No</th>
                         <th>Tanggal</th>
                         <th>Cabang</th>
-                        <th>Metode Pembayaran</th>
+                        <th>Metode</th>
                         <th>Change</th>
                         <th>Dibayar</th>
                         <th>Potongan</th>
+                        <th>Diskon</th>
                         <th>Kasir</th>
                         <th>Nominal</th>
                     </tr>
@@ -39,6 +40,7 @@
                         <td>@currency($pay->change)</td>
                         <td>@currency($pay->dibayar)</td>
                         <td>{{ $pay->payment->potongan }}%</td>
+                        <td>@currency($pay->disc_vouc)</td>
                         <td>{{ $pay->kasir->name }}</td>
                         <td>@currency($pay->nominal)</td>
                     </tr>
@@ -53,6 +55,7 @@
                         <td>@currency($payments->sum('change'))</td>
                         <td>@currency($payments->sum('dibayar'))</td>
                         <td></td>
+                        <td>@currency($payments->sum('disc_vouc'))</td>
                         <td></td>
                         <td>@currency($payments->sum('nominal'))</td>
                     </tr>

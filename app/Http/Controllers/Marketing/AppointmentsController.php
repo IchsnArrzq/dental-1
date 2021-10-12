@@ -20,9 +20,55 @@ class AppointmentsController extends Controller
      */
     public function index()
     {
-        return view('marketing.appointments.index', [
-            'booking' => Booking::where('cabang_id',auth()->user()->cabang_id)->get()
-        ]);
+        return view('marketing.appointments.index');
+    }
+
+    public function ajax()
+    {
+        $appointments = Booking::with('pasien', 'dokter', 'cabang')->where('cabang_id',auth()->user()->cabang_id)->get();
+
+        return datatables()
+            ->of($appointments)
+            ->editColumn('no_booking', function ($appointment) {
+                return '<a href="' . route('marketing.appointments.show', $appointment->id) . '"><span class="badge badge-success">' . $appointment->no_booking . '</span></a>';
+            })
+            ->editColumn('pasien', function ($appointment) {
+                return $appointment->pasien->nama;
+            })
+            ->editColumn('dokter', function ($appointment) {
+                return $appointment->dokter->name;
+            })
+            ->editColumn('umur', function ($appointment) {
+                return Carbon::now()->format('Y') - Carbon::parse($appointment->pasien->tgl_lahir)->format('Y');
+            })
+            ->editColumn('cabang', function ($appointment) {
+                return $appointment->cabang->nama;
+            })
+            ->editColumn('tgl_status', function ($appointment) {
+                return Carbon::parse($appointment->tgl_status)->format('d/m/Y');
+            })
+            ->editColumn('waktu', function ($appointment) {
+                return Carbon::parse($appointment->jam_status)->format('H:i') . ' - ' . Carbon::parse($appointment->jam_selesai)->format('H:i');
+            })
+            ->editColumn('kedatangan', function ($appointment) {
+                return '<span class="custom-badge status-' . $appointment->kedatangan->warna . '">' . $appointment->kedatangan->status . '</span>';
+            })
+            ->editColumn('tindakan', function ($data) {
+                $tindakan = Tindakan::where('booking_id', $data->id)->where('status', 0)->count();
+                if ($tindakan > 0) {
+                    return '<span class="custom-badge status-red d-flex justify-content-between">
+                    Belum
+                    <span>' . $tindakan . '</span>
+                </span>';
+                } else {
+                    return '<span class="custom-badge status-green">
+                    Selesai
+                </span>';
+                }
+            })
+            ->addIndexColumn()
+            ->rawColumns(['no_booking', 'kedatangan', 'tindakan'])
+            ->make(true);
     }
 
     /**

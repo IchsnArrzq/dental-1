@@ -19,14 +19,14 @@ class AppointmentController extends Controller
      */
     public function index()
     {
-        $resign = User::whereHas('roles', function($data){
-            return $data->where('name','dokter');
-        })->where('is_active',2)->pluck('id');
+        $resign = User::whereHas('roles', function ($data) {
+            return $data->where('name', 'dokter');
+        })->where('is_active', 2)->pluck('id');
 
-        $count = Tindakan::whereIn('dokter_id', $resign)->where('status',0)->get()->count();
+        $count = Tindakan::whereIn('dokter_id', $resign)->where('status', 0)->get()->count();
         $tindakan = Tindakan::get();
 
-        return view('hrd.appointments.index',[
+        return view('hrd.appointments.index', [
             'tindakan' => $tindakan,
             'count' => $count
         ]);
@@ -62,8 +62,8 @@ class AppointmentController extends Controller
     public function show($id)
     {
         $booking = Booking::findOrFail($id);
-        
-        return view('hrd.appointments.show',[
+
+        return view('hrd.appointments.show', [
             'booking' => $booking->images
         ]);
     }
@@ -77,10 +77,10 @@ class AppointmentController extends Controller
     public function edit($id)
     {
         $booking = Booking::findOrFail($id);
-        $dokter = User::whereHas('roles', function($data){
+        $dokter = User::whereHas('roles', function ($data) {
             $data->where('name', 'dokter');
         })->get();
-        return view('hrd.appointments.edit',[
+        return view('hrd.appointments.edit', [
             'booking' => $booking,
             'dokter' => $dokter
         ]);
@@ -115,13 +115,13 @@ class AppointmentController extends Controller
     }
     public function resign()
     {
-        $resign = User::whereHas('roles', function($data){
-            return $data->where('name','dokter');
-        })->where('is_active',2)->pluck('id');
+        $resign = User::whereHas('roles', function ($data) {
+            return $data->where('name', 'dokter');
+        })->where('is_active', 2)->pluck('id');
 
-        $tindakan = Tindakan::whereIn('dokter_id', $resign)->where('status',0)->get();
+        $tindakan = Tindakan::whereIn('dokter_id', $resign)->where('status', 0)->get();
 
-        return view('hrd.appointments.resign',[
+        return view('hrd.appointments.resign', [
             'tindakan' => $tindakan,
         ]);
     }

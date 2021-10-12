@@ -65,9 +65,12 @@
                                 <li>
                                     <h5>Total Due: <span class="text-right">@currency($appointment->tindakan->sum('nominal') + $pajak)</span></h5>
                                 </li>
-                                <li>Perawat: <span data-toggle="modal" data-target="#perawatModal" id="perawat">{{ $appointment->perawat->name }}
-                                    </span></li>
-                                <li>Office boy: <span data-toggle="modal" data-target="#obModal" id="ob">{{ $appointment->ob->name }}</span></li>
+                                <li>Perawat:
+                                    <span data-toggle="modal" data-target="#perawatModal" id="perawat">
+                                        {{ $appointment->perawat->name ?? '*Pilih Perawat' }}
+                                    </span>
+                                </li>
+                                <li>Office boy: <span data-toggle="modal" data-target="#obModal" id="ob">{{ $appointment->ob->name ?? '*Pilih OB' }}</span></li>
                                 <li>Resepsionis: <span>{{ $appointment->resepsionis->name }}</span></li>
                                 <li>Address: <span>{{ $appointment->cabang->alamat }}</span></li>
                             </ul>
@@ -95,7 +98,7 @@
                             <tr>
                                 <td>{{ $loop->iteration }}</td>
                                 <td>{{ $tindakan->item->nama_barang }}</td>
-                                <td>Lorem ipsum dolor sit amet, consectetur adipiscing elit</td>
+                                <td>{{ $tindakan->item->description }}</td>
                                 @php
                                 $harga = \App\HargaProdukCabang::where('barang_id', $tindakan->item->id)->where('cabang_id', auth()->user()->cabang_id)->first();
                                 @endphp
@@ -145,10 +148,20 @@
                                                 <td class="text-right">@currency($rincians->sum('dibayar') + $rincians->sum('disc_vouc'))</td>
                                             </tr>
                                             <tr>
-                                                <th>Sisa Pembayaran:</th>
-                                                <td class="text-right text-primary sisa" id="@currency($total - $rincians->sum('dibayar') + $pajak)">
-                                                    <h5 class="tsisa">@currency($total - $rincians->sum('dibayar') + $pajak - $rincians->sum('disc_vouc'))</h5>
+                                                @php
+                                                $sisa = $rincians->sum('dibayar') + $rincians->sum('disc_vouc')
+                                                @endphp
+                                                @if($sisa >= $total)
+                                                <th>Kembali:</th>
+                                                <td class="text-right text-primary sisa" id="@currency($rincians->sum('kembali') - $total)">
+                                                    <h5 class="tsisa">@currency($rincians->sum('dibayar') + $rincians->sum('disc_vouc') - ($total+ $pajak))</h5>
                                                 </td>
+                                                @else
+                                                <th>Sisa Pembayaran:</th>
+                                                <td class="text-right text-primary sisa" id="@currency($total - $rincians->sum('nominal') + $pajak)">
+                                                    <h5 class="tsisa">@currency($total - $rincians->sum('nominal') + $pajak - $rincians->sum('disc_vouc'))</h5>
+                                                </td>
+                                                @endif
                                             </tr>
                                         </tbody>
                                     </table>
@@ -175,7 +188,7 @@
                                     <form action="{{ route('resepsionis.appointments.bayar') }}" method="post">
                                         @csrf
                                         <input type="hidden" name="booking_id" value="{{ $appointment->id }}" id="booking_id">
-                                        <input type="hidden" name="nominal" value="{{ $total - $rincians->sum('dibayar') + $pajak }}" id="nml">
+                                        <input type="hidden" name="nominal" value="{{ $rincians->sum('dibayar') >= $total ? 0 : $total - $rincians->sum('dibayar') + $pajak - $rincians->sum('disc_vouc') }}" id="nml">
                                         <input type="hidden" name="bayar" value="" id="bayar">
                                         <input type="hidden" name="kembali" value="0" id="kembali">
                                         <input type="hidden" name="voucher_id" value="0" id="voucher_id">
@@ -192,7 +205,13 @@
                                             <small class="text-danger">{{ $message }}</small>
                                             @enderror
                                         </td>
-                                        <td><input type="text" value="@rp($total - $rincians->sum('dibayar') + $pajak - $rincians->sum('disc_vouc'))" class="form-control" id="nominal"></td>
+                                        <td>
+                                            @if($rincians->sum('dibayar') >= $total)
+                                            <input type="text" value="@rp(0)" class="form-control" id="nominal">
+                                            @else
+                                            <input type="text" value="@rp($total - $rincians->sum('dibayar') + $pajak - $rincians->sum('disc_vouc'))" class="form-control" id="nominal">
+                                            @endif
+                                        </td>
                                         <td><input type="text" value="0" class="form-control" id="dibayar"></td>
                                         <td><input type="text" value="0" class="form-control" id="change" readonly></td>
                                         <td><input type="datetime" value="{{ \Carbon\Carbon::now()->format('Y-m-d H:i') }}" class="form-control" name="tanggal_pembayaran" id="tanggal_pembayaran" readonly></td>
@@ -239,6 +258,7 @@
                                     <td>Biaya Kartu</td>
                                     <td>Diskon</td>
                                     <td>Dibayar</td>
+                                    <td>Change</td>
                                 </tr>
                                 @foreach($rincians as $rincian)
                                 <tr>
@@ -251,6 +271,7 @@
                                     <td>@currency($rincian->biaya_kartu)</td>
                                     <td>@currency($rincian->disc_vouc)</td>
                                     <td>@currency($rincian->dibayar)</td>
+                                    <td>@currency($rincian->kembali)</td>
                                 </tr>
                                 @endforeach
                             </tbody>
@@ -280,7 +301,7 @@
                         <select name="perawat_id" id="perawat" class="form-control">
                             <option disabled selected>-- Pilih Perawat --</option>
                             @foreach($perawat as $prwt)
-                            <option {{ $appointment->perawat->id == $prwt->id ? 'selected' : '' }} value="{{ $prwt->id }}">{{ $prwt->name }}</option>
+                            <option {{ $appointment->perawat->id ?? 1 == $prwt->id ? 'selected' : '' }} value="{{ $prwt->id }}">{{ $prwt->name }}</option>
                             @endforeach
                         </select>
                     </div>
@@ -312,7 +333,7 @@
                         <select name="ob_id" id="ob" class="form-control">
                             <option disabled selected>-- Pilih Office Boy --</option>
                             @foreach($office as $ob)
-                            <option {{ $appointment->ob->id == $ob->id ? 'selected' : '' }} value="{{ $ob->id }}">{{ $ob->name }}</option>
+                            <option {{ $appointment->ob->id ?? 1 == $ob->id ? 'selected' : '' }} value="{{ $ob->id }}">{{ $ob->name }}</option>
                             @endforeach
                         </select>
                     </div>
@@ -346,6 +367,7 @@
 
             if (bayar >= nominal) {
                 $("#change").val(change)
+                $("#kembali").val(change)
 
                 var kmb = document.getElementById('change');
                 kmb.value = formatRupiah(kmb.value, "Rp. ")
@@ -393,6 +415,7 @@
                         $("#voucher").append(`<span class="text-danger">*` + result.message + `</span>`)
                     } else {
                         if (result.status) {
+                            console.log(result.sisa)
                             $(".sisa").empty().append(`<h5><s class="text-muted">Rp. ` + $("#nominal").val() + `</s> Rp. ` + result.sisa + `</h5>`);
                             $("#nominal").val(result.sisa)
                             $("#voucher").append(`<span class="text-success">*` + result.message + `</span>`)

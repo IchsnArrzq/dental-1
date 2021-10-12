@@ -18,8 +18,13 @@ class CreateRincianPembayaransTable extends Migration
             $table->foreignId('booking_id');
             $table->foreignId('kasir_id');
             $table->foreignId('payment_id');
+            $table->foreignId('voucher_id');
             $table->string('tanggal_pembayaran');
             $table->integer('nominal');
+            $table->integer('dibayar');
+            $table->integer('kembali');
+            $table->integer('disc_vouc');
+            $table->integer('biaya_kartu');
             $table->integer('is_active');
             $table->timestamps();
         });

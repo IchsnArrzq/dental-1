@@ -3,7 +3,7 @@
 @section('content')
 <div class="row">
     <div class="col-sm-5 col-4">
-        <h4 class="page-title">Invoice</h4>
+        <h4 class="page-title">Rincian Appointment</h4>
     </div>
     <div class="col-sm-7 col-8 text-right m-b-30">
         <div class="btn-group btn-group-sm">
@@ -83,6 +83,7 @@
                                 <th>DESCRIPTION</th>
                                 <th>UNIT COST</th>
                                 <th>QUANTITY</th>
+                                <th>DOKTER</th>
                                 <th>TOTAL</th>
                                 <th>STATUS</th>
                             </tr>
@@ -101,8 +102,9 @@
                                 @endphp
                                 <td>@currency($harga->harga)</td>
                                 <td>{{ $tindakan->qty }}</td>
+                                <td>{{ $tindakan->dokter->name }}</td>
                                 <td>@currency($harga->harga * $tindakan->qty)</td>
-                                <td><span class="custom-badge status-{{ $tindakan->status == 0 ? 'red' : 'green' }}">{{ $tindakan->status == 0 ? 'belum' : 'lunas' }}</span></td>
+                                <td><span class="custom-badge status-{{ $tindakan->status == 0 ? 'red' : 'green' }}">{{ $tindakan->status == 0 ? 'Belum' : 'Selesai' }}</span></td>
                             </tr>
                             @php
                             $total += $harga->harga * $tindakan->qty
@@ -157,75 +159,36 @@
                         </div>
                     </div>
                     <div class="invoice-info">
-                        <h5>Riwayat Pembayaran</h5>
+                        <h5>Rincian Komisi</h5>
 
                         <p></p>
-                        <table width="520" border="0" class="table">
-                            <tbody>
+                        <table width="520" border="0" class="table table-striped">
+                            <thead>
                                 <tr>
-                                    <td>No</td>
-                                    <td>Metode </td>
-                                    <td>Waktu </td>
-                                    <td>Cashier</td>
-                                    <td>Potongan</td>
-                                    <td>Nominal</td>
-                                    <td>Biaya Kartu</td>
-                                    <td>Diskon</td>
-                                    <td>Dibayar</td>
-                                    <td>Action</td>
+                                    <th>No</th>
+                                    <th>Tanggal</th>
+                                    <th>Nama Pegawai</th>
+                                    <th>Nominal </th>
+                                    <th>Action</th>
                                 </tr>
-                                @foreach($rincians as $rincian)
+                            </thead>
+
+                            <tbody>
+                                @foreach($rincians as $komisi)
                                 <tr>
                                     <td>{{ $loop->iteration }}</td>
-                                    <td>{{ $rincian->payment->nama_metode }}</td>
-                                    <td>{{ \Carbon\Carbon::parse($rincian->tanggal_pembayaran)->format('d/m/Y H:i') }}</td>
-                                    <td>{{ $rincian->kasir->name }}</td>
-                                    <td>{{ $rincian->payment->potongan }}%</td>
-                                    <td>@currency($rincian->nominal)</td>
-                                    <td>@currency($rincian->biaya_kartu)</td>
-                                    <td>@currency($rincian->disc_vouc)</td>
-                                    <td>@currency($rincian->dibayar)</td>
+                                    <td>{{ Carbon\Carbon::parse($komisi->created_at)->format('d/m/Y') }}</td>
+                                    <td>{{ $komisi->user->name }}</td>
+                                    <td>@currency($komisi->nominal_komisi)</td>
                                     <td>
-                                        <form action="{{ route('supervisor.appointments.deleterincian') }}" method="post" class="d-inline delete-form">
+                                        <a href="{{ route('supervisor.komisi.change', $komisi->id) }}" class="btn btn-sm btn-secondary">Change</a>
+                                        <a href="{{ route('supervisor.komisi.edit', $komisi->id) }}" class="btn btn-sm btn-success">Edit</a>
+                                        <form action="{{ route('supervisor.komisi.destroy', $komisi->id) }}" method="post" style="display: inline;" class="delete-form">
+                                            @method('DELETE')
                                             @csrf
-                                            <input type="hidden" name="id" value="{{ $rincian->id }}">
-                                            <button type="submit" class="btn btn-sm btn-danger delete-form">Delete</button>
+                                            <button type="submit" class="btn btn-sm btn-danger">Delete</button>
                                         </form>
                                     </td>
-                                </tr>
-                                @endforeach
-                            </tbody>
-                        </table>
-                    </div>
-                    <hr>
-                    <div class="invoice-info">
-                        <h5 class="text-danger">Riwayat Pembayaran Yang Sudah Terhapus</h5>
-
-                        <p></p>
-                        <table width="520" border="0" class="table">
-                            <tbody>
-                                <tr>
-                                    <td>No</td>
-                                    <td>Metode </td>
-                                    <td>Waktu </td>
-                                    <td>Cashier</td>
-                                    <td>Potongan</td>
-                                    <td>Nominal</td>
-                                    <td>Biaya Kartu</td>
-                                    <td>Diskon</td>
-                                    <td>Dibayar</td>
-                                </tr>
-                                @foreach($rincians_hapus as $rincian)
-                                <tr>
-                                    <td>{{ $loop->iteration }}</td>
-                                    <td>{{ $rincian->payment->nama_metode }}</td>
-                                    <td>{{ \Carbon\Carbon::parse($rincian->tanggal_pembayaran)->format('d/m/Y H:i') }}</td>
-                                    <td>{{ $rincian->kasir->name }}</td>
-                                    <td>{{ $rincian->payment->potongan }}%</td>
-                                    <td>@currency($rincian->nominal)</td>
-                                    <td>@currency($rincian->biaya_kartu)</td>
-                                    <td>@currency($rincian->disc_vouc)</td>
-                                    <td>@currency($rincian->dibayar)</td>
                                 </tr>
                                 @endforeach
                             </tbody>

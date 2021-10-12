@@ -78,7 +78,7 @@ class DashboardController extends Controller
             $total_pasien = Customer::where('cabang_id', auth()->user()->cabang_id)->get()->count();
 
             $finish = Booking::where('dokter_id', auth()->user()->id)->whereDate('tanggal_status', $now)->where('status_kedatangan_id', 4)->orderBy('jam_status', 'asc')->get();
-            $pending = Booking::where('dokter_id', auth()->user()->id)->whereDate('tanggal_status', $now)->where('status_kedatangan_id',3)->orderBy('jam_status', 'asc')->get();
+            $pending = Booking::where('dokter_id', auth()->user()->id)->whereDate('tanggal_status', $now)->where('status_kedatangan_id', 3)->orderBy('jam_status', 'asc')->get();
             $appointment_count = Booking::where('dokter_id', auth()->user()->id)->whereDate('tanggal_status', $now)->get()->count();
             // $appointment_pending = Booking::where('dokter_id', auth()->user()->id)->whereDate('tanggal_status', $now)->where('status_kedatangan_id','!=',3)->get()->count();
             $appointment_pending = Tindakan::whereHas('booking', function ($qr) use ($now) {
@@ -97,7 +97,7 @@ class DashboardController extends Controller
         if (auth()->user()->roles()->first()->name == 'marketing') {
             $dokter = User::whereHas('roles', function ($role) {
                 return $role->where('name', 'dokter');
-            })->where('cabang_id', auth()->user()->cabang_id)->where('is_active',1)->get();
+            })->where('cabang_id', auth()->user()->cabang_id)->where('is_active', 1)->get();
             $startdate = Carbon::parse(Carbon::now()->format('Y-m-d'));
             $enddate = Carbon::parse(Carbon::now()->endOfMonth()->format('Y-m-d'));
             $current = Carbon::now();
@@ -113,15 +113,15 @@ class DashboardController extends Controller
             ]);
         }
 
-        if(auth()->user()->hasRole('hrd')){
-            $doctor = User::whereHas('roles', function($data){
+        if (auth()->user()->hasRole('hrd')) {
+            $doctor = User::whereHas('roles', function ($data) {
                 return $data->where('name', 'dokter');
-            })->where('is_active',1)->get()->count();
+            })->where('is_active', 1)->get()->count();
 
-            $appointment = Booking::where('status_kedatangan_id','!=',4)->get()->count();
+            $appointment = Booking::where('status_kedatangan_id', '!=', 4)->get()->count();
 
-            $tindakan = Tindakan::where('status',0)->get()->count();
-            return view('dashboard.index',[
+            $tindakan = Tindakan::where('status', 0)->get()->count();
+            return view('dashboard.index', [
                 'doctor' => $doctor,
                 'appointment' => $appointment,
                 'tindakan' => $tindakan

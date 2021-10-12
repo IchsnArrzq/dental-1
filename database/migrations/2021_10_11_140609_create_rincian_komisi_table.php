@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateRekamMedisTable extends Migration
+class CreateRincianKomisiTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,16 +13,12 @@ class CreateRekamMedisTable extends Migration
      */
     public function up()
     {
-        Schema::create('rekam_medis', function (Blueprint $table) {
+        Schema::create('rincian_komisi', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('customer_id');
-            $table->foreignId('simbol_id');
+            $table->foreignId('booking_id');
             $table->foreignId('user_id');
-            $table->date('tanggal');
-            $table->string('no_gigi', 10);
-            $table->string('kondisi');
-            $table->string('keterangan');
-            $table->string('tindakan');
+            $table->bigInteger('nominal_komisi');
+            $table->integer('is_active')->default(1);
             $table->timestamps();
         });
     }
@@ -34,6 +30,6 @@ class CreateRekamMedisTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('rekam_medis');
+        Schema::dropIfExists('rincian_komisi');
     }
 }

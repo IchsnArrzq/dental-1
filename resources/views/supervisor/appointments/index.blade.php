@@ -22,7 +22,8 @@
                         <th>Cabang</th>
                         <th>Tanggal Booking</th>
                         <th>Waktu Booking</th>
-                        <th>Status</th>
+                        <th>Status Kedatangan</th>
+                        <th>Status Tindakan</th>
                     </tr>
                 </thead>
 
@@ -80,6 +81,10 @@
                 {
                     data: 'status',
                     name: 'status'
+                },
+                {
+                    data: 'tindakan',
+                    name: 'tindakan'
                 },
             ]
         })

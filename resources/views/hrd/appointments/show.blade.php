@@ -27,7 +27,7 @@
                                 <th>{{ asset('/storage/'.$book->image) }}</th>
                                 <td><img src="{{ asset('/storage/'.$book->image) }}" class="img-thumbnail" width="100" alt=""></td>
                                 <td>
-                                        <a href="{{ route('hrd.appointments.download', $book->id) }}" class="btn btn-primary">Download</a>
+                                    <a href="{{ route('hrd.appointments.download', $book->id) }}" class="btn btn-primary">Download</a>
                                 </td>
                             </tr>
                             @endforeach

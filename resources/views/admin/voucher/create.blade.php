@@ -16,3 +16,19 @@
     </div>
 </div>
 @stop
+
+@section('footer')
+<script>
+    $("#random").on('click', function() {
+        if ($(this).is(':checked')) {
+            $(this).val(1)
+            $(".kuota").empty().append('Total Generate')
+            $(".kode").hide()
+        } else {
+            $(this).val(0)
+            $(".kuota").empty().append('Kuota')
+            $(".kode").show()
+        }
+    })
+</script>
+@stop
