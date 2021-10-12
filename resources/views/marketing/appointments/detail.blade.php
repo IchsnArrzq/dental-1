@@ -46,7 +46,7 @@
                     </div>
                     <div class="row">
                         <div class="col-sm-6 col-lg-6 m-b-20">
-
+                            
                             <h5>Invoice to:</h5>
                             <ul class="list-unstyled">
                                 <li>
@@ -54,7 +54,7 @@
                                 </li>
                                 <li><span>{{$customer->alamat}}</span></li>
                                 <li>{{$customer->no_telp}}</li>
-                                <li>{{$umur}} Tahun ({{ $customer->ttl }})</li>
+                                <li>{{$umur}} Tahun ({{ $customer->tgl_lahir }})</li>
                                 <li>{{$customer->jk}}</li>
                                 <li>{{$customer->nik_ktp}}</li>
                                 <li><a href="#">{{$customer->email}}</a></li>
@@ -124,12 +124,21 @@
                                         <input type="text" id="sub_total" readonly class="form-control">
                                     </div>
                                 </div>
+                                @if(auth()->user()->cabang->status_pajak)
                                 <div class="col-md-12">
                                     <div class="form-group">
                                         <label>elTax <span class="text-regular" id="the_ppn">{{ auth()->user()->cabang->ppn }}%</span></label>
                                         <input type="text" id="tax" readonly class="form-control">
                                     </div>
                                 </div>
+                                @else
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label>elTax <span class="text-regular" id="the_ppn">0%</span></label>
+                                        <input type="text" id="tax" readonly class="form-control">
+                                    </div>
+                                </div>
+                                @endif
                                 <div class="col-md-12">
                                     <div class="form-group">
                                         <label>Total</label>
@@ -153,8 +162,11 @@
     </div>
     </div>
 </form>
+@if(auth()->user()->cabang->status_pajak)
 <input type="hidden" id="ppn" value="{{ auth()->user()->cabang->ppn }}">
-
+@else
+<input type="hidden" id="ppn" value="0">
+@endif
 <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.12.6/js/standalone/selectize.min.js" integrity="sha256-+C0A5Ilqmu4QcSPxrlGpaZxJ04VjsRjKu+G82kl5UJk=" crossorigin="anonymous"></script>
 <script>

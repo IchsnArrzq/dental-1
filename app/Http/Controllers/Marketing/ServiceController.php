@@ -56,8 +56,7 @@ class ServiceController extends Controller
             $customer = Customer::findOrFail($request->pasien_id);
             $jadwal = Jadwal::findOrFail($request->jadwal_id);
 
-            $ttl = substr($customer->ttl, -10);
-            $umur = (int)Carbon::now()->format('Y') - (int)Carbon::parse($ttl)->format('Y');
+            $umur = (int)Carbon::now()->format('Y') - (int)Carbon::parse($customer->tgl_lahir)->format('Y');
             $no_booking = $customer->cabang->nama . '/' . Carbon::now()->format('Ymd') . '/' . rand(9999, 99999);
             $date_booking = Carbon::now()->format('Y-m-d h:i:s');
 
