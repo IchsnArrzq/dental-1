@@ -9,6 +9,7 @@
         @can('patient-create')
         <a href="{{ route('marketing.patient.create') }}" class="btn btn btn-primary btn-rounded float-right"><i class="fa fa-plus"></i> Add Pasien</a>
         @endcan
+        <a href="{{ route('marketing.patient.restore') }}" class="btn btn-primary btn-rounded float-right mr-2"><i class="fa fa-clock-o"></i> Restore</a>
     </div>
 </div>
 

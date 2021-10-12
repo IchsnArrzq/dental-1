@@ -12,6 +12,7 @@ use App\RincianPembayaran;
 use App\Tindakan;
 use App\Voucher;
 use Carbon\Carbon;
+use Exception;
 
 class AppointmentController extends Controller
 {
@@ -80,9 +81,14 @@ class AppointmentController extends Controller
         //
     }
 
-    public function destroy(Booking $booking)
+    public function destroy($booking)
     {
-        //
+        try {
+            Booking::find($booking)->delete();
+            return back()->with('success', 'Berhasil Menghapus data');
+        } catch (Exception $err) {
+            return back()->with('success', 'Error: '.$err->getMessage());
+        }
     }
 
     public function voucher()

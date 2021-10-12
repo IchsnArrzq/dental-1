@@ -61,7 +61,7 @@
                                         </button>
                                     </div>
                                     </td>
-                                <td>{{ $data->nominal }}</td>
+                                <th>Rp. {{ number_format($data->nominal) }}</th>
                             </tr>
                             @endforeach
                         </table>

@@ -74,8 +74,26 @@ class PatientController extends Controller
      */
     public function store(Request $request)
     {
+        $kode_cabang = auth()->user()->cabang->kode_cabang;
+        
+        $resource = Customer::withTrashed()->get();
+        $wallet = [];
+        foreach ($resource as $data) {
+            array_push($wallet, str_replace($kode_cabang, '', $data->rekam_medik));
+        }
+        array_multisort($wallet);
+        $response = end($wallet);
+        $response += 1;
+        $response = str_pad($response, 4, '0', STR_PAD_LEFT);
+        $generate = $kode_cabang.$response;
+
         $user = User::find(auth()->user()->id);
         $attr = $request->all();
+        
+        if(!strlen($generate) == 6){
+            dd('error cenah');   
+        }
+        $attr['rekam_medik'] = $generate;
 
         $pict = $request->file('pict');
         $pictUrl = $pict->storeAs('images/patients', \Str::random(15) . '.' . $pict->extension());
@@ -182,5 +200,10 @@ class PatientController extends Controller
             DB::rollBack();
             return redirect()->route('marketing.patient.index')->with('error', $err->getMessage());
         }
+    }
+    public function restore()
+    {
+        Customer::onlyTrashed()->restore();
+        return back()->with('success', 'Berhasil Restore Customer');
     }
 }
