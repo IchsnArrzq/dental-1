@@ -9,6 +9,7 @@
         @can('patient-create')
         <a href="{{ route('marketing.patient.create') }}" class="btn btn btn-primary btn-rounded float-right"><i class="fa fa-plus"></i> Add Pasien</a>
         @endcan
+        <a href="{{ route('marketing.patient.restore') }}" class="btn btn-primary btn-rounded float-right mr-2"><i class="fa fa-clock-o"></i> Restore</a>
     </div>
 </div>
 
@@ -18,16 +19,16 @@
     <div class="col-sm-12">
         <div class="card shadow">
             <div class="card-body">
-
                 <div class="table-responsive">
                     <table class="table table-bordered table-striped custom-table datatable">
                         <thead>
                             <tr>
                                 <th>No</th>
+                                <th>Rekam Medik</th>
                                 <th>Nama</th>
                                 <th>Telp</th>
                                 <th>Email</th>
-                                <th>TTL</th>
+                                <th>Tempat Tanggal Lahir</th>
                                 <!-- <th>JK</th> -->
                                 <!-- <th>Suku</th> -->
                                 <th>Alamat</th>
@@ -42,6 +43,7 @@
                             @foreach($patients as $patient)
                             <tr>
                                 <td>{{ $loop->iteration }}</td>
+                                <th>{{ $patient->rekam_medik }}</th>
                                 <td>{{ $patient->nama }}</td>
                                 <td>{{ $patient->no_telp }}</td>
                                 <td>{{ $patient->email }}</td>

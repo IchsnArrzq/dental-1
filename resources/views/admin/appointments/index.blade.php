@@ -39,7 +39,11 @@
                         <td>{{ $appointment->jam_status }} - {{ $appointment->jam_selesai }}</td>
                         <td><span class="custom-badge status-{{ $appointment->is_active == 1 ? 'green' : 'red'}}">{{ $appointment->is_active == 1 ? 'Active' : 'Inactive'}}</span></td>
                         <td>
-                            <a href=""></a>
+                            <form action="{{ route('admin.appointments.destroy', $appointment->id) }}" method="post">
+                                @method('delete')
+                                @csrf
+                                <button type="submit" onclick="return confirm('anda yakin ingin menghapus data')" class="btn btn-outline-danger">Delete</button>
+                            </form>
                         </td>
                     </tr>
                     @endforeach
