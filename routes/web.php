@@ -159,6 +159,7 @@ Route::middleware('auth')->group(function () {
                 return redirect()->route('dashboard');
             })->name('dashboard');
             Route::resource('/appointments', 'AppointmentsController');
+            Route::get('patient/restore', 'PatientController@restore')->name('patient.restore');
             Route::resource('/patient', 'PatientController');
             Route::resource('/doctor', 'DoctorController');
             Route::resource('/pricelist', 'PricelistController');
